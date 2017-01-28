@@ -24,7 +24,8 @@
 
 /* Begin PBXFileReference section */
 		696F32611DEED93E002C8A51 /* Matrix */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Matrix; sourceTree = BUILT_PRODUCTS_DIR; };
-		696F32641DEED93E002C8A51 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		696F32641DEED93E002C8A51 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; usesTabs = 0; };
+		69FC3F1F1E0068F000836DB2 /* Independent_Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Independent_Functions.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				696F32641DEED93E002C8A51 /* main.c */,
+				69FC3F1F1E0068F000836DB2 /* Independent_Functions.h */,
 			);
 			path = Matrix;
 			sourceTree = "<group>";
@@ -93,6 +95,7 @@
 				TargetAttributes = {
 					696F32601DEED93E002C8A51 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = GAR4F92X3Y;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -216,6 +219,9 @@
 		696F32691DEED93E002C8A51 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = GAR4F92X3Y;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -223,6 +229,9 @@
 		696F326A1DEED93E002C8A51 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = GAR4F92X3Y;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -246,6 +255,7 @@
 				696F326A1DEED93E002C8A51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
