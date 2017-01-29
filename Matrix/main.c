@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <time.h>
 #include "Independent_Functions.h"
@@ -560,60 +561,119 @@ double** Adjoint_Matrix(double **Matrix,int m, int n)
     return Transpose_Matrix(Result_Matrix, m, n);                                          //最后需要求转置矩阵才能得到最后的伴随矩阵
 }
 
-char TEST_FLAG;
+char TEST_FLAG='0';
 
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-int main(int argc, const char * argv[])                                                    //目前设定为传入任意参数即进入test随机填充测试模式
-{                                                                                          //今后将开发出传入参数直接指定MODE
+int main(int argc, const char * argv[])
+{
     char MODE='0';
-    puts("\n------------------------------------------------------------------------------");
-    puts("|                                                                            |");
-    puts("|      Copyright (C) 2016 Yanzhe Lee. All rights reserved.                   |");
-    puts("|                                                                            |");
-    puts("|                    Harbin Institute of Technology                          |");
-    puts("|                                                                            |");
-    puts("|      License GPLv3+: GNU GPL version 3 or later                            |");
-    puts("|                                                                            |");
-    puts("|      This is free software: you are free to change and redistribute it.    |");
-    puts("|                                                                            |");
-    puts("|      Email: lee.yanzhe@yanzhe.org                                          |");
-    puts("|                                                                            |");
-    puts("------------------------------------------------------------------------------\n");
-    
-    puts("         Please maximize your window to get a better display effect           \n");
-    
-    puts("------------------------------------------------------------------------------");
-    puts("-    1----    Determinant   ----    2----       Adjoint Matrix      ----    --");
-    puts("-    3----  Inverse Matrix  ----    4----   Matrix Multiplication   ----    --");
-    puts("-    5---- Row Echelon Form ----    6----     Row Canonical Form    ----    --");
-    puts("-    7---- Linear Equations ----    8---- Schmidt Orthogonalization ----    --");
-    puts("------------------------------------------------------------------------------");
-    printf("Please choose mode number: ");
-    
-    scanf("%c",&MODE);
-    
-    while (MODE>'8'||MODE<'1')
+    int invalidFlag=0;
+    if (argc>=2&&strcmp(argv[1], "--mode-1")==0)
     {
-        printf("Unavailable Choice, please choose again: ");
-        //        Safe_Flush(stdin);
+        MODE='1';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                      ---- MODE 1 Determinant   ----                        |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-2")==0)
+    {
+        MODE='2';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                     ---- MODE 2 Adjoint Matrix   ----                      |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-3")==0)
+    {
+        MODE='3';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                     ---- MODE 3 Inverse Matrix   ----                      |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-4")==0)
+    {
+        MODE='4';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                 ---- MODE 4 Matrix Multiplication   ----                   |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-5")==0)
+    {
+        MODE='5';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                    ---- MODE 5 Row Echelon Form   ----                     |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-6")==0)
+    {
+        MODE='6';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                   ---- MODE 6 Row Canonical Form   ----                    |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-7")==0)
+    {
+        MODE='7';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                    ---- MODE 7 Linear Equations   ----                     |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-8")==0)
+    {
+        MODE='8';
+        Show_Index_Page();
+        puts("------------------------------------------------------------------------------");
+        puts("|                ---- MODE 8 Schmidt Orthogonalization   ----                |");
+        puts("------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--menu")==0)
+        Show_Menu_Page();
+    else if(argc>=2&&strcmp(argv[1], "--help")==0)
+    {
+        Show_Index_Page();
+        Show_Help_Page();
+        invalidFlag=1;
+    }
+    else if(argc>=2)
+    {
+        printf("invalid option '%s'; type '--help' for a list.\n",argv[argc-1]);
+        invalidFlag=1;
+    }
+    else
+    {
+        Show_Index_Page();
+        Show_Menu_Page();
+        printf("Please choose mode number: ");
         scanf("%c",&MODE);
+        while (MODE>'8'||MODE<'1')
+        {
+            printf("Unavailable Choice, please choose again: ");
+            //        Safe_Flush(stdin);
+            scanf("%c",&MODE);
+        }
     }
     
+    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
+    
+    if (argc==1)
+    {
+        printf("Press any key to test or press 0 to manually input\n");
+        Safe_Flush(stdin);
+        scanf("%c",&TEST_FLAG);
+    }
     if (MODE=='1'||MODE=='2')
     {
         int n;
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
         if(TEST_FLAG!='0')
         {
             srand((unsigned)time(NULL));                                                    //测试需要 获取随机的m和n
@@ -657,15 +717,6 @@ int main(int argc, const char * argv[])                                         
     
     if (MODE=='5'||MODE=='6')
     {
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
-        
         struct Characteristic_of_Matrix *Matrix_Description;
         Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
         Matrix_Description[0].Matrix_Name="MODE 5 Input";
@@ -729,15 +780,6 @@ int main(int argc, const char * argv[])                                         
     if (MODE=='3')
     {
         int n;
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
-        
         
         if(TEST_FLAG!='0')
         {
@@ -783,15 +825,6 @@ int main(int argc, const char * argv[])                                         
     {
         
         int i;
-        
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
         
         struct Characteristic_of_Matrix *Matrix_Description;
         Matrix_Description=(struct Characteristic_of_Matrix*)calloc(2,sizeof(struct Characteristic_of_Matrix));
@@ -979,15 +1012,6 @@ int main(int argc, const char * argv[])                                         
     
     if (MODE=='8')
     {
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
-        
         struct Characteristic_of_Matrix *Matrix_Description;
         Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
         Matrix_Description[0].Matrix_Name="MODE 5 Input";
@@ -1027,13 +1051,16 @@ int main(int argc, const char * argv[])                                         
     }
     
     Safe_Flush(stdin);
-    puts("\nDo you want to run again? (Press 0 to exit)");
-    char flag;
-    scanf("%c",&flag);
-    if(flag!='0')
+    if(invalidFlag==0)
     {
-        Safe_Flush(stdin);
-        main(1 ,argv);
+        puts("\nDo you want to run again? (Press 0 to exit)");
+        char flag;
+        scanf("%c",&flag);
+        if(flag!='0')
+        {
+            Safe_Flush(stdin);
+            main(1 ,argv);
+        }
     }
     
     return 0;
