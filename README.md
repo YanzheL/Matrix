@@ -6,5 +6,5 @@ Some MODE will ask you to input the value of 'm' or ‘n', which represents row 
 According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determinant are only available for Square Matrix.<br><br>
 ###Here shows screen-cut image of the main menu<br>
 <div align=center>
-<img src="https://github.com/YanzheL/Matrix_OSX/blob/master/menu.png">
+<img src="https://github.com/YanzheL/Matrix_OSX/blob/master/main_menu.png">
 </div>
