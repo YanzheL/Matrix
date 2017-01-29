@@ -571,7 +571,7 @@ char TEST_FLAG='0';
 int main(int argc, const char * argv[])
 {
     char MODE='0';
-    int invalidFlag=0;
+    int invalidOptionFlag=0;
     if (argc>=2&&strcmp(argv[1], "--mode-1")==0)
     {
         MODE='1';
@@ -642,7 +642,7 @@ int main(int argc, const char * argv[])
     {
         Show_Index_Page();
         Show_Help_Page();
-        invalidFlag=1;
+        invalidOptionFlag=1;
     }
     else if (argc==1||(argc==2&&strcmp(argv[1], "--test")==0))
     {
@@ -660,7 +660,7 @@ int main(int argc, const char * argv[])
     else if(argc>=2)
     {
         printf("invalid option '%s'; type '--help' for a list.\n",argv[argc-1]);
-        invalidFlag=1;
+        invalidOptionFlag=1;
     }
     
     if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
@@ -1050,7 +1050,7 @@ int main(int argc, const char * argv[])
             Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
     }
     
-    if(invalidFlag==0)
+    if(invalidOptionFlag==0)
     {
         Safe_Flush(stdin);
         puts("\nDo you want to run again? (Press 0 to exit)");
