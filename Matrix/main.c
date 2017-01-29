@@ -576,7 +576,9 @@ int main(int argc, const char * argv[])
     puts("|                                                                            |");
     puts("|                    Harbin Institute of Technology                          |");
     puts("|                                                                            |");
-    puts("|      This is free software, BUT you CANNOT change or redistribute it.      |");
+    puts("|      License GPLv3+: GNU GPL version 3 or later                            |");
+    puts("|                                                                            |");
+    puts("|      This is free software: you are free to change and redistribute it.    |");
     puts("|                                                                            |");
     puts("|      Email: lee.yanzhe@yanzhe.org                                          |");
     puts("|                                                                            |");
