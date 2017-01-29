@@ -578,7 +578,7 @@ int main(int argc, const char * argv[])
     puts("|                                                                            |");
     puts("|      This is free software, BUT you CANNOT change or redistribute it.      |");
     puts("|                                                                            |");
-    puts("|      Email: lee.yanzhe@yanzhe.org          Version 1.0.0                   |");
+    puts("|      Email: lee.yanzhe@yanzhe.org                                          |");
     puts("|                                                                            |");
     puts("------------------------------------------------------------------------------\n");
     puts("         Please maximize your window to get a better display effect           \n");
