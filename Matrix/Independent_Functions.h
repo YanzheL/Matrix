@@ -43,14 +43,14 @@ void Scalar_Multiplication(double k, double **Matrix,int r,int m,int n)         
         Matrix[r][j]*=k;
 }
 
-void Show_Matrix(double **Matrix,int start_row,int start_column,int end_row,int end_column,int display_flag)
+void Show_Matrix(double **Matrix,int startRow,int startColumn,int endRow,int endColumn,int displayFlag)
 {                                                                                                 //用于向屏幕打印整个矩阵
     int i,j;
-    for (i=start_row-1; i<=end_row-1; i++)
+    for (i=startRow-1; i<=endRow-1; i++)
     {
-        for (j=start_column-1; j<=end_column-1; j++)
+        for (j=startColumn-1; j<=endColumn-1; j++)
         {
-            if (display_flag==1)
+            if (displayFlag==1)
             {
                 if (Matrix[i][j]==floor(Matrix[i][j]))
                     printf("%10d",(int)floor(Matrix[i][j]));
@@ -65,26 +65,10 @@ void Show_Matrix(double **Matrix,int start_row,int start_column,int end_row,int 
     }
 }
 
-//void Approximate(double **Matrix,int m,int n,int k)
-//{
-//    int i,j;
-//    double p=pow(10, -k);
-//    for (i=0; i<=m-1; i++)
-//    {
-//        for (j=0; j<=n-1; j++)
-//        {
-//            if (fabs(Matrix[i][j])<p)
-//                Matrix[i][j]=0;                                                                 //近似运算
-//            if (fabs(fabs(Matrix[i][j])-1)<p)
-//                Matrix[i][j]=(Matrix[i][j]>0)?1:(-1);
-//        }
-//    }
-//}
-
-void Approximate(double **Matrix,int m,int n,int k)
+void Approximate(double **Matrix,int m,int n,int index)
 {
     int i,j;
-    double p=pow(10, -k);
+    double p=pow(10, -index);
     for (i=0; i<=m-1; i++)
     {
         for (j=0; j<=n-1; j++)
@@ -96,7 +80,6 @@ void Approximate(double **Matrix,int m,int n,int k)
         }
     }
 }
-
 
 void Row_Exchange(double **Matrix,int r1,int r2,int n)                                       //行交换，r1行与r2行交换
 {
@@ -149,23 +132,23 @@ int Find_Leading_Column(double **Matrix,int row,int n)
 
 int Check_Zero_Matrix(double **Matrix,int m,int n)
 {
-    int zero_element_count=0,i,j;
+    int zeroElementCount=0,i,j;
     for (i=0; i<=m-1; i++)                                                                   //数出增广矩阵中零元素的个数
     {
         for (j=0; j<=n-1; j++)
         {
-            if (Matrix[i][j]==0)zero_element_count++;
+            if (Matrix[i][j]==0)zeroElementCount++;
         }
     }
-    if(zero_element_count==(m)*(n))
+    if(zeroElementCount==(m)*(n))
     {
-        printf("Zero Element = %d\n",zero_element_count);
+        printf("Zero Element = %d\n",zeroElementCount);
         return -1;                                                                           //如果用户输入的矩阵元素全为0，则不用化简，直接返回
     }
-    else return zero_element_count;
+    else return zeroElementCount;
 }
 
-void Safe_Flush(FILE *fp)
+void Safe_Flush(FILE *fp)                                                                    //用于清空scanf缓冲区
 {
     int ch;
     while( (ch = fgetc(fp)) != EOF && ch != '\n' );

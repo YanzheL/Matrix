@@ -19,14 +19,14 @@
 
 int Check_Echelon(double **Matrix,int m,int n)                                                   //用于检查是否已化为行阶梯形
 {
-    int former_column_no_zero_count,next_column_no_zero_count;
+    int formerColumnNoZeroCount,nextColumnNoZeroCount;
     int i;
     for (i=0; i<=n-2; i++)
     {
-        former_column_no_zero_count=Find_No_Zero_Row(Matrix, i, m)+1;
-        next_column_no_zero_count=Find_No_Zero_Row(Matrix, i+1, m)+1;
-        next_column_no_zero_count=(former_column_no_zero_count>next_column_no_zero_count)?former_column_no_zero_count:next_column_no_zero_count;
-        if(next_column_no_zero_count-former_column_no_zero_count>1&&(next_column_no_zero_count!=former_column_no_zero_count))
+        formerColumnNoZeroCount=Find_No_Zero_Row(Matrix, i, m)+1;
+        nextColumnNoZeroCount=Find_No_Zero_Row(Matrix, i+1, m)+1;
+        nextColumnNoZeroCount=(formerColumnNoZeroCount>nextColumnNoZeroCount)?formerColumnNoZeroCount:nextColumnNoZeroCount;
+        if(nextColumnNoZeroCount-formerColumnNoZeroCount>1&&(nextColumnNoZeroCount!=formerColumnNoZeroCount))
         {                                                                  //如果发现后一列的非零元个数减去前一列的非零元个数的差大于1，则没有化简完
             return i;
         }
@@ -50,38 +50,38 @@ void User_Input_Matrix(double **Matrix,int m,int n,char *TYPE)
     }
 }
 
-int Row_Echelon_Form(double **Matrix,int m, int n,int Determinant_MODE)
+int Row_Echelon_Form(double **Matrix,int m, int n,int DeterminantMODE)
 {
-    int r,j,column,row_to_be_exchanged,no_zero_row_count=0;
-    double k,coefficient_of_entire_determinant=1;
+    int r,j,column,rowToBeExchanged,noZeroRowCount=0;
+    double k,coefficientOfEntireDeterminant=1;
     
     if (Check_Zero_Matrix(Matrix, m, n)==-1)return 0;
     for(column=0;column<=n-1&&column<=m-1;column++)
     {
         //        printf("\n\n-------------------------- Column %d Begin ------------------------\n",column+1);
-        for (row_to_be_exchanged=column;row_to_be_exchanged<=m-2 ; row_to_be_exchanged++)        // 将第column列从上到下化为1,1,...,1,...,0,0,...,0
+        for (rowToBeExchanged=column;rowToBeExchanged<=m-2 ; rowToBeExchanged++)        // 将第column列从上到下化为1,1,...,1,...,0,0,...,0
         {
             
-            for(j=row_to_be_exchanged;j<=m-1;j++)
+            for(j=rowToBeExchanged;j<=m-1;j++)
             {
-                if(Matrix[row_to_be_exchanged][column]!=0)
+                if(Matrix[rowToBeExchanged][column]!=0)
                 {
-                    k=(double)1/(Matrix[row_to_be_exchanged][column]);                           // k等于第row_to_be_changed行第一个元素的倒数
-                    Scalar_Multiplication(k, Matrix,row_to_be_exchanged,m,n);
-                    if (Determinant_MODE==1)
-                        coefficient_of_entire_determinant*=1/k;
+                    k=(double)1/(Matrix[rowToBeExchanged][column]);                           // k等于第row_to_be_changed行第一个元素的倒数
+                    Scalar_Multiplication(k, Matrix,rowToBeExchanged,m,n);
+                    if (DeterminantMODE==1)
+                        coefficientOfEntireDeterminant*=1/k;
                 }
                 if(Matrix[j][column]!=0)                                                         // 从上到下找出首列元素不为零的行
                 {
                     k=(double)1/(Matrix[j][column]);                                             // k等于第j行第一个元素的倒数
                     Scalar_Multiplication(k, Matrix,j,m,n);                                      // k数乘第j行，使第j行第一个元素化为1
-                    if (Determinant_MODE==1)
-                        coefficient_of_entire_determinant*=1/k;
-                    if(Matrix[row_to_be_exchanged][column]==0)
+                    if (DeterminantMODE==1)
+                        coefficientOfEntireDeterminant*=1/k;
+                    if(Matrix[rowToBeExchanged][column]==0)
                     {
-                        Row_Exchange(Matrix, j,row_to_be_exchanged,n);                           // 将第j行与第row_to_be_changed行交换
-                        if (Determinant_MODE==1)
-                            coefficient_of_entire_determinant*=(-1);
+                        Row_Exchange(Matrix, j,rowToBeExchanged,n);                           // 将第j行与第row_to_be_changed行交换
+                        if (DeterminantMODE==1)
+                            coefficientOfEntireDeterminant*=(-1);
                     }
                     //printf("------------------------- Row %d <--> Row %d -----------------------\n",j+1,row_to_be_exchanged+1);
                     //Show_Matrix(Determinant, 1,1,n, n,1);
@@ -89,18 +89,18 @@ int Row_Echelon_Form(double **Matrix,int m, int n,int Determinant_MODE)
             }
         }
         
-        no_zero_row_count=Find_No_Zero_Row(Matrix, column, m)+1;
+        noZeroRowCount=Find_No_Zero_Row(Matrix, column, m)+1;
         
         //printf("------------------ Column %d No Zero Row Count = %d ----------------\n",column+1,no_zero_row_count);
         //Show_Matrix(Determinant, 1,1,n, n,1);
-        for (r=column+1; r<=no_zero_row_count-1; r++)
+        for (r=column+1; r<=noZeroRowCount-1; r++)
         {
             Row_Add(Matrix, r,column,n,1);
         }
         
         //puts("------------------------ Add Finish ------------------------------");
         //Show_Matrix(AB, m, n,1);
-        no_zero_row_count=0;
+        noZeroRowCount=0;
         
         //printf("------------------------- Column %d Finish ------------------------\n\n",column+1);
     }
@@ -109,51 +109,51 @@ int Row_Echelon_Form(double **Matrix,int m, int n,int Determinant_MODE)
     //    else Show_Matrix(Matrix, 1,1,n, n,1);
     //    puts("--------------------------------------- Fix Begin ----------------------------------------");
     //
-    int problem_column=0;
-    if(Check_Echelon(Matrix, m, n)!=0)problem_column=Check_Echelon(Matrix, m, n);                    //检查是否已经化为行阶梯
+    int problemColumn=0;
+    if(Check_Echelon(Matrix, m, n)!=0)problemColumn=Check_Echelon(Matrix, m, n);                    //检查是否已经化为行阶梯
     
     //    printf("Problem column = %d\n",problem_column+1);
-    if(problem_column!=0)
+    if(problemColumn!=0)
     {
-        double last_2_leading_coefficient,last_1_leading_coefficient;
-        last_2_leading_coefficient=Matrix[m-2][problem_column+1];
-        last_1_leading_coefficient=Matrix[m-1][problem_column+1];
-        Scalar_Multiplication(1/last_2_leading_coefficient, Matrix,m-2,m,n);                         //先把倒数第二行首个非零元化为1
-        if (Determinant_MODE==1)
-            coefficient_of_entire_determinant*=last_2_leading_coefficient;
-        Scalar_Multiplication(1/last_1_leading_coefficient, Matrix,m-1,m,n);                         //再把倒数第一行首个非零元化为1
-        if (Determinant_MODE==1)
-            coefficient_of_entire_determinant*=last_1_leading_coefficient;
+        double last_2_LeadingCoefficient,last_1_LeadingCoefficient;
+        last_2_LeadingCoefficient=Matrix[m-2][problemColumn+1];
+        last_1_LeadingCoefficient=Matrix[m-1][problemColumn+1];
+        Scalar_Multiplication(1/last_2_LeadingCoefficient, Matrix,m-2,m,n);                         //先把倒数第二行首个非零元化为1
+        if (DeterminantMODE==1)
+            coefficientOfEntireDeterminant*=last_2_LeadingCoefficient;
+        Scalar_Multiplication(1/last_1_LeadingCoefficient, Matrix,m-1,m,n);                         //再把倒数第一行首个非零元化为1
+        if (DeterminantMODE==1)
+            coefficientOfEntireDeterminant*=last_1_LeadingCoefficient;
         Row_Add(Matrix,m-1,m-2,n,1);                                                                 //倒数第一行减去倒数第二行，使成为阶梯
     }
     //    puts("-------------------------------------- Row Echelon Finish ---------------------------------------");
-    if (Determinant_MODE==1)
-        Scalar_Multiplication(coefficient_of_entire_determinant, Matrix, 0, m, n);
+    if (DeterminantMODE==1)
+        Scalar_Multiplication(coefficientOfEntireDeterminant, Matrix, 0, m, n);
     Approximate(Matrix, m, n, 6);
     //    if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
     //    else Show_Matrix(Matrix, 1,1,n, n,1);
     
     
-    return coefficient_of_entire_determinant;
+    return coefficientOfEntireDeterminant;
 }
 
 
 int Row_Canonical_Form(double **Matrix,int m, int n)
 {
-    int i,row,row_i_leading_column,last_no_zero_row=m-1,return_of_Find_Leading_Column;
+    int i,row,row_i_LeadingColumn,lastNoZeroRow=m-1,returnValueOf_Find_Leading_Column;
     //    int row_row_leading_column;
-    double row_row_second_coefficient,row_row_leading_coefficient,row_last_coefficient;
+    double row_row_SecondCoefficient,row_row_LeadingCoefficient,rowLastCoefficient;
     if(Row_Echelon_Form(Matrix,m,n,0)==0)return 0;
     
     for (i=m-1; i>=0; i--)
     {
-        return_of_Find_Leading_Column=Find_Leading_Column(Matrix, i, n);
-        if (return_of_Find_Leading_Column!=0)
+        returnValueOf_Find_Leading_Column=Find_Leading_Column(Matrix, i, n);
+        if (returnValueOf_Find_Leading_Column!=0)
         {
-            last_no_zero_row=i;
+            lastNoZeroRow=i;
         }
-        row_last_coefficient=Matrix[last_no_zero_row][Find_Leading_Column(Matrix, last_no_zero_row, n)];
-        if (row_last_coefficient!=0)Scalar_Multiplication(1/row_last_coefficient, Matrix, last_no_zero_row, m, n);
+        rowLastCoefficient=Matrix[lastNoZeroRow][Find_Leading_Column(Matrix, lastNoZeroRow, n)];
+        if (rowLastCoefficient!=0)Scalar_Multiplication(1/rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
     }
     
     for (row=0; row<=m-2; row++)
@@ -161,13 +161,13 @@ int Row_Canonical_Form(double **Matrix,int m, int n)
         for (i=row+1; i<=m-1; i++)
         {
             //            row_row_leading_column=Find_Leading_Column(Matrix, row, n);
-            row_i_leading_column=Find_Leading_Column(Matrix,i, n);
-            row_row_second_coefficient=Matrix[row][row_i_leading_column];
-            if (row_row_second_coefficient!=0&&Matrix[i][row_i_leading_column]!=0)
+            row_i_LeadingColumn=Find_Leading_Column(Matrix,i, n);
+            row_row_SecondCoefficient=Matrix[row][row_i_LeadingColumn];
+            if (row_row_SecondCoefficient!=0&&Matrix[i][row_i_LeadingColumn]!=0)
             {
                 //printf("\n---------- Row %d ----> i %d Prepare---------------\n",row+1,i+1);
                 //Show_Matrix(AB, m, n,1);
-                Scalar_Multiplication(1/row_row_second_coefficient, Matrix, row, m, n);
+                Scalar_Multiplication(1/row_row_SecondCoefficient, Matrix, row, m, n);
                 //printf("---------- Row %d ----> i %d Scalared--------------\n",row+1,i+1);
                 //Show_Matrix(AB, m, n,1);
                 Row_Add(Matrix, row, i, n, 1);
@@ -176,8 +176,8 @@ int Row_Canonical_Form(double **Matrix,int m, int n)
             }
         }
         //}
-        row_row_leading_coefficient=Matrix[row][Find_Leading_Column(Matrix, row, n)];
-        if(row_row_leading_coefficient!=0)Scalar_Multiplication(1/row_row_leading_coefficient, Matrix, row, m, n);
+        row_row_LeadingCoefficient=Matrix[row][Find_Leading_Column(Matrix, row, n)];
+        if(row_row_LeadingCoefficient!=0)Scalar_Multiplication(1/row_row_LeadingCoefficient, Matrix, row, m, n);
     }
     
     //puts("----------------------- Row Canonical Finish -----------------------");
@@ -241,9 +241,9 @@ int Check_Linear_Equation_Solution_Existance(double **AB,int m,int n)
     else return 1;
 }
 
-void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int n_of_Solution_Matrix,int rank_of_A)
+void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int n_of_Solution_Matrix,int rankOf_A)
 {
-    int i,j,row_i_leading_column=0;
+    int i,j,row_i_LeadingColumn=0;
     for (i=0; i<=n-1; i++)
     {
         Solution_Matrix[i][0]=1;
@@ -252,10 +252,10 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
         else
             Solution_Matrix[i][0]=1;
     }
-    int basic_column_count=rank_of_A;
+    int basicColumnCount=rankOf_A;
     
-    double **basic_column_array=Create_Matrix(1, basic_column_count, "Basic Column Array");
-    for (i=0; i<=basic_column_count-1; i++)
+    double **basic_column_array=Create_Matrix(1, basicColumnCount, "Basic Column Array");
+    for (i=0; i<=basicColumnCount-1; i++)
     {
         basic_column_array[0][i]=Find_Leading_Column(AB, i, n);            //找出基础未知量所在的列号，存入数组
     }
@@ -263,7 +263,7 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
     //    Show_Matrix(basic_column_array, 1, basic_column_count, 1);
     //    Show_Matrix(basic_column_array, 1, 1,1,basic_column_count, 1);
     
-    double **non_basic_column_array=Create_Matrix(1, n-rank_of_A, "Non Basic Column Array");
+    double **non_basic_column_array=Create_Matrix(1, n-rankOf_A, "Non Basic Column Array");
     double *pointer=&non_basic_column_array[0][0];
     
     for (i=0; i<=n-1; i++)
@@ -282,11 +282,11 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
     for (i=0; i<=n-1; i++)
     {
         if(i<=m-1)
-            row_i_leading_column=Find_Leading_Column(AB, i, n);
+            row_i_LeadingColumn=Find_Leading_Column(AB, i, n);
         
-        if (i!=row_i_leading_column)
+        if (i!=row_i_LeadingColumn)
         {
-            for (j=0; j<=n-rank_of_A-1; j++)
+            for (j=0; j<=n-rankOf_A-1; j++)
             {
                 if (i==non_basic_column_array[0][j])
                 {
@@ -300,7 +300,7 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
             j=0;
             if (i<=m-1)
             {
-                for (j=0; j<=n-rank_of_A-1; j++)
+                for (j=0; j<=n-rankOf_A-1; j++)
                 {
                     Solution_Matrix[i][j+1]=-AB[i][(int)non_basic_column_array[0][j]];
                 }
@@ -372,12 +372,12 @@ struct Characteristic_of_Matrix
     int n;
 };
 
-void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test,int struct_element_number,int m_rand_min,int m_rand_max,int n_rand_min,int n_rand_max)
+void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test,int structElementNumber,int m_rand_min,int mRandMax,int nRandMin,int nRandMax)
 {
     srand((unsigned)time(NULL));
     //srand((unsigned)20);
-    Recive_mn_for_Test[struct_element_number-1].m=m_rand_min+rand()%(m_rand_max-m_rand_min);       //测试需要
-    Recive_mn_for_Test[struct_element_number-1].n=n_rand_min+rand()%(n_rand_max-n_rand_min);
+    Recive_mn_for_Test[structElementNumber-1].m=m_rand_min+rand()%(mRandMax-m_rand_min);       //测试需要
+    Recive_mn_for_Test[structElementNumber-1].n=nRandMin+rand()%(nRandMax-nRandMin);
 }
 
 double** Transpose_Matrix(double **Matrix,int m,int n)
