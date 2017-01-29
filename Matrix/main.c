@@ -522,7 +522,7 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     return Result_Matrix;
 }
 
-double Mirror(double **Matrix, int row, int column, int m,int n)
+double Mirror(double **Matrix, int row, int column, int m,int n)                            //找出余子矩阵，并返回余子式的值
 {
     double **Mirror_Matrix=Create_Matrix(m-1, n-1, "");
     int i,j;
@@ -531,7 +531,7 @@ double Mirror(double **Matrix, int row, int column, int m,int n)
     {
         for (j=0; j<=n-2; j++)
         {
-            if (i<row&&j<column)
+            if (i<row&&j<column)                                                            //通过跳过指定的行、列来创建余子矩阵
                 Mirror_Matrix[i][j]=Matrix[i][j];
             else if(i<row&&j>=column)
                 Mirror_Matrix[i][j]=Matrix[i][j+1];
@@ -557,7 +557,7 @@ double** Adjoint_Matrix(double **Matrix,int m, int n)
             Result_Matrix[i][j]=pow(-1, i+j)*Mirror(Matrix, i, j, m, n);
         }
     }
-    return Transpose_Matrix(Result_Matrix, m, n);
+    return Transpose_Matrix(Result_Matrix, m, n);                                          //最后需要求转置矩阵才能得到最后的伴随矩阵
 }
 
 char TEST_FLAG;
@@ -567,8 +567,8 @@ char TEST_FLAG;
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-int main(int argc, const char * argv[])
-{
+int main(int argc, const char * argv[])                                                    //目前设定为传入任意参数即进入test随机填充测试模式
+{                                                                                          //今后将开发出传入参数直接指定MODE
     char MODE='0';
     puts("\n------------------------------------------------------------------------------");
     puts("|                                                                            |");
@@ -583,6 +583,7 @@ int main(int argc, const char * argv[])
     puts("|      Email: lee.yanzhe@yanzhe.org                                          |");
     puts("|                                                                            |");
     puts("------------------------------------------------------------------------------\n");
+    
     puts("         Please maximize your window to get a better display effect           \n");
     
     puts("------------------------------------------------------------------------------");
@@ -591,8 +592,8 @@ int main(int argc, const char * argv[])
     puts("-    5---- Row Echelon Form ----    6----     Row Canonical Form    ----    --");
     puts("-    7---- Linear Equations ----    8---- Schmidt Orthogonalization ----    --");
     puts("------------------------------------------------------------------------------");
-    
     printf("Please choose mode number: ");
+    
     scanf("%c",&MODE);
     
     while (MODE>'8'||MODE<'1')
@@ -615,7 +616,7 @@ int main(int argc, const char * argv[])
         }
         if(TEST_FLAG!='0')
         {
-            srand((unsigned)time(NULL));                            //测试需要 获取随机的m和n
+            srand((unsigned)time(NULL));                                                    //测试需要 获取随机的m和n
             n=4+rand()%4;
         }
         else
