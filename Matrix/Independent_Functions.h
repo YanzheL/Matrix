@@ -9,6 +9,13 @@
 #ifndef Independent_Functions_h
 #define Independent_Functions_h
 
+void Safe_Flush(FILE *fp)                                                                    //用于清空scanf缓冲区
+{
+    int ch;
+    while( (ch = fgetc(fp)) != EOF && ch != '\n' );
+    //    while( (ch = fgetc(fp)) != EOF );
+}
+
 double** Create_Matrix(int m,int n,char *DISPLAY)
 {
     int i;

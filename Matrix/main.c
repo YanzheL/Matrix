@@ -39,7 +39,7 @@ int Check_Echelon(double **Matrix,int m,int n)                                  
 void User_Input_Matrix(double **Matrix,int m,int n,char *TYPE)
 {
     int i,j;
-    fflush(stdin);
+    Safe_Flush(stdin);
     for (i=0; i<=m-1; i++)                                                                       //用户输入矩阵
     {
         printf("Please input row %d elements of%s Matrix : ",i+1,TYPE);
@@ -674,7 +674,7 @@ int main(int argc, const char * argv[])
         while (MODE>'8'||MODE<'1')
         {
             printf("Unavailable Choice, please choose again: ");
-            fflush(stdin);
+            Safe_Flush(stdin);
             scanf("%c",&MODE);
         }
     }
@@ -690,7 +690,7 @@ int main(int argc, const char * argv[])
     if (argc==1)
     {
         printf("Press any key to test or press 0 to manually input\n");
-        fflush(stdin);
+        Safe_Flush(stdin);
         scanf("%c",&TEST_FLAG);
     }
     if (MODE=='1'||MODE=='2')
@@ -1053,7 +1053,7 @@ int main(int argc, const char * argv[])
             Rand_Fill(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,-10,20,0);
         Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        fflush(stdin);
+        Safe_Flush(stdin);
         char normFlag='n';
         printf("TEST_FLAG = %c\n",TEST_FLAG);
         puts("\nDo you want Normalization? Please press y or n. (default n)");
@@ -1093,13 +1093,13 @@ int main(int argc, const char * argv[])
     
     if(invalidOptionFlag==0)
     {
-        fflush(stdin);
+        Safe_Flush(stdin);
         puts("\nPress any key to run again or press 0 to exit");
         char flag;
         scanf("%c",&flag);
         if(flag!='0')
         {
-            fflush(stdin);
+            Safe_Flush(stdin);
             if ((argc>=2&&strcmp(argv[argc-1], "--test")==0))main(argc ,argv);
             else main(1, argv);
         }
