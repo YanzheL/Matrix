@@ -18,6 +18,23 @@
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
 
+
+
+void Show_Main_Source()
+{
+    char C;
+    FILE *fp = fopen(__FILE__, "r");
+    
+    do
+    {
+        C = fgetc(fp);
+        putchar(C);
+    }
+    while (C != EOF);
+    
+    fclose(fp);
+}
+
 int Check_Echelon(double **Matrix,int m,int n)                                                   //用于检查是否已化为行阶梯形
 {
     int formerColumnNoZeroCount,nextColumnNoZeroCount;
@@ -439,23 +456,23 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     int i,j;
     double *bets_scalar_product=(double*)calloc(n-1, sizeof(double));
     
-//    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
+    //    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
     double ***alpha=Column_Vector_Extract(Matrix, m, n);
-//    for (i=0; i<=n-1; i++)
-//        alpha[i]=Create_Matrix(m, 1, "Beta");
+    //    for (i=0; i<=n-1; i++)
+    //        alpha[i]=Create_Matrix(m, 1, "Beta");
     double ***beta=(double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
     for (i=0; i<=n-1; i++)
         beta[i]=Create_Matrix(m, 1, "Beta");
     
-//    int r,s;
+    //    int r,s;
     
-//    for (s=0; s<n; s++)
-//    {
-//        for (r=0; r<m; r++)
-//        {
-//            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
-//        }
-//    }
+    //    for (s=0; s<n; s++)
+    //    {
+    //        for (r=0; r<m; r++)
+    //        {
+    //            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
+    //        }
+    //    }
     
     for (i=0; i<m; i++)
     {
@@ -531,7 +548,7 @@ double** Vector_Normalization(double **Matrix,int m,int n)
     {
         product[i]=sqrt(Scalar_Product(vector_System[i], vector_System[i], m));
         double **temp_Tranpose=Transpose_Matrix(vector_System[i], m, 1);
-        Scalar_Multiplication(1/product[i], temp_Tranpose, 1, 1, m);
+        Scalar_Multiplication(1/product[i], temp_Tranpose, 0, 1, m);
         vector_System[i]=Transpose_Matrix(temp_Tranpose, 1, m);
         Free_Matrix(temp_Tranpose, 1);
     }
@@ -671,12 +688,45 @@ int main(int argc, const char * argv[])
         Show_Menu_Page();
         printf("Please choose mode number: ");
         scanf("%c",&MODE);
+        fflush(stdin);
         while (MODE>'8'||MODE<'1')
         {
-            printf("Unavailable Choice, please choose again: ");
-            Safe_Flush(stdin);
+            printf("Unavailable Choice, please choose again\r");
+            //            Safe_Flush(stdin);
             scanf("%c",&MODE);
         }
+        
+    }
+    else if (argc==2&&strcmp(argv[1], "--lord")==0)               //上帝模式，可以打印出程序自身源码
+    {
+        char passwd[15];
+        int k,l;
+        puts("So prove that you are the Lord");                   //需要输入密码
+        for(k=0;k<14;k++)
+        {
+            passwd[k]=getch_(0);
+            printf("*");
+        }
+        passwd[14]='\0';
+        printf("\n");
+        if (strcmp(passwd, "LYZ18679853316")==0)
+        {
+            for (l=1;l<=3;l++)
+            {
+                for (k=1;k<=230; k++)printf("#");
+                puts("");
+            }
+            Show_Main_Source();
+            puts("");
+            for (l=1;l<=3;l++)
+            {
+                for (k=1;k<=230; k++)printf("#");
+                puts("");
+            }
+            Show_Header_Source();
+        }
+        else puts("You are not my lord\n");
+        return 0;
     }
     else if(argc>=2)
     {
@@ -689,9 +739,11 @@ int main(int argc, const char * argv[])
     
     if (argc==1)
     {
-        printf("Press any key to test or press 0 to manually input\n");
+        printf("Press any key to test or press 0 to manually input\r");
         Safe_Flush(stdin);
         scanf("%c",&TEST_FLAG);
+        //        printf("TEST_FLAG = %c\n",TEST_FLAG);
+        fflush(stdin);
     }
     if (MODE=='1'||MODE=='2')
     {
@@ -1055,17 +1107,15 @@ int main(int argc, const char * argv[])
         
         Safe_Flush(stdin);
         char normFlag='n';
-        printf("TEST_FLAG = %c\n",TEST_FLAG);
-        puts("\nDo you want Normalization? Please press y or n. (default n)");
+        puts("Do you want Normalization? Please press y or n. (default n)");
         scanf("%c",&normFlag);
         if (normFlag=='\n') normFlag='n';
-        printf("normFlag = %c\n",normFlag);
-//        while (normFlag!='y'&&normFlag!='n'&&normFlag!='\n')
-//        {
-//            printf("Unavailable Choice, please choose again: ");
-//            fflush(stdin);
-//            scanf("%c",&MODE);
-//        }
+        while (normFlag!='y'&&normFlag!='n'&&normFlag!='\n')
+        {
+            printf("Unavailable Choice, please choose again: ");
+            fflush(stdin);
+            scanf("%c",&MODE);
+        }
         
         puts("---------------------------------- Confirm Input -------------------------------");
         if(Matrix_Description[0].n>9)
@@ -1080,8 +1130,6 @@ int main(int argc, const char * argv[])
         if (normFlag=='y')
         {
             double **temp_Result=Vector_Normalization(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
-            Free_Matrix(Result_Matrix, Matrix_Description[0].m);
-            double **Result_Matrix;
             Result_Matrix=temp_Result;
         }
         
@@ -1099,7 +1147,7 @@ int main(int argc, const char * argv[])
         scanf("%c",&flag);
         if(flag!='0')
         {
-            Safe_Flush(stdin);
+            fflush(stdin);
             if ((argc>=2&&strcmp(argv[argc-1], "--test")==0))main(argc ,argv);
             else main(1, argv);
         }
