@@ -658,6 +658,7 @@ int main(int argc, const char * argv[])
     else if(argc>=2)
     {
         printf("invalid option '%s'; type '--help' for a list.\n",argv[argc-1]);
+        puts("Syntax: Matrix [Commands] [options]");
         invalidOptionFlag=1;
     }
     
