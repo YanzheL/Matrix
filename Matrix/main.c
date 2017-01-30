@@ -439,59 +439,60 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     int i,j;
     double *bets_scalar_product=(double*)calloc(n-1, sizeof(double));
     
-    double ***alpha=(double***)calloc(n, sizeof(double**));
+    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
     for (i=0; i<=n-1; i++)
         alpha[i]=Create_Matrix(m, 1, "Beta");
-    double ***beta=(double***)calloc(n, sizeof(double**));
+    double ***beta=(double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
     for (i=0; i<=n-1; i++)
         beta[i]=Create_Matrix(m, 1, "Beta");
     
     int r,s;
     
-    for (s=0; s<=n-1; s++)
+    for (s=0; s<n; s++)
     {
-        for (r=0; r<=m-1; r++)
+        for (r=0; r<m; r++)
         {
-            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[i]
+            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
         }
+        //        printf("------------------------------- alpha_s[%d] -------------------------------\n",s);
+        //        Show_Matrix(alpha[s], 1, 1, m, 1, 1);
     }
     
-    for (i=0; i<=m-1; i++)
+    for (i=0; i<m; i++)
     {
-        beta[0][i][0]=alpha[0][i][0];
-    }                                   //beta1 = alpha1
+        beta[0][i][0]=alpha[0][i][0];                                    //赋初始值beta1 = alpha1
+    }
     
     int row=0,x=0;
     for (i=1; i<=n-1; i++)
     {
-        double **sum=Create_Matrix(m, 1, "");
-        for (x=0; x<=i-1; x++)
+        double **sum=Create_Matrix(m, 1, "");                            //sum得到正交化公式中后面项的和向量
+        for (x=0; x<i; x++)
         {
             double **temp=Create_Matrix(m, 1, "");
             
-            for (row=0; row<=m-1; row++)
-                temp[row][0]=beta[i-1][row][0];                      //复制Betai-1的列
+            for (row=0; row<m; row++)
+                temp[row][0]=beta[i-x-1][row][0];                          //复制Beta[i-1]的列向量到temp中
             
             //            printf("------------------------------- temp[%d] -------------------------------\n",i-1);
             //            Show_Matrix(temp, 1, 1,m, 1, 1);
+            //            printf("------------------------------- Beta[%d] -------------------------------\n",i-x-1);
+            //            Show_Matrix(beta[i-x-1], 1, 1, m, 1, 1);
             
-            printf("------------------------------- Beta[%d] -------------------------------\n",i-x-1);
-            Show_Matrix(beta[i-x-1], 1, 1, m, 1, 1);
-            
-            double numerator=Scalar_Product(alpha[i], beta[i-x-1], m);                    //可能没有free
+            double numerator=Scalar_Product(alpha[i], beta[i-x-1], m);   //可能没有free
             double dominator=Scalar_Product(beta[i-x-1], beta[i-x-1], m);
             
             double coefficient=numerator/dominator;
-            double **transpose_temp=Transpose_Matrix(temp, m, 1);
+            double **transpose_temp=Transpose_Matrix(temp, m, 1);        //转置成行向量再数乘每个元素
             Scalar_Multiplication(coefficient,transpose_temp, 0, 1, m);
-            temp=Transpose_Matrix(transpose_temp, 1, m);
-            printf("------------------------------- temp-T[%d] -------------------------------\n",i-1);
-            Show_Matrix(temp, 1, 1,m, 1, 1);
+            temp=Transpose_Matrix(transpose_temp, 1, m);                 //恢复temp向量
+            //            printf("------------------------------- temp-T[%d] -------------------------------\n",i-x-1);
+            //            Show_Matrix(temp, 1, 1,m, 1, 1);
             
             sum=Matrix_Sum(sum, temp, m, 1, 0);
             
-            printf("------------------------------- Sum[%d] -------------------------------\n",x);
-            Show_Matrix(sum, 1, 1, m, 1, 1);
+            //            printf("------------------------------- Sum[%d] -------------------------------\n",x);
+            //            Show_Matrix(sum, 1, 1, m, 1, 1);
             
             Free_Matrix(temp, m);
             Free_Matrix(transpose_temp, 1);
@@ -511,14 +512,11 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     }
     
     free(bets_scalar_product);
-    
     for (i=0; i<n-1; i++)
         Free_Matrix(alpha[i], m);
     
     for (i=1; i<n-1; i++)
         Free_Matrix(beta[i], m);
-    
-    puts("----------------------------------------------------------------------------------");
     
     return Result_Matrix;
 }
@@ -722,9 +720,7 @@ int main(int argc, const char * argv[])
         Matrix_Description[0].Matrix_Name="MODE 5 Input";
         
         if(TEST_FLAG!='0')
-        {
             Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
-        }
         else
         {
             printf("\nPlease input 'm' and 'n' : ");
@@ -1040,7 +1036,7 @@ int main(int argc, const char * argv[])
         else
             Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------\n");
+        puts("\n\n\n----------------------------------- Result -----------------------------------");
         double **Result_Matrix=Schmidt_Orthogonalization(Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
         
