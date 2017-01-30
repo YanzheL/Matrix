@@ -148,13 +148,6 @@ int Check_Zero_Matrix(double **Matrix,int m,int n)
     else return zeroElementCount;
 }
 
-void Safe_Flush(FILE *fp)                                                                    //用于清空scanf缓冲区
-{
-    int ch;
-    while( (ch = fgetc(fp)) != EOF && ch != '\n' );
-//    while( (ch = fgetc(fp)) != EOF );
-}
-
 void Rand_Fill(double **Matrix,int m,int n,int MIN,int MAX,int MODE)
 {
     int i,j;
@@ -166,6 +159,35 @@ void Rand_Fill(double **Matrix,int m,int n,int MIN,int MAX,int MODE)
             if (MODE==1)
                 Matrix[i][j]=MIN+rand()%(MAX-MIN-1)+(double)rand()/RAND_MAX;                 //随机小数填充
             else Matrix[i][j]=MIN+rand()%MAX;                                                //随机整数填充
+        }
+    }
+}
+
+double*** Column_Vector_Extract(double **Matrix,int m,int n)
+{
+    int i,r,s;
+    double ***vector_System=(double***)calloc(n, sizeof(double**));
+    for (i=0; i<n; i++)
+        vector_System[i]=Create_Matrix(m, 1, "Vector System");
+    
+    for (s=0; s<n; s++)
+    {
+        for (r=0; r<m; r++)
+        {
+            vector_System[s][r][0]=Matrix[r][s];
+        }
+    }
+    return vector_System;
+}
+
+void Column_Vector_Refill(double ***vector_System,double **Matrix,int m,int n)
+{
+    int r,s;
+    for (s=0; s<n; s++)
+    {
+        for (r=0; r<m; r++)
+        {
+            Matrix[r][s]=vector_System[s][r][0];
         }
     }
 }

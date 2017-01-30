@@ -39,7 +39,7 @@ int Check_Echelon(double **Matrix,int m,int n)                                  
 void User_Input_Matrix(double **Matrix,int m,int n,char *TYPE)
 {
     int i,j;
-    Safe_Flush(stdin);
+    fflush(stdin);
     for (i=0; i<=m-1; i++)                                                                       //用户输入矩阵
     {
         printf("Please input row %d elements of%s Matrix : ",i+1,TYPE);
@@ -439,24 +439,23 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     int i,j;
     double *bets_scalar_product=(double*)calloc(n-1, sizeof(double));
     
-    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
-    for (i=0; i<=n-1; i++)
-        alpha[i]=Create_Matrix(m, 1, "Beta");
+//    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
+    double ***alpha=Column_Vector_Extract(Matrix, m, n);
+//    for (i=0; i<=n-1; i++)
+//        alpha[i]=Create_Matrix(m, 1, "Beta");
     double ***beta=(double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
     for (i=0; i<=n-1; i++)
         beta[i]=Create_Matrix(m, 1, "Beta");
     
-    int r,s;
+//    int r,s;
     
-    for (s=0; s<n; s++)
-    {
-        for (r=0; r<m; r++)
-        {
-            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
-        }
-        //        printf("------------------------------- alpha_s[%d] -------------------------------\n",s);
-        //        Show_Matrix(alpha[s], 1, 1, m, 1, 1);
-    }
+//    for (s=0; s<n; s++)
+//    {
+//        for (r=0; r<m; r++)
+//        {
+//            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
+//        }
+//    }
     
     for (i=0; i<m; i++)
     {
@@ -518,6 +517,30 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     for (i=1; i<n-1; i++)
         Free_Matrix(beta[i], m);
     
+    return Result_Matrix;
+}
+
+double** Vector_Normalization(double **Matrix,int m,int n)
+{
+    double *product=(double*)calloc(n, sizeof(double));
+    double **Result_Matrix=Create_Matrix(m, n, "");
+    int i;
+    double ***vector_System=Column_Vector_Extract(Matrix, m, n);
+    
+    for (i=0; i<n; i++)
+    {
+        product[i]=sqrt(Scalar_Product(vector_System[i], vector_System[i], m));
+        double **temp_Tranpose=Transpose_Matrix(vector_System[i], m, 1);
+        Scalar_Multiplication(1/product[i], temp_Tranpose, 1, 1, m);
+        vector_System[i]=Transpose_Matrix(temp_Tranpose, 1, m);
+        Free_Matrix(temp_Tranpose, 1);
+    }
+    
+    Column_Vector_Refill(vector_System, Result_Matrix, m, n);
+    
+    free(product);
+    for (i=0; i<n; i++)
+        Free_Matrix(vector_System[i], n);
     return Result_Matrix;
 }
 
@@ -651,7 +674,7 @@ int main(int argc, const char * argv[])
         while (MODE>'8'||MODE<'1')
         {
             printf("Unavailable Choice, please choose again: ");
-            //        Safe_Flush(stdin);
+            fflush(stdin);
             scanf("%c",&MODE);
         }
     }
@@ -667,7 +690,7 @@ int main(int argc, const char * argv[])
     if (argc==1)
     {
         printf("Press any key to test or press 0 to manually input\n");
-        Safe_Flush(stdin);
+        fflush(stdin);
         scanf("%c",&TEST_FLAG);
     }
     if (MODE=='1'||MODE=='2')
@@ -1028,8 +1051,21 @@ int main(int argc, const char * argv[])
             User_Input_Matrix(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, "");
         else
             Rand_Fill(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,-10,20,0);
-        
         Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
+        
+        fflush(stdin);
+        char normFlag='n';
+        printf("TEST_FLAG = %c\n",TEST_FLAG);
+        puts("\nDo you want Normalization? Please press y or n. (default n)");
+        scanf("%c",&normFlag);
+        if (normFlag=='\n') normFlag='n';
+        printf("normFlag = %c\n",normFlag);
+//        while (normFlag!='y'&&normFlag!='n'&&normFlag!='\n')
+//        {
+//            printf("Unavailable Choice, please choose again: ");
+//            fflush(stdin);
+//            scanf("%c",&MODE);
+//        }
         
         puts("---------------------------------- Confirm Input -------------------------------");
         if(Matrix_Description[0].n>9)
@@ -1041,6 +1077,14 @@ int main(int argc, const char * argv[])
         double **Result_Matrix=Schmidt_Orthogonalization(Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
         
+        if (normFlag=='y')
+        {
+            double **temp_Result=Vector_Normalization(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
+            Free_Matrix(Result_Matrix, Matrix_Description[0].m);
+            double **Result_Matrix;
+            Result_Matrix=temp_Result;
+        }
+        
         if(Matrix_Description[0].n>9)
             Show_Matrix(Result_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
         else
@@ -1049,13 +1093,13 @@ int main(int argc, const char * argv[])
     
     if(invalidOptionFlag==0)
     {
-        Safe_Flush(stdin);
-        puts("\nDo you want to run again? (Press 0 to exit)");
+        fflush(stdin);
+        puts("\nPress any key to run again or press 0 to exit");
         char flag;
         scanf("%c",&flag);
         if(flag!='0')
         {
-            Safe_Flush(stdin);
+            fflush(stdin);
             if ((argc>=2&&strcmp(argv[argc-1], "--test")==0))main(argc ,argv);
             else main(1, argv);
         }
