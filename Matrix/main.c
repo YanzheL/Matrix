@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <time.h>
 #include "Independent_Functions.h"
@@ -438,59 +439,60 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     int i,j;
     double *bets_scalar_product=(double*)calloc(n-1, sizeof(double));
     
-    double ***alpha=(double***)calloc(n, sizeof(double**));
+    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
     for (i=0; i<=n-1; i++)
         alpha[i]=Create_Matrix(m, 1, "Beta");
-    double ***beta=(double***)calloc(n, sizeof(double**));
+    double ***beta=(double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
     for (i=0; i<=n-1; i++)
         beta[i]=Create_Matrix(m, 1, "Beta");
     
     int r,s;
     
-    for (s=0; s<=n-1; s++)
+    for (s=0; s<n; s++)
     {
-        for (r=0; r<=m-1; r++)
+        for (r=0; r<m; r++)
         {
-            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[i]
+            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
         }
+        //        printf("------------------------------- alpha_s[%d] -------------------------------\n",s);
+        //        Show_Matrix(alpha[s], 1, 1, m, 1, 1);
     }
     
-    for (i=0; i<=m-1; i++)
+    for (i=0; i<m; i++)
     {
-        beta[0][i][0]=alpha[0][i][0];
-    }                                   //beta1 = alpha1
+        beta[0][i][0]=alpha[0][i][0];                                    //赋初始值beta1 = alpha1
+    }
     
     int row=0,x=0;
     for (i=1; i<=n-1; i++)
     {
-        double **sum=Create_Matrix(m, 1, "");
-        for (x=0; x<=i-1; x++)
+        double **sum=Create_Matrix(m, 1, "");                            //sum得到正交化公式中后面项的和向量
+        for (x=0; x<i; x++)
         {
             double **temp=Create_Matrix(m, 1, "");
             
-            for (row=0; row<=m-1; row++)
-                temp[row][0]=beta[i-1][row][0];                      //复制Betai-1的列
+            for (row=0; row<m; row++)
+                temp[row][0]=beta[i-x-1][row][0];                          //复制Beta[i-1]的列向量到temp中
             
             //            printf("------------------------------- temp[%d] -------------------------------\n",i-1);
             //            Show_Matrix(temp, 1, 1,m, 1, 1);
+            //            printf("------------------------------- Beta[%d] -------------------------------\n",i-x-1);
+            //            Show_Matrix(beta[i-x-1], 1, 1, m, 1, 1);
             
-            printf("------------------------------- Beta[%d] -------------------------------\n",i-x-1);
-            Show_Matrix(beta[i-x-1], 1, 1, m, 1, 1);
-            
-            double numerator=Scalar_Product(alpha[i], beta[i-x-1], m);                    //可能没有free
+            double numerator=Scalar_Product(alpha[i], beta[i-x-1], m);   //可能没有free
             double dominator=Scalar_Product(beta[i-x-1], beta[i-x-1], m);
             
             double coefficient=numerator/dominator;
-            double **transpose_temp=Transpose_Matrix(temp, m, 1);
+            double **transpose_temp=Transpose_Matrix(temp, m, 1);        //转置成行向量再数乘每个元素
             Scalar_Multiplication(coefficient,transpose_temp, 0, 1, m);
-            temp=Transpose_Matrix(transpose_temp, 1, m);
-            printf("------------------------------- temp-T[%d] -------------------------------\n",i-1);
-            Show_Matrix(temp, 1, 1,m, 1, 1);
+            temp=Transpose_Matrix(transpose_temp, 1, m);                 //恢复temp向量
+            //            printf("------------------------------- temp-T[%d] -------------------------------\n",i-x-1);
+            //            Show_Matrix(temp, 1, 1,m, 1, 1);
             
             sum=Matrix_Sum(sum, temp, m, 1, 0);
             
-            printf("------------------------------- Sum[%d] -------------------------------\n",x);
-            Show_Matrix(sum, 1, 1, m, 1, 1);
+            //            printf("------------------------------- Sum[%d] -------------------------------\n",x);
+            //            Show_Matrix(sum, 1, 1, m, 1, 1);
             
             Free_Matrix(temp, m);
             Free_Matrix(transpose_temp, 1);
@@ -510,19 +512,16 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     }
     
     free(bets_scalar_product);
-    
     for (i=0; i<n-1; i++)
         Free_Matrix(alpha[i], m);
     
     for (i=1; i<n-1; i++)
         Free_Matrix(beta[i], m);
     
-    puts("----------------------------------------------------------------------------------");
-    
     return Result_Matrix;
 }
 
-double Mirror(double **Matrix, int row, int column, int m,int n)
+double Mirror(double **Matrix, int row, int column, int m,int n)                            //找出余子矩阵，并返回余子式的值
 {
     double **Mirror_Matrix=Create_Matrix(m-1, n-1, "");
     int i,j;
@@ -531,7 +530,7 @@ double Mirror(double **Matrix, int row, int column, int m,int n)
     {
         for (j=0; j<=n-2; j++)
         {
-            if (i<row&&j<column)
+            if (i<row&&j<column)                                                            //通过跳过指定的行、列来创建余子矩阵
                 Mirror_Matrix[i][j]=Matrix[i][j];
             else if(i<row&&j>=column)
                 Mirror_Matrix[i][j]=Matrix[i][j+1];
@@ -557,10 +556,10 @@ double** Adjoint_Matrix(double **Matrix,int m, int n)
             Result_Matrix[i][j]=pow(-1, i+j)*Mirror(Matrix, i, j, m, n);
         }
     }
-    return Transpose_Matrix(Result_Matrix, m, n);
+    return Transpose_Matrix(Result_Matrix, m, n);                                          //最后需要求转置矩阵才能得到最后的伴随矩阵
 }
 
-char TEST_FLAG;
+char TEST_FLAG='0';
 
 
 
@@ -570,52 +569,113 @@ char TEST_FLAG;
 int main(int argc, const char * argv[])
 {
     char MODE='0';
-    puts("\n------------------------------------------------------------------------------");
-    puts("|                                                                            |");
-    puts("|      Copyright (C) 2016 Yanzhe Lee. All rights reserved.                   |");
-    puts("|                                                                            |");
-    puts("|                    Harbin Institute of Technology                          |");
-    puts("|                                                                            |");
-    puts("|      License GPLv3+: GNU GPL version 3 or later                            |");
-    puts("|                                                                            |");
-    puts("|      This is free software: you are free to change and redistribute it.    |");
-    puts("|                                                                            |");
-    puts("|      Email: lee.yanzhe@yanzhe.org                                          |");
-    puts("|                                                                            |");
-    puts("------------------------------------------------------------------------------\n");
-    puts("         Please maximize your window to get a better display effect           \n");
-    
-    puts("------------------------------------------------------------------------------");
-    puts("-    1----    Determinant   ----    2----       Adjoint Matrix      ----    --");
-    puts("-    3----  Inverse Matrix  ----    4----   Matrix Multiplication   ----    --");
-    puts("-    5---- Row Echelon Form ----    6----     Row Canonical Form    ----    --");
-    puts("-    7---- Linear Equations ----    8---- Schmidt Orthogonalization ----    --");
-    puts("------------------------------------------------------------------------------");
-    
-    printf("Please choose mode number: ");
-    scanf("%c",&MODE);
-    
-    while (MODE>'8'||MODE<'1')
+    int invalidOptionFlag=0;
+    if (argc>=2&&strcmp(argv[1], "--mode-1")==0)
     {
-        printf("Unavailable Choice, please choose again: ");
-        //        Safe_Flush(stdin);
+        MODE='1';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                        ---- MODE 1 Determinant ----                          |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-2")==0)
+    {
+        MODE='2';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                       ---- MODE 2 Adjoint Matrix ----                        |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-3")==0)
+    {
+        MODE='3';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                       ---- MODE 3 Inverse Matrix ----                        |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-4")==0)
+    {
+        MODE='4';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                    ---- MODE 4 Matrix Multiplication ----                    |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-5")==0)
+    {
+        MODE='5';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                       ---- MODE 5 Row Echelon Form ----                      |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-6")==0)
+    {
+        MODE='6';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                      ---- MODE 6 Row Canonical Form ----                     |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-7")==0)
+    {
+        MODE='7';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                       ---- MODE 7 Linear Equations ----                      |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--mode-8")==0)
+    {
+        MODE='8';
+        Show_Index_Page();
+        puts("--------------------------------------------------------------------------------");
+        puts("|                   ---- MODE 8 Schmidt Orthogonalization ----                 |");
+        puts("--------------------------------------------------------------------------------");
+    }
+    else if (argc>=2&&strcmp(argv[1], "--menu")==0)
+        Show_Menu_Page();
+    else if(argc>=2&&strcmp(argv[1], "--help")==0)
+    {
+        Show_Index_Page();
+        Show_Help_Page();
+        invalidOptionFlag=1;
+    }
+    else if (argc==1||(argc==2&&strcmp(argv[1], "--test")==0))
+    {
+        Show_Index_Page();
+        Show_Menu_Page();
+        printf("Please choose mode number: ");
         scanf("%c",&MODE);
+        while (MODE>'8'||MODE<'1')
+        {
+            printf("Unavailable Choice, please choose again: ");
+            //        Safe_Flush(stdin);
+            scanf("%c",&MODE);
+        }
+    }
+    else if(argc>=2)
+    {
+        printf("invalid option '%s'; type '--help' for a list.\n",argv[argc-1]);
+        puts("Syntax: Matrix [Commands] [options]");
+        invalidOptionFlag=1;
     }
     
+    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
+    
+    if (argc==1)
+    {
+        printf("Press any key to test or press 0 to manually input\n");
+        Safe_Flush(stdin);
+        scanf("%c",&TEST_FLAG);
+    }
     if (MODE=='1'||MODE=='2')
     {
         int n;
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
         if(TEST_FLAG!='0')
         {
-            srand((unsigned)time(NULL));                            //测试需要 获取随机的m和n
+            srand((unsigned)time(NULL));                                                    //测试需要 获取随机的m和n
             n=4+rand()%4;
         }
         else
@@ -633,12 +693,12 @@ int main(int argc, const char * argv[])
             Rand_Fill(Matrix, n, n,-10,10,0);
         
         Approximate(Matrix, n, n, 6);
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
         else
             Show_Matrix(Matrix, 1,1,n, n,1);
-        puts("\n\n\n --------------------------------- Result -----------------------------------");
+        puts("\n\n\n ---------------------------------- Result ------------------------------------");
         if(MODE=='1')
         {
             printf("Determinant Value = %lf\n",Determinant(Matrix, n));
@@ -656,23 +716,12 @@ int main(int argc, const char * argv[])
     
     if (MODE=='5'||MODE=='6')
     {
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
-        
         struct Characteristic_of_Matrix *Matrix_Description;
         Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
         Matrix_Description[0].Matrix_Name="MODE 5 Input";
         
         if(TEST_FLAG!='0')
-        {
             Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
-        }
         else
         {
             printf("\nPlease input 'm' and 'n' : ");
@@ -689,14 +738,14 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         //Show_Matrix(AB, m, n+1,1);
         if(Matrix_Description[0].n>9)
             Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
         else
             Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------\n");
+        puts("\n\n\n------------------------------------ Result ------------------------------------\n");
         if(MODE=='5')
         {
             if(Row_Echelon_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,0)==0)
@@ -728,15 +777,6 @@ int main(int argc, const char * argv[])
     if (MODE=='3')
     {
         int n;
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
-        
         
         if(TEST_FLAG!='0')
         {
@@ -759,7 +799,7 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, n, n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
         else
@@ -771,7 +811,7 @@ int main(int argc, const char * argv[])
         }
         else
         {
-            puts("\n\n\n----------------------------------- Result -----------------------------------");
+            puts("\n\n\n------------------------------------ Result ------------------------------------");
             if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
             else Show_Matrix(Matrix, 1,1,n, n,1);
         }
@@ -782,15 +822,6 @@ int main(int argc, const char * argv[])
     {
         
         int i;
-        
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
         
         struct Characteristic_of_Matrix *Matrix_Description;
         Matrix_Description=(struct Characteristic_of_Matrix*)calloc(2,sizeof(struct Characteristic_of_Matrix));
@@ -848,19 +879,19 @@ int main(int argc, const char * argv[])
         
         Approximate(A, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(Matrix_Description[1].n>14)
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,Matrix_Description[1].n-9,Matrix_Description[1].m, Matrix_Description[1].n,1);
         }
         else
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,1,Matrix_Description[1].m, Matrix_Description[1].n,1);
         }
         
@@ -872,24 +903,24 @@ int main(int argc, const char * argv[])
             Matrix_Multiplication(Result_Matrix, Result_Matrix, Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n);
         }
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------\n");
+        puts("\n\n\n------------------------------------ Result ------------------------------------\n");
         
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[1].n, 5);
         
         if(Matrix_Description[1].n>14)
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,Matrix_Description[1].n-9,Matrix_Description[1].m, Matrix_Description[1].n,1);
         }
         else
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,1,Matrix_Description[1].m, Matrix_Description[1].n,1);
-            printf(" ---------------------------------- A B %d X %d ------------------------------\n",Matrix_Description[0].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- A B %d X %d -------------------------------\n",Matrix_Description[0].m,Matrix_Description[1].n);
             Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[1].n,1);
         }
         
@@ -926,7 +957,7 @@ int main(int argc, const char * argv[])
         
         Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         //Show_Matrix(AB, m, n+1,1);
         if(Matrix_Description[0].n>9)
             Show_Matrix(AB, 1,Matrix_Description[0].n+1-9,Matrix_Description[0].m, Matrix_Description[0].n+1,1);
@@ -949,7 +980,7 @@ int main(int argc, const char * argv[])
         double **Solution_Matrix=Create_Matrix(Matrix_Description[0].n,n_of_Solution_Matrix,"Solution Matrix");
         Build_Solution_Matrix(AB, Solution_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, n_of_Solution_Matrix, rank_of_A);
         
-        puts("\n\n----------------------------------- Result -----------------------------------");
+        puts("\n\n------------------------------------ Result ------------------------------------");
         
         Approximate(Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 5);
         
@@ -957,7 +988,7 @@ int main(int argc, const char * argv[])
         
         if (Homogeneous_Flag!=0)
         {
-            puts("\n\n\n----------------------------- Particular Solution ----------------------------");
+            puts("\n\n\n------------------------------ Particular Solution -----------------------------");
             Show_Matrix(Solution_Matrix, 1,n_of_Solution_Matrix,Matrix_Description[0].n, n_of_Solution_Matrix, 1);
             
         }
@@ -969,7 +1000,7 @@ int main(int argc, const char * argv[])
         }
         else
         {
-            puts("\n\n\n------------------------- Fundamental Solution Systems -----------------------");
+            puts("\n\n\n-------------------------- Fundamental Solution Systems ------------------------");
             Show_Matrix(Solution_Matrix, 1,2,Matrix_Description[0].n, n_of_Solution_Matrix-1, 1);
         }
         Free_Matrix(AB, Matrix_Description[0].m);
@@ -978,15 +1009,6 @@ int main(int argc, const char * argv[])
     
     if (MODE=='8')
     {
-        if (argc>=2)
-            TEST_FLAG='1';
-        else
-        {
-            printf("Press any key to test or press 0 to manually input\n");
-            Safe_Flush(stdin);
-            scanf("%c",&TEST_FLAG);
-        }
-        
         struct Characteristic_of_Matrix *Matrix_Description;
         Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
         Matrix_Description[0].Matrix_Name="MODE 5 Input";
@@ -1009,13 +1031,13 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(Matrix_Description[0].n>9)
             Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
         else
             Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------\n");
+        puts("\n\n\n------------------------------------ Result ------------------------------------");
         double **Result_Matrix=Schmidt_Orthogonalization(Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
         
@@ -1025,14 +1047,18 @@ int main(int argc, const char * argv[])
             Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
     }
     
-    Safe_Flush(stdin);
-    puts("\nDo you want to run again? (Press 0 to exit)");
-    char flag;
-    scanf("%c",&flag);
-    if(flag!='0')
+    if(invalidOptionFlag==0)
     {
         Safe_Flush(stdin);
-        main(1 ,argv);
+        puts("\nDo you want to run again? (Press 0 to exit)");
+        char flag;
+        scanf("%c",&flag);
+        if(flag!='0')
+        {
+            Safe_Flush(stdin);
+            if ((argc>=2&&strcmp(argv[argc-1], "--test")==0))main(argc ,argv);
+            else main(1, argv);
+        }
     }
     
     return 0;
