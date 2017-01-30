@@ -575,7 +575,7 @@ int main(int argc, const char * argv[])
         MODE='1';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                        ---- MODE 1 Determinant   ----                        |");
+        puts("|                        ---- MODE 1 Determinant ----                          |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-2")==0)
@@ -583,7 +583,7 @@ int main(int argc, const char * argv[])
         MODE='2';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                       ---- MODE 2 Adjoint Matrix   ----                      |");
+        puts("|                       ---- MODE 2 Adjoint Matrix ----                        |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-3")==0)
@@ -591,7 +591,7 @@ int main(int argc, const char * argv[])
         MODE='3';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                       ---- MODE 3 Inverse Matrix   ----                      |");
+        puts("|                       ---- MODE 3 Inverse Matrix ----                        |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-4")==0)
@@ -599,7 +599,7 @@ int main(int argc, const char * argv[])
         MODE='4';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                   ---- MODE 4 Matrix Multiplication   ----                   |");
+        puts("|                    ---- MODE 4 Matrix Multiplication ----                    |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-5")==0)
@@ -607,7 +607,7 @@ int main(int argc, const char * argv[])
         MODE='5';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                      ---- MODE 5 Row Echelon Form   ----                     |");
+        puts("|                       ---- MODE 5 Row Echelon Form ----                      |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-6")==0)
@@ -615,7 +615,7 @@ int main(int argc, const char * argv[])
         MODE='6';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                     ---- MODE 6 Row Canonical Form   ----                    |");
+        puts("|                      ---- MODE 6 Row Canonical Form ----                     |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-7")==0)
@@ -623,7 +623,7 @@ int main(int argc, const char * argv[])
         MODE='7';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                      ---- MODE 7 Linear Equations   ----                     |");
+        puts("|                       ---- MODE 7 Linear Equations ----                      |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-8")==0)
@@ -631,7 +631,7 @@ int main(int argc, const char * argv[])
         MODE='8';
         Show_Index_Page();
         puts("--------------------------------------------------------------------------------");
-        puts("|                  ---- MODE 8 Schmidt Orthogonalization   ----                |");
+        puts("|                   ---- MODE 8 Schmidt Orthogonalization ----                 |");
         puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--menu")==0)

@@ -186,7 +186,6 @@ void Show_Index_Page()
     puts("|                                                                              |");
     puts("--------------------------------------------------------------------------------");
     puts("          Please maximize your window to get a better display effect            ");
-    puts("--------------------------------------------------------------------------------");
 }
 
 void Show_Menu_Page()
