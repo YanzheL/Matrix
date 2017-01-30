@@ -172,31 +172,31 @@ void Rand_Fill(double **Matrix,int m,int n,int MIN,int MAX,int MODE)
 
 void Show_Index_Page()
 {
-    puts("\n------------------------------------------------------------------------------");
-    puts("|                                                                            |");
-    puts("|       Copyright (C) 2016 Yanzhe Lee. All rights reserved.                  |");
-    puts("|                                                                            |");
-    puts("|                     Harbin Institute of Technology                         |");
-    puts("|                                                                            |");
-    puts("|       License GPLv3+: GNU GPL version 3 or later                           |");
-    puts("|                                                                            |");
-    puts("|       This is free software: you are free to change and redistribute it    |");
-    puts("|                                                                            |");
-    puts("|       Email: lee.yanzhe@yanzhe.org                                         |");
-    puts("|                                                                            |");
-    puts("------------------------------------------------------------------------------");
-    puts("        Please maximize your window to get a better display effect            ");
-    puts("------------------------------------------------------------------------------");
+    puts("\n--------------------------------------------------------------------------------");
+    puts("|                                                                              |");
+    puts("|         Copyright (C) 2016 Yanzhe Lee. All rights reserved.                  |");
+    puts("|                                                                              |");
+    puts("|                       Harbin Institute of Technology                         |");
+    puts("|                                                                              |");
+    puts("|         License GPLv3+: GNU GPL version 3 or later                           |");
+    puts("|                                                                              |");
+    puts("|         This is free software: you are free to change and redistribute it    |");
+    puts("|                                                                              |");
+    puts("|         Email: lee.yanzhe@yanzhe.org                                         |");
+    puts("|                                                                              |");
+    puts("--------------------------------------------------------------------------------");
+    puts("          Please maximize your window to get a better display effect            ");
+    puts("--------------------------------------------------------------------------------");
 }
 
 void Show_Menu_Page()
 {
-    puts("------------------------------------------------------------------------------");
-    puts("-    1----    Determinant   ----    2----       Adjoint Matrix      ----    --");
-    puts("-    3----  Inverse Matrix  ----    4----   Matrix Multiplication   ----    --");
-    puts("-    5---- Row Echelon Form ----    6----     Row Canonical Form    ----    --");
-    puts("-    7---- Linear Equations ----    8---- Schmidt Orthogonalization ----    --");
-    puts("------------------------------------------------------------------------------");
+    puts("--------------------------------------------------------------------------------");
+    puts("-     1----    Determinant   ----    2----       Adjoint Matrix      ----     --");
+    puts("-     3----  Inverse Matrix  ----    4----   Matrix Multiplication   ----     --");
+    puts("-     5---- Row Echelon Form ----    6----     Row Canonical Form    ----     --");
+    puts("-     7---- Linear Equations ----    8---- Schmidt Orthogonalization ----     --");
+    puts("--------------------------------------------------------------------------------");
 }
 
 void Show_Help_Page()

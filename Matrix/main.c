@@ -574,65 +574,65 @@ int main(int argc, const char * argv[])
     {
         MODE='1';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                      ---- MODE 1 Determinant   ----                        |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                        ---- MODE 1 Determinant   ----                        |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-2")==0)
     {
         MODE='2';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                     ---- MODE 2 Adjoint Matrix   ----                      |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                       ---- MODE 2 Adjoint Matrix   ----                      |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-3")==0)
     {
         MODE='3';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                     ---- MODE 3 Inverse Matrix   ----                      |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                       ---- MODE 3 Inverse Matrix   ----                      |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-4")==0)
     {
         MODE='4';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                 ---- MODE 4 Matrix Multiplication   ----                   |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                   ---- MODE 4 Matrix Multiplication   ----                   |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-5")==0)
     {
         MODE='5';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                    ---- MODE 5 Row Echelon Form   ----                     |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                      ---- MODE 5 Row Echelon Form   ----                     |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-6")==0)
     {
         MODE='6';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                   ---- MODE 6 Row Canonical Form   ----                    |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                     ---- MODE 6 Row Canonical Form   ----                    |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-7")==0)
     {
         MODE='7';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                    ---- MODE 7 Linear Equations   ----                     |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                      ---- MODE 7 Linear Equations   ----                     |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--mode-8")==0)
     {
         MODE='8';
         Show_Index_Page();
-        puts("------------------------------------------------------------------------------");
-        puts("|                ---- MODE 8 Schmidt Orthogonalization   ----                |");
-        puts("------------------------------------------------------------------------------");
+        puts("--------------------------------------------------------------------------------");
+        puts("|                  ---- MODE 8 Schmidt Orthogonalization   ----                |");
+        puts("--------------------------------------------------------------------------------");
     }
     else if (argc>=2&&strcmp(argv[1], "--menu")==0)
         Show_Menu_Page();
@@ -693,12 +693,12 @@ int main(int argc, const char * argv[])
             Rand_Fill(Matrix, n, n,-10,10,0);
         
         Approximate(Matrix, n, n, 6);
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
         else
             Show_Matrix(Matrix, 1,1,n, n,1);
-        puts("\n\n\n --------------------------------- Result -----------------------------------");
+        puts("\n\n\n ---------------------------------- Result ------------------------------------");
         if(MODE=='1')
         {
             printf("Determinant Value = %lf\n",Determinant(Matrix, n));
@@ -738,14 +738,14 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         //Show_Matrix(AB, m, n+1,1);
         if(Matrix_Description[0].n>9)
             Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
         else
             Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------\n");
+        puts("\n\n\n------------------------------------ Result ------------------------------------\n");
         if(MODE=='5')
         {
             if(Row_Echelon_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,0)==0)
@@ -799,7 +799,7 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, n, n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
         else
@@ -811,7 +811,7 @@ int main(int argc, const char * argv[])
         }
         else
         {
-            puts("\n\n\n----------------------------------- Result -----------------------------------");
+            puts("\n\n\n------------------------------------ Result ------------------------------------");
             if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
             else Show_Matrix(Matrix, 1,1,n, n,1);
         }
@@ -879,19 +879,19 @@ int main(int argc, const char * argv[])
         
         Approximate(A, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(Matrix_Description[1].n>14)
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,Matrix_Description[1].n-9,Matrix_Description[1].m, Matrix_Description[1].n,1);
         }
         else
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,1,Matrix_Description[1].m, Matrix_Description[1].n,1);
         }
         
@@ -903,24 +903,24 @@ int main(int argc, const char * argv[])
             Matrix_Multiplication(Result_Matrix, Result_Matrix, Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n);
         }
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------\n");
+        puts("\n\n\n------------------------------------ Result ------------------------------------\n");
         
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[1].n, 5);
         
         if(Matrix_Description[1].n>14)
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,Matrix_Description[1].n-9,Matrix_Description[1].m, Matrix_Description[1].n,1);
         }
         else
         {
-            printf(" ---------------------------------- A %d X %d --------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
+            printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
             Show_Matrix(A, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf(" ---------------------------------- B %d X %d --------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- B %d X %d ---------------------------------\n",Matrix_Description[1].m,Matrix_Description[1].n);
             Show_Matrix(B, 1,1,Matrix_Description[1].m, Matrix_Description[1].n,1);
-            printf(" ---------------------------------- A B %d X %d ------------------------------\n",Matrix_Description[0].m,Matrix_Description[1].n);
+            printf(" ----------------------------------- A B %d X %d -------------------------------\n",Matrix_Description[0].m,Matrix_Description[1].n);
             Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[1].n,1);
         }
         
@@ -957,7 +957,7 @@ int main(int argc, const char * argv[])
         
         Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         //Show_Matrix(AB, m, n+1,1);
         if(Matrix_Description[0].n>9)
             Show_Matrix(AB, 1,Matrix_Description[0].n+1-9,Matrix_Description[0].m, Matrix_Description[0].n+1,1);
@@ -980,7 +980,7 @@ int main(int argc, const char * argv[])
         double **Solution_Matrix=Create_Matrix(Matrix_Description[0].n,n_of_Solution_Matrix,"Solution Matrix");
         Build_Solution_Matrix(AB, Solution_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, n_of_Solution_Matrix, rank_of_A);
         
-        puts("\n\n----------------------------------- Result -----------------------------------");
+        puts("\n\n------------------------------------ Result ------------------------------------");
         
         Approximate(Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 5);
         
@@ -988,7 +988,7 @@ int main(int argc, const char * argv[])
         
         if (Homogeneous_Flag!=0)
         {
-            puts("\n\n\n----------------------------- Particular Solution ----------------------------");
+            puts("\n\n\n------------------------------ Particular Solution -----------------------------");
             Show_Matrix(Solution_Matrix, 1,n_of_Solution_Matrix,Matrix_Description[0].n, n_of_Solution_Matrix, 1);
             
         }
@@ -1000,7 +1000,7 @@ int main(int argc, const char * argv[])
         }
         else
         {
-            puts("\n\n\n------------------------- Fundamental Solution Systems -----------------------");
+            puts("\n\n\n-------------------------- Fundamental Solution Systems ------------------------");
             Show_Matrix(Solution_Matrix, 1,2,Matrix_Description[0].n, n_of_Solution_Matrix-1, 1);
         }
         Free_Matrix(AB, Matrix_Description[0].m);
@@ -1031,13 +1031,13 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input ------------------------------");
+        puts("---------------------------------- Confirm Input -------------------------------");
         if(Matrix_Description[0].n>9)
             Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
         else
             Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
         
-        puts("\n\n\n----------------------------------- Result -----------------------------------");
+        puts("\n\n\n------------------------------------ Result ------------------------------------");
         double **Result_Matrix=Schmidt_Orthogonalization(Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
         
