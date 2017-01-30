@@ -53,13 +53,13 @@ void Show_Matrix(double **Matrix,int startRow,int startColumn,int endRow,int end
             if (displayFlag==1)
             {
                 if (Matrix[i][j]==floor(Matrix[i][j]))
-                    printf("%10d",(int)floor(Matrix[i][j]));
+                    printf("%9d",(int)floor(Matrix[i][j]));
                 else if (Matrix[i][j]==ceil(Matrix[i][j]))
-                    printf("%10d",(int)ceil(Matrix[i][j]));
+                    printf("%9d",(int)ceil(Matrix[i][j]));
                 else
-                    printf("%10.3lf",Matrix[i][j]);
+                    printf("%9.3lf",Matrix[i][j]);
             }
-            else printf("%10.3lf",Matrix[i][j]);
+            else printf("%9.3lf",Matrix[i][j]);
         }
         puts("");
     }
@@ -204,9 +204,9 @@ void Show_Help_Page()
     puts("Commands:");
     puts("   --help        Show this help page");
     puts("   --menu        Show Mode Menu page");
-    puts("   --mode-1      --mode-2        --mode-3");
-    puts("   --mode-4      --mode-5        --mode-6");
-    puts("   --mode-7      --mode-8        ");
+    puts("   --mode-1      --mode-2      --mode-3");
+    puts("   --mode-4      --mode-5      --mode-6");
+    puts("   --mode-7      --mode-8      ");
     puts("Options:");
     puts("   --test        Enter random fill test mode");
 }

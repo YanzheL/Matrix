@@ -1056,7 +1056,7 @@ int main(int argc, const char * argv[])
         if(flag!='0')
         {
             Safe_Flush(stdin);
-            if ((argc==2&&strcmp(argv[1], "--test")==0))main(argc ,argv);
+            if ((argc>=2&&strcmp(argv[argc-1], "--test")==0))main(argc ,argv);
             else main(1, argv);
         }
     }
