@@ -240,11 +240,15 @@ void Show_Help_Page()
     puts("   --test        Enter random fill test mode");
 }
 
-void Show_Header_Source()
+int Show_Header_Source()
 {
     char C;
     FILE *fp = fopen(__FILE__, "r");
-    
+    if (fp==NULL)
+    {
+        puts("Header Source __FILE__ open error");
+        return 1;
+    }
     do
     {
         C = fgetc(fp);
@@ -253,6 +257,7 @@ void Show_Header_Source()
     while (C != EOF);
     
     fclose(fp);
+    return 0;
 }
 
 

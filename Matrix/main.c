@@ -20,11 +20,15 @@
 
 
 
-void Show_Main_Source()
+int Show_Main_Source()
 {
     char C;
     FILE *fp = fopen(__FILE__, "r");
-    
+    if (fp==NULL)
+    {
+        puts("Main Source __FILE__ open error");
+        return 1;
+    }
     do
     {
         C = fgetc(fp);
@@ -33,6 +37,7 @@ void Show_Main_Source()
     while (C != EOF);
     
     fclose(fp);
+    return 0;
 }
 
 int Check_Echelon(double **Matrix,int m,int n)                                                   //用于检查是否已化为行阶梯形
@@ -716,14 +721,14 @@ int main(int argc, const char * argv[])
                 for (k=1;k<=230; k++)printf("#");
                 puts("");
             }
-            Show_Main_Source();
+            if(Show_Main_Source()!=0)return 1;
             puts("");
             for (l=1;l<=3;l++)
             {
                 for (k=1;k<=230; k++)printf("#");
                 puts("");
             }
-            Show_Header_Source();
+            if(Show_Header_Source()!=0)return 1;
         }
         else puts("You are not my lord\n");
         return 0;
