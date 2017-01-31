@@ -18,8 +18,6 @@
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
 
-
-
 int Show_Main_Source()
 {
     char C;
@@ -159,7 +157,6 @@ int Row_Echelon_Form(double **Matrix,int m, int n,int DeterminantMODE)
     
     return coefficientOfEntireDeterminant;
 }
-
 
 int Row_Canonical_Form(double **Matrix,int m, int n)
 {
@@ -605,8 +602,6 @@ double** Adjoint_Matrix(double **Matrix,int m, int n)
 }
 
 char TEST_FLAG='0';
-
-
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
