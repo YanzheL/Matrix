@@ -549,10 +549,13 @@ double** Vector_Normalization(double **Matrix,int m,int n)
     for (i=0; i<n; i++)
     {
         product[i]=sqrt(Scalar_Product(vector_System[i], vector_System[i], m));
-        double **temp_Tranpose=Transpose_Matrix(vector_System[i], m, 1);
-        Scalar_Multiplication(1/product[i], temp_Tranpose, 0, 1, m);
-        vector_System[i]=Transpose_Matrix(temp_Tranpose, 1, m);
-        Free_Matrix(temp_Tranpose, 1);
+        if (product[i]!=0)
+        {
+            double **temp_Tranpose=Transpose_Matrix(vector_System[i], m, 1);
+            Scalar_Multiplication(1/product[i], temp_Tranpose, 0, 1, m);
+            vector_System[i]=Transpose_Matrix(temp_Tranpose, 1, m);
+            Free_Matrix(temp_Tranpose, 1);
+        }
     }
     
     Column_Vector_Refill(vector_System, Result_Matrix, m, n);
