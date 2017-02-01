@@ -1140,6 +1140,7 @@ int main(int argc, const char * argv[])
             Show_Matrix(Result_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
         else
             Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+        Free_Matrix(Matrix, Matrix_Description[0].m);
     }
     
     if(invalidOptionFlag==0)
