@@ -34,7 +34,7 @@ int Show_File_Text(FILE *fp)
     //    FILE *fp = fopen(__FILE__, "r");
     if (fp==NULL)
     {
-        puts("FILE open error");
+        perror("FILE Text open error");
         return 1;
     }
     do
@@ -60,7 +60,8 @@ double** Create_Matrix(int m,int n,char *DISPLAY)
     double **Matrix;
     if((Matrix=(double**)calloc(m,sizeof(double*)))==NULL)
     {
-        printf("Matrix%s Calloc Error",DISPLAY);
+        printf("Matrix%s Calloc Error\n",DISPLAY);
+        perror("Error Info");
         return NULL;
     }
     
