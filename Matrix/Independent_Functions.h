@@ -21,14 +21,17 @@ typedef struct Config
     int getMODE;
     int getTestFlag;
     char extraOption;
-    int getM;
-    int getN;
-    double *getElements;
+    int getM_One;
+    int getN_One;
+    int getM_Two;
+    int getN_Two;
+    double *getElements_One;
+    double *getElements_Two;
 }sConfig;
 
 //用于清空scanf缓冲区
 void Safe_Flush(FILE *fp);
-
+int Show_File_Text(FILE *fp);
 double** Create_Matrix(int m,int n,char *DISPLAY);
 void Free_Matrix(double **Matrix,int m);
 

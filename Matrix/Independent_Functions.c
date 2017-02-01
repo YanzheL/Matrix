@@ -12,6 +12,27 @@
 #include <math.h>
 #include <time.h>
 #include "Independent_Functions.h"
+
+int Show_File_Text(FILE *fp)
+{
+    char C;
+    //    FILE *fp = fopen(__FILE__, "r");
+    if (fp==NULL)
+    {
+        puts("Main Source __FILE__ open error");
+        return 1;
+    }
+    do
+    {
+        C = fgetc(fp);
+        putchar(C);
+    }
+    while (C != EOF);
+    
+    fclose(fp);
+    return 0;
+}
+
 void Safe_Flush(FILE *fp)                                                                    //用于清空scanf缓冲区
 {
     int ch;
@@ -152,7 +173,7 @@ int Check_Zero_Matrix(double **Matrix,int m,int n)
     }
     if(zeroElementCount==(m)*(n))
     {
-        printf("Zero Element = %d\n",zeroElementCount);
+//        printf("Zero Element = %d\n",zeroElementCount);
         return -1;                                                                           //如果用户输入的矩阵元素全为0，则不用化简，直接返回
     }
     else return zeroElementCount;
@@ -245,22 +266,8 @@ void Show_Help_Page()
 
 int Show_Header_Source()
 {
-    char C;
     FILE *fp = fopen(__FILE__, "r");
-    if (fp==NULL)
-    {
-        puts("Header Source __FILE__ open error");
-        return 1;
-    }
-    do
-    {
-        C = fgetc(fp);
-        putchar(C);
-    }
-    while (C != EOF);
-    
-    fclose(fp);
-    return 0;
+    return Show_File_Text(fp);
 }
 
 
