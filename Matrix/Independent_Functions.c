@@ -270,13 +270,21 @@ void Show_Help_Page()
 {
     puts("\nSyntax: Matrix [Commands] [options]");
     puts("Commands:");
-    puts("   --help        Show this help page");
-    puts("   --menu        Show Mode Menu page");
-    puts("   --mode-1      --mode-2      --mode-3");
-    puts("   --mode-4      --mode-5      --mode-6");
-    puts("   --mode-7      --mode-8      ");
+    puts("  -h --help        Show this help page");
+    puts("  -c --config      Read config file named 'config.json' from $DOCUMENT_ROOT");
+    puts("     --menu        Show Mode Menu page");
+    puts("     --mode-1      --mode-2      --mode-3");
+    puts("     --mode-4      --mode-5      --mode-6");
+    puts("     --mode-7      --mode-8");
     puts("Options:");
-    puts("   --test        Enter random fill test mode");
+    puts("  -o --out         Output stdout to FILE that will be stored in your default $DOCUMENT_ROOT");
+    puts("     --test        Enable random fill test mode");
+    puts("     --mass-test   Enable Unstoppable test mode");
+    puts("Examples:");
+    puts("  Matrix --help");
+    puts("  Matrix -c");
+    puts("  Matrix --mode-8 --test -o");
+    puts("  Matrix --mode-5 --mass-test");
 }
 
 void Show_MODE_Band(char MODE)

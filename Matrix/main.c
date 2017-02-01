@@ -785,7 +785,7 @@ int main(int argc, const char * argv[])
     }
     else if (argc>=2&&strcmp(argv[1], "--menu")==0)
         Show_Menu_Page();
-    else if(argc>=2&&strcmp(argv[1], "--help")==0)
+    else if(argc>=2&&(strcmp(argv[1], "--help")==0||strcmp(argv[1], "-h")==0))
     {
         Show_Index_Page();
         Show_Help_Page();
