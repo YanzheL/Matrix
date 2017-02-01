@@ -576,13 +576,13 @@ sConfig Read_Config()
     char CurrentPath_Temp[1000];
     getcwd(CurrentPath_Temp, 1000);
     unsigned long PathLength=strlen(CurrentPath_Temp);
-//    char *CurrentPath=(char*)calloc(PathLength, sizeof(char));
+    //    char *CurrentPath=(char*)calloc(PathLength, sizeof(char));
     
     char *configPath=(char*)calloc(PathLength+strlen("/config.json"), sizeof(char));
     strcpy(configPath, CurrentPath_Temp);
     strcat(configPath, "/config.json");
     
-//    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
+    //    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
     FILE *fp=fopen(configPath,"rt");
     if (fp==NULL)
         perror("Config open error");
@@ -684,6 +684,8 @@ void Config_Fill_Matrix(double **Matrix,sConfig configSource,int TYPE)
         }
 }
 
+
+
 static char TEST_FLAG='0';
 static char MODE='0';
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -699,22 +701,26 @@ int main(int argc, const char * argv[])
     int outputMode=0;
     char *outputFileName;
     //    configMode=1;
-    sConfig receiveCfg={0,0,'n',0,0,0,0,NULL,NULL};                                                                      //初始化
-    
-    if ((argc>=2&&(strcmp(argv[1], "-c")==0||strcmp(argv[1], "--config")==0))||configMode==1)
+    sConfig receiveCfg={0,0,'n',0,0,0,0,NULL,NULL};//初始化
+    if (Check_Option(argc, argv, "-c")!=0||Check_Option(argc, argv, "--config")!=0)configMode=1;
+    if (Check_Option(argc, argv, "--mass-test")!=0)
     {
-        configMode=1;
+        massFlag=1;
+        TEST_FLAG='1';
+    }
+    if (Check_Option(argc, argv, "-o")!=0||Check_Option(argc, argv, "--out")!=0)outputMode=1;
+    if (Check_Option(argc, argv, "--test")!=0) TEST_FLAG='1';
+    
+    if (configMode==1)
+    {
         invalidOptionFlag=1;
         receiveCfg=Read_Config();
         MODE=(char)(48+receiveCfg.getMODE);
         TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
     }
-    if (strcmp(argv[argc-1], "--mass-test")==0)massFlag=1;
-    if (argc>=2&&(strcmp(argv[argc-1], "--test")==0||massFlag==1))TEST_FLAG='1';
     
-    if ((argc>=2&&(strcmp(argv[argc-1], "-o")==0||strcmp(argv[argc-1], "--out")==0))||outputMode==1)
+    if (outputMode==1)
     {
-        outputMode=1;
         time_t timeRaw;
         time(&timeRaw);
         outputFileName=ctime(&timeRaw);
@@ -795,7 +801,7 @@ int main(int argc, const char * argv[])
         while ((MODE>'8'||MODE<'1')&&MODE!='c')
         {
             printf("Unavailable Choice, please choose again\r");
-//            Safe_Flush(stdin);
+            //            Safe_Flush(stdin);
             scanf("%c",&MODE);
         }
     }
@@ -1284,15 +1290,15 @@ int main(int argc, const char * argv[])
     if (configMode==1) free(receiveCfg.getElements_One);
     if(invalidOptionFlag==0)
     {
-        if (strcmp(argv[argc-1], "--mass-test")!=0) Safe_Flush(stdin);
+        if (massFlag==0) Safe_Flush(stdin);
         puts("\nPress any key to run again or press 0 to exit");
-        char flag='0';
-        if (strcmp(argv[argc-1], "--mass-test")!=0) scanf("%c",&flag);
-        if (strcmp(argv[argc-1], "--mass-test")==0)flag='1';
-        if(flag!='0')
+        char continueFlag='0';
+        if (massFlag==0) scanf("%c",&continueFlag);
+        if (massFlag==1)continueFlag='1';
+        if(continueFlag!='0')
         {
             fflush(stdin);
-            if ((argc>=2&&(strcmp(argv[argc-1], "--test")==0||strcmp(argv[argc-1], "--mass-test")==0)))main(argc ,argv);
+            if ((argc>=2&&(TEST_FLAG!='0'||massFlag==1)))main(argc ,argv);
             else main(1, argv);
         }
     }

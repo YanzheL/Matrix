@@ -13,6 +13,21 @@
 #include <time.h>
 #include "Independent_Functions.h"
 
+int Check_Option(int argc, const char **argv, char *option)
+{
+    int optionCheck;
+    int flag=0;
+    for (optionCheck=0; optionCheck<argc; optionCheck++)
+    {
+        if (strcmp(argv[optionCheck], option)==0)
+        {
+            flag=1;
+            break;
+        }
+    }
+    return flag;
+}
+
 int Show_File_Text(FILE *fp)
 {
     char C;

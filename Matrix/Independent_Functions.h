@@ -61,7 +61,7 @@ void Show_Menu_Page();
 void Show_Help_Page();
 int Show_Header_Source();
 void Show_MODE_Band(char MODE);
-
+int Check_Option(int argc, const char **argv, char *option);
 //-------------------------------------------- 针对OSX系统，定义getch函数 --------------------------------------------
 #include <termios.h>
 static struct termios old, new;
