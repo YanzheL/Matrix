@@ -25,10 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6949EFC31E40EFC400214DAA /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		6949EFC41E40F01700214DAA /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		6949EFC51E40F05B00214DAA /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
 		6949EFC71E411E4900214DAA /* Independent_Functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Independent_Functions.c; sourceTree = "<group>"; };
+		6949EFC91E41EB3200214DAA /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		696F32611DEED93E002C8A51 /* Matrix */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Matrix; sourceTree = BUILT_PRODUCTS_DIR; };
 		696F32641DEED93E002C8A51 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; usesTabs = 0; };
 		69FC3F1F1E0068F000836DB2 /* Independent_Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Independent_Functions.h; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 		696F32631DEED93E002C8A51 /* Matrix */ = {
 			isa = PBXGroup;
 			children = (
-				6949EFC31E40EFC400214DAA /* config.json */,
+				6949EFC91E41EB3200214DAA /* config.json */,
 				696F32641DEED93E002C8A51 /* main.c */,
 				69FC3F1F1E0068F000836DB2 /* Independent_Functions.h */,
 				6949EFC41E40F01700214DAA /* cJSON.h */,

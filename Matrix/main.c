@@ -685,7 +685,7 @@ int main(int argc, const char * argv[])
     int configMode=0;
     int outputMode=0;
     char *outputFileName;
-//    configMode=1;
+    //    configMode=1;
     sConfig receiveCfg={0,0,'n',0,0,0,0,NULL,NULL};                                                                      //初始化
     
     if ((argc>=2&&(strcmp(argv[1], "-c")==0||strcmp(argv[1], "--config")==0))||configMode==1)
@@ -698,7 +698,7 @@ int main(int argc, const char * argv[])
     }
     if (strcmp(argv[argc-1], "--mass-test")==0)massFlag=1;
     if (argc>=2&&(strcmp(argv[argc-1], "--test")==0||massFlag==1))TEST_FLAG='1';
-
+    
     if ((argc>=2&&(strcmp(argv[argc-1], "-o")==0||strcmp(argv[argc-1], "--out")==0))||outputMode==1)
     {
         outputMode=1;
@@ -843,15 +843,15 @@ int main(int argc, const char * argv[])
         invalidOptionFlag=1;
     }
     
-//    if (configMode==1)
-//    {
-//        invalidOptionFlag=1;
-//        receiveCfg=Read_Config();
-//        MODE=(char)(48+receiveCfg.getMODE);
-//        TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
-//    }
+    //    if (configMode==1)
+    //    {
+    //        invalidOptionFlag=1;
+    //        receiveCfg=Read_Config();
+    //        MODE=(char)(48+receiveCfg.getMODE);
+    //        TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
+    //    }
     
-//    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
+    //    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
     
     if (argc==1&&configMode==0)
     {
@@ -1032,7 +1032,7 @@ int main(int argc, const char * argv[])
         if(Matrix_Multiplication(A, B, Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n)==0)
             Show_Matrix(Result_Matrix,1,1, Matrix_Description[0].m, Matrix_Description[1].n,0);
         
-
+        
         if (multiFlag==1)
         {
             double **Temp_Result=Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "");
@@ -1043,7 +1043,7 @@ int main(int argc, const char * argv[])
             }
             Result_Matrix=Temp_Result;
         }
-
+        
         puts("\n\n------------------------------------ Result ------------------------------------\n");
         
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[1].n, 5);
@@ -1284,64 +1284,7 @@ int main(int argc, const char * argv[])
         Free_Matrix(Solution_Matrix, Matrix_Description[0].n);
     }
     
-    if (MODE=='8')
-    {
-        struct Characteristic_of_Matrix *Matrix_Description;
-        Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
-        Matrix_Description[0].Matrix_Name="MODE 5 Input";
-        
-        if(TEST_FLAG!='0')
-            Test_Scanf(Matrix_Description,1, 4,8,3,9);
-        else
-        {
-            printf("\nPlease input 'm' and 'n' : ");
-            scanf("%d %d",&Matrix_Description[0].m,&Matrix_Description[0].n);
-            puts("");
-        }
-        
-        double **Matrix=Create_Matrix(Matrix_Description[0].m,Matrix_Description[0].n,"MODE 8");
-        
-        if (TEST_FLAG=='0')
-            User_Input_Matrix(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, "");
-        else
-            Rand_Fill(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,-10,20,0);
-        Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
-        
-        Safe_Flush(stdin);
-        char normFlag='n';
-        puts("Do you want Normalization? Please press y or n. (default n)");
-        scanf("%c",&normFlag);
-        if (normFlag=='\n') normFlag='n';
-        while (normFlag!='y'&&normFlag!='n'&&normFlag!='\n')
-        {
-            printf("Unavailable Choice, please choose again: ");
-            fflush(stdin);
-            scanf("%c",&MODE);
-        }
-        
-        puts("---------------------------------- Confirm Input -------------------------------");
-        if(Matrix_Description[0].n>9)
-            Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-        else
-            Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-        
-        puts("\n\n\n------------------------------------ Result ------------------------------------");
-        double **Result_Matrix=Schmidt_Orthogonalization(Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
-        Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
-        
-        if (normFlag=='y')
-        {
-            double **temp_Result=Vector_Normalization(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
-            Result_Matrix=temp_Result;
-        }
-        
-        if(Matrix_Description[0].n>9)
-            Show_Matrix(Result_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-        else
-            Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-        Free_Matrix(Matrix, Matrix_Description[0].m);
-    }
-    
+    if (configMode==1) free(receiveCfg.getElements_One);
     if(invalidOptionFlag==0)
     {
         if (argc>=2&&strcmp(argv[argc-1], "--mass-test")!=0) Safe_Flush(stdin);

@@ -173,7 +173,7 @@ int Check_Zero_Matrix(double **Matrix,int m,int n)
     }
     if(zeroElementCount==(m)*(n))
     {
-//        printf("Zero Element = %d\n",zeroElementCount);
+        //        printf("Zero Element = %d\n",zeroElementCount);
         return -1;                                                                           //如果用户输入的矩阵元素全为0，则不用化简，直接返回
     }
     else return zeroElementCount;
