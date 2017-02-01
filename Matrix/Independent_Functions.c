@@ -277,7 +277,7 @@ void Show_Help_Page()
     puts("     --mode-4      --mode-5      --mode-6");
     puts("     --mode-7      --mode-8");
     puts("Options:");
-    puts("  -o --out         Output stdout to FILE that will be stored in your default $DOCUMENT_ROOT");
+    puts("  -o --out         Output stdout to FILE and store in $DOCUMENT_ROOT");
     puts("     --test        Enable random fill test mode");
     puts("     --mass-test   Enable Unstoppable test mode");
     puts("Examples:");
