@@ -1154,7 +1154,7 @@ int main(int argc, const char * argv[])
             else
                 Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
             
-            puts("\n\n ------------------------------------ Result ------------------------------------\n");
+            puts("\n\n------------------------------------ Result ------------------------------------\n");
             if(MODE=='5')
             {
                 if(Row_Echelon_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,0)==0)
