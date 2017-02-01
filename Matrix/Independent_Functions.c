@@ -19,7 +19,7 @@ int Show_File_Text(FILE *fp)
     //    FILE *fp = fopen(__FILE__, "r");
     if (fp==NULL)
     {
-        puts("Main Source __FILE__ open error");
+        puts("FILE open error");
         return 1;
     }
     do
@@ -37,7 +37,6 @@ void Safe_Flush(FILE *fp)                                                       
 {
     int ch;
     while( (ch = fgetc(fp)) != EOF && ch != '\n' );
-    //    while( (ch = fgetc(fp)) != EOF );
 }
 
 double** Create_Matrix(int m,int n,char *DISPLAY)
