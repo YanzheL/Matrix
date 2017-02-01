@@ -12,31 +12,12 @@
 #include <math.h>
 #include <time.h>
 #include "Independent_Functions.h"
+#include "cJSON.h"
 
 #define M_RAND_MIN 20
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
-
-int Show_Main_Source()
-{
-    char C;
-    FILE *fp = fopen(__FILE__, "r");
-    if (fp==NULL)
-    {
-        puts("Main Source __FILE__ open error");
-        return 1;
-    }
-    do
-    {
-        C = fgetc(fp);
-        putchar(C);
-    }
-    while (C != EOF);
-    
-    fclose(fp);
-    return 0;
-}
 
 int Check_Echelon(double **Matrix,int m,int n)                                                   //用于检查是否已化为行阶梯形
 {
@@ -153,8 +134,6 @@ int Row_Echelon_Form(double **Matrix,int m, int n,int DeterminantMODE)
     Approximate(Matrix, m, n, 6);
     //    if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
     //    else Show_Matrix(Matrix, 1,1,n, n,1);
-    
-    
     return coefficientOfEntireDeterminant;
 }
 
@@ -199,7 +178,6 @@ int Row_Canonical_Form(double **Matrix,int m, int n)
         row_row_LeadingCoefficient=Matrix[row][Find_Leading_Column(Matrix, row, n)];
         if(row_row_LeadingCoefficient!=0)Scalar_Multiplication(1/row_row_LeadingCoefficient, Matrix, row, m, n);
     }
-    
     //puts("----------------------- Row Canonical Finish -----------------------");
     //Show_Matrix(AB, m, n,1);
     return 1;
@@ -209,11 +187,11 @@ int Matrix_Multiplication(double **A,double **B,double **Result_Matrix,int m_A,i
 {
     int i,j,r;
     double **Temp=Create_Matrix(m_A, n_B, "Multi Temp");
-    for (i=0; i<=m_A-1; i++)
+    for (i=0; i<m_A; i++)
     {
-        for (j=0; j<=n_B-1; j++)
+        for (j=0; j<n_B; j++)
         {
-            for (r=0; r<=n_A-1; r++)
+            for (r=0; r<n_A; r++)
             {
                 Temp[i][j]+=A[i][r]*B[r][j];
             }
@@ -233,9 +211,6 @@ int Find_Rank(double **Matrix,int m,int n)
         for (j=0; j<=n-1; j++)
             Copy_Of_Matrix[i][j]=Matrix[i][j];                        //把传来的矩阵元素复制到新的Copy矩阵里，防止影响原矩阵
     }
-    
-    //    puts("Copy-------------------------------------------");
-    //    Show_Matrix(Copy_Of_Matrix, 1, 1, m, n, 1);
     if(Row_Echelon_Form(Copy_Of_Matrix, m, n, 0)==0)return 0;
     else
     {
@@ -294,7 +269,6 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
             pointer++;
         }
     }
-    
     //    puts("----------------------------------------- Non Basic -------------------------------------------");
     //    Show_Matrix(non_basic_column_array, 1, n-rank_of_A, 1);
     //    Show_Matrix(non_basic_column_array, 1, 1,1,n-rank_of_A, 1);
@@ -367,7 +341,6 @@ int Reverse_Matrix(double **Matrix,int n)
                 Matrix[i][j]=Combined_Matrix[i][j+n];
             }
         }
-        
         Free_Matrix(Combined_Matrix, n);
     }
     return 1;
@@ -385,12 +358,6 @@ double Determinant(double **Matrix,int n)
     return result;
 }
 
-struct Characteristic_of_Matrix
-{
-    char* Matrix_Name;
-    int m;
-    int n;
-};
 
 void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test,int structElementNumber,int m_rand_min,int mRandMax,int nRandMin,int nRandMax)
 {
@@ -477,9 +444,7 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     //    }
     
     for (i=0; i<m; i++)
-    {
         beta[0][i][0]=alpha[0][i][0];                                    //赋初始值beta1 = alpha1
-    }
     
     int row=0,x=0;
     for (i=1; i<=n-1; i++)
@@ -604,16 +569,154 @@ double** Adjoint_Matrix(double **Matrix,int m, int n)
     return Transpose_Matrix(Result_Matrix, m, n);                                          //最后需要求转置矩阵才能得到最后的伴随矩阵
 }
 
-char TEST_FLAG='0';
+sConfig Read_Config()
+{
+    sConfig readResult;
+    FILE *fp=fopen("config.json","r");
+    if (fp==NULL)
+        puts("Config open error");
+    else
+    {
+        int i;
+        long int length;
+        fseek(fp,0L,SEEK_END);
+        length=ftell(fp);
+        fseek(fp,0L,SEEK_SET);
+        
+        //        printf("length = %ld\n",length);
+        
+        char *fstr=(char*)calloc(length, sizeof(char));
+        char C;
+        for (i=0;;i++)
+        {
+            C=fgetc(fp);
+            if (C==EOF)break;
+            fstr[i]=C;
+        }
+        
+        //        printf("%s\n",fstr);
+        
+        cJSON * root = cJSON_Parse(fstr);
+        cJSON *Elements_One=cJSON_GetObjectItem(root, "Matrix_One");
+        cJSON *Elements_Two=cJSON_GetObjectItem(root, "Matrix_Two");
+        
+        readResult.getMODE=cJSON_GetObjectItem(root, "MODE")->valueint;
+        readResult.getTestFlag=cJSON_GetObjectItem(root, "TEST_FLAG")->valueint;
+        readResult.getM_One=cJSON_GetObjectItem(root, "m_One")->valueint;
+        readResult.getN_One=cJSON_GetObjectItem(root, "n_One")->valueint;
+        if (Elements_Two!=NULL)
+        {
+            readResult.getM_Two=cJSON_GetObjectItem(root, "m_Two")->valueint;
+            readResult.getN_Two=cJSON_GetObjectItem(root, "n_Two")->valueint;
+        }
+        readResult.extraOption=cJSON_GetObjectItem(root, "Extra_Option")->valuestring[0];
+        
+        readResult.getElements_One=(double*)calloc(readResult.getM_One*readResult.getN_One, sizeof(double));
+        readResult.getElements_Two=(double*)calloc(readResult.getM_One*readResult.getN_One, sizeof(double));
+        
+        
+        int row,column;
+        i=0;
+        for (row=0; row<readResult.getM_One; row++)
+        {
+            for (column=0; column<readResult.getN_One; column++,i++)
+            {
+                readResult.getElements_One[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_One, row), column)->valuedouble;
+            }
+        }
+        row=0;
+        column=0;
+        i=0;
+        if (Elements_Two!=NULL)
+            for (row=0; row<readResult.getM_Two; row++)
+            {
+                for (column=0; column<readResult.getN_Two; column++,i++)
+                {
+                    readResult.getElements_Two[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_Two, row), column)->valuedouble;
+                }
+            }
+        //        printf("getMODE = %d\n",readResult.getMODE);
+        //        printf("getTestFlag = %d\n",readResult.getTestFlag);
+        //        printf("getM = %d\n",readResult.getM);
+        //        printf("getN = %d\n",readResult.getN);
+        //        puts("Elements");
+        //        for (i=0; i<readResult.getM*readResult.getN; i++)
+        //        {
+        //            printf("%lf ",readResult.getElements[i]);
+        //        }
+    }
+    
+    fclose(fp);
+    return readResult;
+}
 
+void Config_Fill_Matrix(double **Matrix,sConfig configSource,int TYPE)
+{
+    int i,j;
+    int num=0;
+    if (TYPE==1)
+        for (i=0; i<configSource.getM_One; i++)
+        {
+            for (j=0; j<configSource.getN_One; j++,num++)
+            {
+                Matrix[i][j]=configSource.getElements_One[num];
+            }
+        }
+    if (TYPE==2)
+        for (i=0; i<configSource.getM_Two; i++)
+        {
+            for (j=0; j<configSource.getN_Two; j++,num++)
+            {
+                Matrix[i][j]=configSource.getElements_Two[num];
+            }
+        }
+}
+
+static char TEST_FLAG='0';
+static char MODE='0';
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 int main(int argc, const char * argv[])
 {
-    char MODE='0';
+    //    Read_Config();
     int invalidOptionFlag=0;
-    if (argc>=2&&strcmp(argv[1], "--mode-1")==0)
+    int massFlag=0;
+    int configMode=0;
+    int outputMode=0;
+    char *outputFileName;
+//    configMode=1;
+    sConfig receiveCfg={0,0,'n',0,0,0,0,NULL,NULL};                                                                      //初始化
+    
+    if ((argc>=2&&(strcmp(argv[1], "-c")==0||strcmp(argv[1], "--config")==0))||configMode==1)
+    {
+        configMode=1;
+        invalidOptionFlag=1;
+        receiveCfg=Read_Config();
+        MODE=(char)(48+receiveCfg.getMODE);
+        TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
+    }
+    if (strcmp(argv[argc-1], "--mass-test")==0)massFlag=1;
+    if (argc>=2&&(strcmp(argv[argc-1], "--test")==0||massFlag==1))TEST_FLAG='1';
+
+    if ((argc>=2&&(strcmp(argv[argc-1], "-o")==0||strcmp(argv[argc-1], "--out")==0))||outputMode==1)
+    {
+        outputMode=1;
+        time_t timeRaw;
+        time(&timeRaw);
+        outputFileName=ctime(&timeRaw);
+        char *outTemp=(char*)calloc(strlen("【MODE 0】OUTPUT")+strlen(outputFileName)+strlen(".txt"), sizeof(char));
+        strcpy(outTemp, "【MODE  】");
+        outTemp[strlen("【MODE ")]=MODE;
+        strcat(outTemp, "OUTPUT ");
+        strcat(outTemp, outputFileName);
+        outTemp[strlen(outTemp)-1]=' ';
+        strcat(outTemp, ".txt");
+        outputFileName=outTemp;
+        freopen(outputFileName, "w", stdout);
+    }
+    
+    if ((argc>=2&&strcmp(argv[1], "--mode-1")==0)||MODE=='1')
     {
         MODE='1';
         Show_Index_Page();
@@ -621,7 +724,7 @@ int main(int argc, const char * argv[])
         puts("|                        ---- MODE 1 Determinant ----                          |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-2")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-2")==0)||MODE=='2')
     {
         MODE='2';
         Show_Index_Page();
@@ -629,7 +732,7 @@ int main(int argc, const char * argv[])
         puts("|                       ---- MODE 2 Adjoint Matrix ----                        |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-3")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-3")==0)||MODE=='3')
     {
         MODE='3';
         Show_Index_Page();
@@ -637,7 +740,7 @@ int main(int argc, const char * argv[])
         puts("|                       ---- MODE 3 Inverse Matrix ----                        |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-4")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-4")==0)||MODE=='4')
     {
         MODE='4';
         Show_Index_Page();
@@ -645,7 +748,7 @@ int main(int argc, const char * argv[])
         puts("|                    ---- MODE 4 Matrix Multiplication ----                    |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-5")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-5")==0)||MODE=='5')
     {
         MODE='5';
         Show_Index_Page();
@@ -653,7 +756,7 @@ int main(int argc, const char * argv[])
         puts("|                       ---- MODE 5 Row Echelon Form ----                      |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-6")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-6")==0)||MODE=='6')
     {
         MODE='6';
         Show_Index_Page();
@@ -661,7 +764,7 @@ int main(int argc, const char * argv[])
         puts("|                      ---- MODE 6 Row Canonical Form ----                     |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-7")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-7")==0)||MODE=='7')
     {
         MODE='7';
         Show_Index_Page();
@@ -669,7 +772,7 @@ int main(int argc, const char * argv[])
         puts("|                       ---- MODE 7 Linear Equations ----                      |");
         puts("--------------------------------------------------------------------------------");
     }
-    else if (argc>=2&&strcmp(argv[1], "--mode-8")==0)
+    else if ((argc>=2&&strcmp(argv[1], "--mode-8")==0)||MODE=='8')
     {
         MODE='8';
         Show_Index_Page();
@@ -685,14 +788,15 @@ int main(int argc, const char * argv[])
         Show_Help_Page();
         invalidOptionFlag=1;
     }
-    else if (argc==1||(argc==2&&strcmp(argv[1], "--test")==0))
+    else if ((argc==1||(argc==2&&(TEST_FLAG!=0||outputMode==1))))
     {
         Show_Index_Page();
         Show_Menu_Page();
         printf("Please choose mode number: ");
         scanf("%c",&MODE);
         fflush(stdin);
-        while (MODE>'8'||MODE<'1')
+        if (MODE=='c') configMode=1;
+        while ((MODE>'8'||MODE<'1')&&MODE!='c')
         {
             printf("Unavailable Choice, please choose again\r");
             //            Safe_Flush(stdin);
@@ -719,7 +823,8 @@ int main(int argc, const char * argv[])
                 for (k=1;k<=230; k++)printf("#");
                 puts("");
             }
-            if(Show_Main_Source()!=0)return 1;
+            FILE *fSOURCE = fopen(__FILE__, "r");
+            if(Show_File_Text(fSOURCE)!=0)return 1;
             puts("");
             for (l=1;l<=3;l++)
             {
@@ -738,45 +843,66 @@ int main(int argc, const char * argv[])
         invalidOptionFlag=1;
     }
     
-    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
+//    if (configMode==1)
+//    {
+//        invalidOptionFlag=1;
+//        receiveCfg=Read_Config();
+//        MODE=(char)(48+receiveCfg.getMODE);
+//        TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
+//    }
     
-    if (argc==1)
+//    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
+    
+    if (argc==1&&configMode==0)
     {
         printf("Press any key to test or press 0 to manually input\r");
         Safe_Flush(stdin);
-        scanf("%c",&TEST_FLAG);
+        if (argc>=2&&massFlag==0) scanf("%c",&TEST_FLAG);
         //        printf("TEST_FLAG = %c\n",TEST_FLAG);
         fflush(stdin);
     }
-    if (MODE=='1'||MODE=='2')
+    if (MODE=='1'||MODE=='2'||MODE=='3')
     {
-        int n;
+        int n=1;
         if(TEST_FLAG!='0')
         {
             srand((unsigned)time(NULL));                                                    //测试需要 获取随机的m和n
             n=4+rand()%4;
         }
-        else
+        else if(configMode==0)
         {
             printf("\nPlease input 'n' : ");
             scanf("%d",&n);
             puts("");
         }
+        else if (configMode==1)
+        {
+            if (receiveCfg.getM_One!=receiveCfg.getN_One)
+            {
+                puts("Your input Matrix is not a Square Matrix");
+                return 0;
+            }
+            else n=receiveCfg.getN_One;
+        }
         
-        double **Matrix=Create_Matrix(n,n,"MODE 1");
-        
+        double **Matrix=Create_Matrix(n,n,"MODE 1&2&3");
         if (TEST_FLAG=='0')
-            User_Input_Matrix(Matrix, n, n, "");
+        {
+            if (configMode==0)
+                User_Input_Matrix(Matrix, n, n, "");
+            else
+                Config_Fill_Matrix(Matrix, receiveCfg,1);
+        }
         else
             Rand_Fill(Matrix, n, n,-10,10,0);
         
         Approximate(Matrix, n, n, 6);
-        puts("---------------------------------- Confirm Input -------------------------------");
+        puts("--------------------------------- Confirm Input --------------------------------\n");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
         else
             Show_Matrix(Matrix, 1,1,n, n,1);
-        puts("\n\n\n ---------------------------------- Result ------------------------------------");
+        puts("\n\n------------------------------------ Result ------------------------------------\n");
         if(MODE=='1')
         {
             printf("Determinant Value = %lf\n",Determinant(Matrix, n));
@@ -790,115 +916,21 @@ int main(int argc, const char * argv[])
             Free_Matrix(Adjoint, n);
             Free_Matrix(Matrix, n);
         }
-    }
-    
-    if (MODE=='5'||MODE=='6')
-    {
-        struct Characteristic_of_Matrix *Matrix_Description;
-        Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
-        Matrix_Description[0].Matrix_Name="MODE 5 Input";
-        
-        if(TEST_FLAG!='0')
-            Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
-        else
+        if (MODE=='3')
         {
-            printf("\nPlease input 'm' and 'n' : ");
-            scanf("%d %d",&Matrix_Description[0].m,&Matrix_Description[0].n);
-            puts("");
-        }
-        
-        double **Matrix=Create_Matrix(Matrix_Description[0].m,Matrix_Description[0].n,"MODE 2");
-        
-        if (TEST_FLAG=='0')
-            User_Input_Matrix(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, "");
-        else
-            Rand_Fill(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,-10,10,0);
-        
-        Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
-        
-        puts("---------------------------------- Confirm Input -------------------------------");
-        //Show_Matrix(AB, m, n+1,1);
-        if(Matrix_Description[0].n>9)
-            Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-        else
-            Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-        
-        puts("\n\n\n------------------------------------ Result ------------------------------------\n");
-        if(MODE=='5')
-        {
-            if(Row_Echelon_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,0)==0)
-                Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
-            if(Matrix_Description[0].n>9)
-                Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            if(Reverse_Matrix(Matrix, n)==0)
+                printf("The Inverse Matrix doesn't Exist\n");
             else
-                Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            
-            printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
-            
-            Free_Matrix(Matrix, Matrix_Description[0].m);
+            {
+                if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
+                else Show_Matrix(Matrix, 1,1,n, n,1);
+            }
+            Free_Matrix(Matrix, n);
         }
-        else if(MODE=='6')
-        {
-            if(Row_Canonical_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n)==0)
-                Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,0);
-            Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
-            if(Matrix_Description[0].n>9)
-                Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            else
-                Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
-            Free_Matrix(Matrix, Matrix_Description[0].m);
-        }
-    }
-    
-    if (MODE=='3')
-    {
-        int n;
-        
-        if(TEST_FLAG!='0')
-        {
-            srand((unsigned)time(NULL));                            //测试需要 获取随机的m和n
-            n=4+rand()%4;
-        }
-        else
-        {
-            printf("\nPlease input 'n' : ");
-            scanf("%d",&n);
-            puts("");
-        }
-        
-        double **Matrix=Create_Matrix(n,n,"MODE 5");
-        
-        if (TEST_FLAG=='0')
-            User_Input_Matrix(Matrix, n, n, "");
-        else
-            Rand_Fill(Matrix, n, n,-10,50,0);
-        
-        Approximate(Matrix, n, n, 6);
-        
-        puts("---------------------------------- Confirm Input -------------------------------");
-        if(n>9)
-            Show_Matrix(Matrix, 1,n-9,n, n,1);
-        else
-            Show_Matrix(Matrix, 1,1,n, n,1);
-        
-        if(Reverse_Matrix(Matrix, n)==0)
-        {
-            printf("The Inverse Matrix doesn't Exist\n");
-        }
-        else
-        {
-            puts("\n\n\n------------------------------------ Result ------------------------------------");
-            if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
-            else Show_Matrix(Matrix, 1,1,n, n,1);
-        }
-        Free_Matrix(Matrix, n);
     }
     
     if (MODE=='4')
     {
-        
         int i;
         
         struct Characteristic_of_Matrix *Matrix_Description;
@@ -906,14 +938,13 @@ int main(int argc, const char * argv[])
         Matrix_Description[0].Matrix_Name="MODE 4 A";
         Matrix_Description[1].Matrix_Name="MODE 4 B";
         
-        
         if(TEST_FLAG!='0')
         {
             Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
             Test_Scanf(Matrix_Description,2, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
             Matrix_Description[1].m=Matrix_Description[0].n;
         }
-        else
+        else if (configMode==0)
         {
             for (i=0;; i++)
             {
@@ -925,17 +956,34 @@ int main(int argc, const char * argv[])
                 else printf("A and B cannot be multiplied, Please input again: \n");
             }
         }
+        else if (configMode==1)
+        {
+            Matrix_Description[0].m=receiveCfg.getM_One;
+            Matrix_Description[0].n=receiveCfg.getN_One;
+            Matrix_Description[1].m=receiveCfg.getM_Two;
+            Matrix_Description[1].n=receiveCfg.getN_Two;
+        }
         
         int multi_times=1;
+        int multiFlag=0;
         if (Matrix_Description[0].m==Matrix_Description[1].n)
         {
-            printf("\nIt seems like AB is a square matrix.\nSo input how many times you want to multipy in total: ");
-            for (i=0;; i++)
+            multiFlag=1;
+            if (configMode==0)
             {
-                scanf("%d",&multi_times);
-                if (multi_times>=1) break;
-                else printf("Wrong answer. Please input again: ");
+                printf("\nIt seems like AB is a square matrix.\nSo input how many times you want to multipy in total: ");
+                for (i=0;; i++)
+                {
+                    scanf("%d",&multi_times);
+                    if (multi_times>=1) break;
+                    else printf("Wrong answer. Please input again: ");
+                }
             }
+            else
+            {
+                multi_times=(int)(receiveCfg.extraOption)-48;
+            }
+            printf("Multi Times = %d\n",multi_times);
         }
         
         double **A=Create_Matrix(Matrix_Description[0].m,Matrix_Description[0].n,Matrix_Description[0].Matrix_Name);
@@ -944,10 +992,18 @@ int main(int argc, const char * argv[])
         
         if (TEST_FLAG=='0')
         {
-            puts("");
-            User_Input_Matrix(A, Matrix_Description[0].m, Matrix_Description[0].n, " A");
-            puts("");
-            User_Input_Matrix(B, Matrix_Description[1].m, Matrix_Description[1].n, " B");
+            if (configMode==0)
+            {
+                puts("");
+                User_Input_Matrix(A, Matrix_Description[0].m, Matrix_Description[0].n, " A");
+                puts("");
+                User_Input_Matrix(B, Matrix_Description[1].m, Matrix_Description[1].n, " B");
+            }
+            else
+            {
+                Config_Fill_Matrix(A, receiveCfg,1);
+                Config_Fill_Matrix(B, receiveCfg,2);
+            }
         }
         else
         {
@@ -957,7 +1013,7 @@ int main(int argc, const char * argv[])
         
         Approximate(A, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("---------------------------------- Confirm Input -------------------------------");
+        puts("--------------------------------- Confirm Input --------------------------------\n");
         if(Matrix_Description[1].n>14)
         {
             printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
@@ -976,12 +1032,19 @@ int main(int argc, const char * argv[])
         if(Matrix_Multiplication(A, B, Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n)==0)
             Show_Matrix(Result_Matrix,1,1, Matrix_Description[0].m, Matrix_Description[1].n,0);
         
-        for (i=1;i<=multi_times-1;i++)
+
+        if (multiFlag==1)
         {
-            Matrix_Multiplication(Result_Matrix, Result_Matrix, Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n);
+            double **Temp_Result=Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "");
+            for (i=1;i<=multi_times-1;i++)
+            {
+                Matrix_Multiplication(Result_Matrix, Result_Matrix, Temp_Result, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m);
+                //            Matrix_Multiplication(<#double **A#>, <#double **B#>, <#double **Result_Matrix#>, <#int m_A#>, <#int n_A#>, <#int m_B#>, <#int n_B#>)
+            }
+            Result_Matrix=Temp_Result;
         }
-        
-        puts("\n\n\n------------------------------------ Result ------------------------------------\n");
+
+        puts("\n\n------------------------------------ Result ------------------------------------\n");
         
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[1].n, 5);
         
@@ -1007,6 +1070,123 @@ int main(int argc, const char * argv[])
         Free_Matrix(Result_Matrix, Matrix_Description[0].m);
     }
     
+    if (MODE=='5'||MODE=='6'||MODE=='8')
+    {
+        struct Characteristic_of_Matrix *Matrix_Description;
+        Matrix_Description=(struct Characteristic_of_Matrix*)calloc(1,sizeof(struct Characteristic_of_Matrix));
+        Matrix_Description[0].Matrix_Name="MODE 5&6&8 Input";
+        
+        if(TEST_FLAG!='0')
+            Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
+        else if(configMode==0)
+        {
+            printf("\nPlease input 'm' and 'n' : ");
+            scanf("%d %d",&Matrix_Description[0].m,&Matrix_Description[0].n);
+            puts("");
+        }
+        else if (configMode==1)
+        {
+            Matrix_Description[0].m=receiveCfg.getM_One;
+            Matrix_Description[0].n=receiveCfg.getN_One;
+        }
+        
+        double **Matrix=Create_Matrix(Matrix_Description[0].m,Matrix_Description[0].n,"MODE 5&6&8");
+        
+        if (TEST_FLAG=='0')
+        {
+            if (configMode==0)
+                User_Input_Matrix(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, "");
+            else
+                Config_Fill_Matrix(Matrix, receiveCfg,1);
+        }
+        else
+            Rand_Fill(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,-10,10,0);
+        
+        Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
+        
+        if (MODE=='8')
+        {
+            //            printf("stdin = %d\n",(int)fgetc(stdin));
+            if (configMode==0&&argc>=2&&strcmp(argv[argc-1], "--test")!=0&&massFlag==0)
+                Safe_Flush(stdin);
+            char normFlag='n';
+            if (configMode==0)
+            {
+                puts("Do you want Normalization? Please press y or n. (default n)");
+                if (massFlag==1)normFlag='y';
+                if (argc>=2&&massFlag==0)scanf("%c",&normFlag);
+            }
+            else normFlag=receiveCfg.extraOption;
+            
+            if (normFlag=='\n') normFlag='n';
+            while (normFlag!='y'&&normFlag!='n'&&normFlag!='\n')
+            {
+                printf("Unavailable Choice, please choose again: ");
+                fflush(stdin);
+                scanf("%c",&MODE);
+            }
+            
+            puts("--------------------------------- Confirm Input --------------------------------\n");
+            if(Matrix_Description[0].n>9)
+                Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            else
+                Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            puts("\n\n------------------------------------ Result ------------------------------------\n");
+            double **Result_Matrix=Schmidt_Orthogonalization(Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
+            Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
+            
+            if (normFlag=='y')
+            {
+                double **temp_Result=Vector_Normalization(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
+                Result_Matrix=temp_Result;
+            }
+            
+            if(Matrix_Description[0].n>9)
+                Show_Matrix(Result_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            else
+                Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            Free_Matrix(Matrix, Matrix_Description[0].m);
+        }
+        
+        else
+        {
+            puts("--------------------------------- Confirm Input --------------------------------\n");
+            //Show_Matrix(AB, m, n+1,1);
+            if(Matrix_Description[0].n>9)
+                Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            else
+                Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            
+            puts("\n\n ------------------------------------ Result ------------------------------------\n");
+            if(MODE=='5')
+            {
+                if(Row_Echelon_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,0)==0)
+                    Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+                Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
+                if(Matrix_Description[0].n>9)
+                    Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+                else
+                    Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+                
+                printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
+                
+                Free_Matrix(Matrix, Matrix_Description[0].m);
+            }
+            else if(MODE=='6')
+            {
+                if(Row_Canonical_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n)==0)
+                    Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,0);
+                Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
+                if(Matrix_Description[0].n>9)
+                    Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+                else
+                    Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+                printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
+                Free_Matrix(Matrix, Matrix_Description[0].m);
+            }
+        }
+    }
+    
     if (MODE=='7')
     {
         TEST_FLAG='0';
@@ -1016,41 +1196,63 @@ int main(int argc, const char * argv[])
         Matrix_Description[0].Matrix_Name="MODE 5 Input";
         
         if(TEST_FLAG!='0')
-        {
             Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
-        }
-        else
+        else if(configMode==0)
         {
             printf("\nPlease input 'm' and 'n' : ");
             scanf("%d %d",&Matrix_Description[0].m,&Matrix_Description[0].n);
             puts("");
         }
+        else if (configMode==1)
+        {
+            Matrix_Description[0].m=receiveCfg.getM_One;
+            Matrix_Description[0].n=receiveCfg.getN_One-1;
+        }
+        
+        //        if(TEST_FLAG!='0')
+        //        {
+        //            Test_Scanf(Matrix_Description,1, M_RAND_MIN,M_RAND_MAX,N_RAND_MIN,N_RAND_MAX);
+        //        }
+        //        else
+        //        {
+        //            printf("\nPlease input 'm' and 'n' : ");
+        //            scanf("%d %d",&Matrix_Description[0].m,&Matrix_Description[0].n);
+        //            puts("");
+        //        }
         
         double **AB=Create_Matrix(Matrix_Description[0].m,Matrix_Description[0].n+1,"MODE 4 AB");
         
         if (TEST_FLAG=='0')
-            User_Input_Matrix(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, " Augmented");
+        {
+            if (configMode==0)
+                User_Input_Matrix(AB, Matrix_Description[0].m, Matrix_Description[0].n, "");
+            else
+                Config_Fill_Matrix(AB, receiveCfg,1);
+        }
         else
-            Rand_Fill(AB, Matrix_Description[0].m, Matrix_Description[0].n+1,50,1000,0);
+            Rand_Fill(AB, Matrix_Description[0].m, Matrix_Description[0].n,-10,10,0);
+        
+        //        if (TEST_FLAG=='0')
+        //            User_Input_Matrix(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, " Augmented");
+        //        else
+        //            Rand_Fill(AB, Matrix_Description[0].m, Matrix_Description[0].n+1,50,1000,0);
         
         Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, 6);
         
-        puts("---------------------------------- Confirm Input -------------------------------");
-        //Show_Matrix(AB, m, n+1,1);
+        puts("--------------------------------- Confirm Input --------------------------------\n");
         if(Matrix_Description[0].n>9)
             Show_Matrix(AB, 1,Matrix_Description[0].n+1-9,Matrix_Description[0].m, Matrix_Description[0].n+1,1);
         else
             Show_Matrix(AB, 1,1,Matrix_Description[0].m, Matrix_Description[0].n+1,1);
         
+        puts("\n\n------------------------------------ Result ------------------------------------\n");
         if(Check_Linear_Equation_Solution_Existance(AB, Matrix_Description[0].m, Matrix_Description[0].n)==0)
         {
             printf("This Linear Equation System does not have a solution\n");
             return 0;
         }
         
-        //if(Row_Echelon_Form(AB,m,n+1)==0)Show_Matrix(AB, m, n+1,0);
-        if(Row_Canonical_Form(AB, Matrix_Description[0].m, Matrix_Description[0].n+1)==0)
-            Show_Matrix(AB, 1,1,Matrix_Description[0].m, Matrix_Description[0].n+1,0);
+        Row_Canonical_Form(AB, Matrix_Description[0].m, Matrix_Description[0].n+1);
         
         Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, 6);
         
@@ -1058,27 +1260,24 @@ int main(int argc, const char * argv[])
         double **Solution_Matrix=Create_Matrix(Matrix_Description[0].n,n_of_Solution_Matrix,"Solution Matrix");
         Build_Solution_Matrix(AB, Solution_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, n_of_Solution_Matrix, rank_of_A);
         
-        puts("\n\n------------------------------------ Result ------------------------------------");
         
         Approximate(Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 5);
         
         int Homogeneous_Flag=Find_No_Zero_Row(Solution_Matrix, n_of_Solution_Matrix-1, Matrix_Description[0].n);
-        
         if (Homogeneous_Flag!=0)
         {
-            puts("\n\n\n------------------------------ Particular Solution -----------------------------");
+            puts("\n------------------------------ Particular Solution -----------------------------\n");
             Show_Matrix(Solution_Matrix, 1,n_of_Solution_Matrix,Matrix_Description[0].n, n_of_Solution_Matrix, 1);
             
         }
         if (Matrix_Description[0].n-rank_of_A<=0)
         {
-            printf("This Linear Equation Systems only exist one solution");
-            if (Homogeneous_Flag==0)
-                puts(" = ZERO\n");
+            printf("\nThis Linear Equation Systems only exist one solution\n\n");
+            if (Homogeneous_Flag==0)puts(" = ZERO\n");
         }
         else
         {
-            puts("\n\n\n-------------------------- Fundamental Solution Systems ------------------------");
+            puts("\n-------------------------- Fundamental Solution Systems ------------------------\n");
             Show_Matrix(Solution_Matrix, 1,2,Matrix_Description[0].n, n_of_Solution_Matrix-1, 1);
         }
         Free_Matrix(AB, Matrix_Description[0].m);
@@ -1145,16 +1344,24 @@ int main(int argc, const char * argv[])
     
     if(invalidOptionFlag==0)
     {
-        Safe_Flush(stdin);
+        if (argc>=2&&strcmp(argv[argc-1], "--mass-test")!=0) Safe_Flush(stdin);
         puts("\nPress any key to run again or press 0 to exit");
-        char flag;
-        scanf("%c",&flag);
+        char flag='0';
+        if (argc>=2&&strcmp(argv[argc-1], "--mass-test")!=0) scanf("%c",&flag);
+        if (argc>=2&&strcmp(argv[argc-1], "--mass-test")==0)flag='1';
         if(flag!='0')
         {
             fflush(stdin);
-            if ((argc>=2&&strcmp(argv[argc-1], "--test")==0))main(argc ,argv);
+            if ((argc>=2&&(strcmp(argv[argc-1], "--test")==0||strcmp(argv[argc-1], "--mass-test")==0)))main(argc ,argv);
             else main(1, argv);
         }
+    }
+    
+    if (outputMode==1)
+    {
+        FILE *output=fopen(outputFileName, "rt");
+        Show_File_Text(output);
+        fclose(stdout);
     }
     
     return 0;
