@@ -60,6 +60,7 @@ void Show_Index_Page();
 void Show_Menu_Page();
 void Show_Help_Page();
 int Show_Header_Source();
+void Show_MODE_Band(char MODE);
 
 //-------------------------------------------- 针对OSX系统，定义getch函数 --------------------------------------------
 #include <termios.h>

@@ -11,6 +11,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <unistd.h>
 #include "Independent_Functions.h"
 #include "cJSON.h"
 
@@ -572,9 +573,19 @@ double** Adjoint_Matrix(double **Matrix,int m, int n)
 sConfig Read_Config()
 {
     sConfig readResult;
-    FILE *fp=fopen("config.json","r");
+    char CurrentPath_Temp[1000];
+    getcwd(CurrentPath_Temp, 1000);
+    unsigned long PathLength=strlen(CurrentPath_Temp);
+//    char *CurrentPath=(char*)calloc(PathLength, sizeof(char));
+    
+    char *configPath=(char*)calloc(PathLength+strlen("/config.json"), sizeof(char));
+    strcpy(configPath, CurrentPath_Temp);
+    strcat(configPath, "/config.json");
+    
+//    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
+    FILE *fp=fopen(configPath,"rt");
     if (fp==NULL)
-        puts("Config open error");
+        perror("Config open error");
     else
     {
         int i;
@@ -635,6 +646,7 @@ sConfig Read_Config()
                     readResult.getElements_Two[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_Two, row), column)->valuedouble;
                 }
             }
+        free(fstr);
         //        printf("getMODE = %d\n",readResult.getMODE);
         //        printf("getTestFlag = %d\n",readResult.getTestFlag);
         //        printf("getM = %d\n",readResult.getM);
@@ -679,6 +691,7 @@ static char MODE='0';
 
 int main(int argc, const char * argv[])
 {
+    
     //    Read_Config();
     int invalidOptionFlag=0;
     int massFlag=0;
@@ -720,65 +733,49 @@ int main(int argc, const char * argv[])
     {
         MODE='1';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                        ---- MODE 1 Determinant ----                          |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-2")==0)||MODE=='2')
     {
         MODE='2';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                       ---- MODE 2 Adjoint Matrix ----                        |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-3")==0)||MODE=='3')
     {
         MODE='3';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                       ---- MODE 3 Inverse Matrix ----                        |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-4")==0)||MODE=='4')
     {
         MODE='4';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                    ---- MODE 4 Matrix Multiplication ----                    |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-5")==0)||MODE=='5')
     {
         MODE='5';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                       ---- MODE 5 Row Echelon Form ----                      |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-6")==0)||MODE=='6')
     {
         MODE='6';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                      ---- MODE 6 Row Canonical Form ----                     |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-7")==0)||MODE=='7')
     {
         MODE='7';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                       ---- MODE 7 Linear Equations ----                      |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-8")==0)||MODE=='8')
     {
         MODE='8';
         Show_Index_Page();
-        puts("--------------------------------------------------------------------------------");
-        puts("|                   ---- MODE 8 Schmidt Orthogonalization ----                 |");
-        puts("--------------------------------------------------------------------------------");
+        Show_MODE_Band(MODE);
     }
     else if (argc>=2&&strcmp(argv[1], "--menu")==0)
         Show_Menu_Page();
@@ -788,21 +785,19 @@ int main(int argc, const char * argv[])
         Show_Help_Page();
         invalidOptionFlag=1;
     }
-    else if ((argc==1||(argc==2&&(TEST_FLAG!=0||outputMode==1))))
+    else if (((argc==1||(argc==2&&(TEST_FLAG!=0||outputMode==1))))&&configMode==0)
     {
         Show_Index_Page();
         Show_Menu_Page();
         printf("Please choose mode number: ");
         scanf("%c",&MODE);
         fflush(stdin);
-        if (MODE=='c') configMode=1;
         while ((MODE>'8'||MODE<'1')&&MODE!='c')
         {
             printf("Unavailable Choice, please choose again\r");
-            //            Safe_Flush(stdin);
+//            Safe_Flush(stdin);
             scanf("%c",&MODE);
         }
-        
     }
     else if (argc==2&&strcmp(argv[1], "--lord")==0)               //上帝模式，可以打印出程序自身源码
     {
@@ -836,28 +831,30 @@ int main(int argc, const char * argv[])
         else puts("You are not my lord\n");
         return 0;
     }
-    else if(argc>=2)
+    else if(argc>=2&&configMode==0)
     {
         printf("invalid option '%s'; type '--help' for a list.\n",argv[argc-1]);
         puts("Syntax: Matrix [Commands] [options]");
         invalidOptionFlag=1;
     }
     
-    //    if (configMode==1)
-    //    {
-    //        invalidOptionFlag=1;
-    //        receiveCfg=Read_Config();
-    //        MODE=(char)(48+receiveCfg.getMODE);
-    //        TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
-    //    }
+    if (MODE=='c')
+    {
+        configMode=1;
+        invalidOptionFlag=1;
+        receiveCfg=Read_Config();
+        MODE=(char)(48+receiveCfg.getMODE);
+        TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
+        Show_MODE_Band(MODE);
+    }
     
     //    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
     
     if (argc==1&&configMode==0)
     {
-        printf("Press any key to test or press 0 to manually input\r");
+        printf("Press any key to test or press 0 to manually input\n");
         Safe_Flush(stdin);
-        if (argc>=2&&massFlag==0) scanf("%c",&TEST_FLAG);
+        scanf("%c",&TEST_FLAG);
         //        printf("TEST_FLAG = %c\n",TEST_FLAG);
         fflush(stdin);
     }
@@ -1287,11 +1284,11 @@ int main(int argc, const char * argv[])
     if (configMode==1) free(receiveCfg.getElements_One);
     if(invalidOptionFlag==0)
     {
-        if (argc>=2&&strcmp(argv[argc-1], "--mass-test")!=0) Safe_Flush(stdin);
+        if (strcmp(argv[argc-1], "--mass-test")!=0) Safe_Flush(stdin);
         puts("\nPress any key to run again or press 0 to exit");
         char flag='0';
-        if (argc>=2&&strcmp(argv[argc-1], "--mass-test")!=0) scanf("%c",&flag);
-        if (argc>=2&&strcmp(argv[argc-1], "--mass-test")==0)flag='1';
+        if (strcmp(argv[argc-1], "--mass-test")!=0) scanf("%c",&flag);
+        if (strcmp(argv[argc-1], "--mass-test")==0)flag='1';
         if(flag!='0')
         {
             fflush(stdin);
