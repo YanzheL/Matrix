@@ -1303,12 +1303,12 @@ int main(int argc, const char * argv[])
         }
     }
     
-    if (outputMode==1)
-    {
-        FILE *output=fopen(outputFileName, "rt");
-        Show_File_Text(output);
-        fclose(stdout);
-    }
+//    if (outputMode==1)
+//    {
+//        FILE *output=fopen(outputFileName, "rt");
+//        Show_File_Text(output);
+//        fclose(stdout);
+//    }
     
     return 0;
 }
