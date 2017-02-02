@@ -6,12 +6,7 @@
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
-#include "Independent_Functions.h"
+#include "Matrix.h"
 
 int Check_Option(int argc, const char **argv, char *option)
 {
