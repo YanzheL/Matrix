@@ -5,7 +5,6 @@
 //  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,6 +18,10 @@
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
+
+#ifdef WINDOWS
+#include <conio.h>
+#endif
 
 int Check_Echelon(double **Matrix,int m,int n)                                                   //用于检查是否已化为行阶梯形
 {
@@ -424,7 +427,6 @@ double Scalar_Product(double **Vector1,double **Vector2,int n)
 double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
 {
     int i,j;
-    double *bets_scalar_product=(double*)calloc(n-1, sizeof(double));
     
     //    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
     double ***alpha=Column_Vector_Extract(Matrix, m, n);
@@ -495,7 +497,6 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
         }
     }
     
-    free(bets_scalar_product);
     for (i=0; i<n-1; i++)
         Free_Matrix(alpha[i], m);
     
@@ -528,7 +529,7 @@ double** Vector_Normalization(double **Matrix,int m,int n)
     
     free(product);
     for (i=0; i<n; i++)
-        Free_Matrix(vector_System[i], n);
+        Free_Matrix(vector_System[i], m);
     return Result_Matrix;
 }
 
@@ -734,7 +735,44 @@ int main(int argc, const char * argv[])
         outputFileName=outTemp;
         freopen(outputFileName, "w", stdout);
     }
-    
+    if (argc==2&&strcmp(argv[1], "--lord")==0)               //上帝模式，可以打印出程序自身源码
+    {
+        char passwd[15];
+        int k,l;
+        puts("So prove that you are the Lord");                   //需要输入密码
+        for(k=0;k<14;k++)
+        {
+#ifdef OSX
+            passwd[k]=getch_(0);
+#endif
+#ifdef WINDOWS
+            passwd[k]=_getch();
+#endif
+            printf("*");
+        }
+        passwd[14]='\0';
+        printf("\n");
+        if (strcmp(passwd, "LYZ18679853316")==0)
+        {
+            for (l=1;l<=3;l++)
+            {
+                for (k=1;k<=230; k++)printf("#");
+                puts("");
+            }
+            printf("Main Source __FILE__ PATH = %s\n",__FILE__);
+            FILE *fSOURCE = fopen(__FILE__, "r");
+            if(Show_File_Text(fSOURCE)!=0)return 1;
+            puts("");
+            for (l=1;l<=3;l++)
+            {
+                for (k=1;k<=230; k++)printf("#");
+                puts("");
+            }
+            if(Show_Header_Source()!=0)return 1;
+        }
+        else puts("You are not my lord\n");
+        return 0;
+    }
     if ((argc>=2&&strcmp(argv[1], "--mode-1")==0)||MODE=='1')
     {
         MODE='1';
@@ -804,38 +842,6 @@ int main(int argc, const char * argv[])
             //            Safe_Flush(stdin);
             scanf("%c",&MODE);
         }
-    }
-    else if (argc==2&&strcmp(argv[1], "--lord")==0)               //上帝模式，可以打印出程序自身源码
-    {
-        char passwd[15];
-        int k,l;
-        puts("So prove that you are the Lord");                   //需要输入密码
-        for(k=0;k<14;k++)
-        {
-            passwd[k]=getch_(0);
-            printf("*");
-        }
-        passwd[14]='\0';
-        printf("\n");
-        if (strcmp(passwd, "LYZ18679853316")==0)
-        {
-            for (l=1;l<=3;l++)
-            {
-                for (k=1;k<=230; k++)printf("#");
-                puts("");
-            }
-            FILE *fSOURCE = fopen(__FILE__, "r");
-            if(Show_File_Text(fSOURCE)!=0)return 1;
-            puts("");
-            for (l=1;l<=3;l++)
-            {
-                for (k=1;k<=230; k++)printf("#");
-                puts("");
-            }
-            if(Show_Header_Source()!=0)return 1;
-        }
-        else puts("You are not my lord\n");
-        return 0;
     }
     else if(argc>=2&&configMode==0)
     {
@@ -1110,7 +1116,7 @@ int main(int argc, const char * argv[])
         if (MODE=='8')
         {
             //            printf("stdin = %d\n",(int)fgetc(stdin));
-            if (configMode==0&&argc>=2&&strcmp(argv[argc-1], "--test")!=0&&massFlag==0)
+            if (configMode==0&&argc>=2&&TEST_FLAG=='0'&&massFlag==0)
                 Safe_Flush(stdin);
             char normFlag='n';
             if (configMode==0)
@@ -1143,18 +1149,11 @@ int main(int argc, const char * argv[])
                 double **temp_Result=Vector_Normalization(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
                 Result_Matrix=temp_Result;
             }
-            
-            if(Matrix_Description[0].n>9)
-                Show_Matrix(Result_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            else
-                Show_Matrix(Result_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            Free_Matrix(Matrix, Matrix_Description[0].m);
         }
         
         else
         {
             puts("--------------------------------- Confirm Input --------------------------------\n");
-            //Show_Matrix(AB, m, n+1,1);
             if(Matrix_Description[0].n>9)
                 Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
             else
@@ -1165,29 +1164,20 @@ int main(int argc, const char * argv[])
             {
                 if(Row_Echelon_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n,0)==0)
                     Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-                Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
-                if(Matrix_Description[0].n>9)
-                    Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-                else
-                    Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-                
-                printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
-                
-                Free_Matrix(Matrix, Matrix_Description[0].m);
             }
             else if(MODE=='6')
             {
                 if(Row_Canonical_Form(Matrix, Matrix_Description[0].m, Matrix_Description[0].n)==0)
                     Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,0);
-                Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
-                if(Matrix_Description[0].n>9)
-                    Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
-                else
-                    Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-                printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
-                Free_Matrix(Matrix, Matrix_Description[0].m);
             }
+            Approximate(Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
+            printf("Rank = %d\n",Find_Rank(Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
         }
+        if(Matrix_Description[0].n>9)
+            Show_Matrix(Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
+        else
+            Show_Matrix(Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+        Free_Matrix(Matrix, Matrix_Description[0].m);
     }
     
     if (MODE=='7')
@@ -1299,7 +1289,14 @@ int main(int argc, const char * argv[])
         {
             fflush(stdin);
             if ((argc>=2&&(TEST_FLAG!='0'||massFlag==1)))main(argc ,argv);
-            else main(1, argv);
+            else
+            {
+                int argcNext=1;
+                const char** argvNext=(const char**)calloc(1, sizeof(char*));
+                argvNext[0]=(char*)calloc(1, sizeof(char));
+                argvNext[0]=argv[0];
+                main(argcNext, argvNext);
+            }
         }
     }
     

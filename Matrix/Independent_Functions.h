@@ -9,6 +9,8 @@
 #ifndef Independent_Functions_h
 #define Independent_Functions_h
 
+#define OSX
+
 struct Characteristic_of_Matrix
 {
     char* Matrix_Name;
@@ -62,6 +64,7 @@ void Show_Help_Page();
 int Show_Header_Source();
 void Show_MODE_Band(char MODE);
 int Check_Option(int argc, const char **argv, char *option);
+#ifdef OSX
 //-------------------------------------------- 针对OSX系统，定义getch函数 --------------------------------------------
 #include <termios.h>
 static struct termios old, new;
@@ -87,3 +90,4 @@ char getche(void);
 //---------------------------------------------------------------------------------------------------------------------
 
 #endif /* Independent_Functions_h */
+#endif
