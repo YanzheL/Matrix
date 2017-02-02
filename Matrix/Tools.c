@@ -8,20 +8,21 @@
 
 #include "Matrix.h"
 
-sConfig Read_Config()
+sConfig Read_Config(const char* programPath)
 {
     sConfig readResult;
-    char CurrentPath_Temp[1000];
-    getcwd(CurrentPath_Temp, 1000);
-    unsigned long PathLength=strlen(CurrentPath_Temp);
-    //    char *CurrentPath=(char*)calloc(PathLength, sizeof(char));
     
-    char *configPath=(char*)calloc(PathLength+strlen("/config.json"), sizeof(char));
-    strcpy(configPath, CurrentPath_Temp);
-    strcat(configPath, "/config.json");
+#ifdef GET_CURRENT_PATH_MODE
+    char *configPath=(char*)calloc(strlen(programPath)-strlen("Matrix")+strlen(CONFIG_FILE_NAME), sizeof(char));
+    configPath=strncpy(configPath, programPath, strlen(programPath)-strlen("Matrix"));
+    strcat(configPath, CONFIG_FILE_NAME);
     
-    //    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
+//    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
     FILE *fp=fopen(configPath,"rt");
+#else
+    FILE *fp=fopen(CONFIG_FILE_NAME,"rt");
+#endif
+    
     if (fp==NULL)
     perror("Config open error");
     else

@@ -13,7 +13,7 @@ static char MODE='0';
 //-----------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, const char * argv[])
 {
-    
+//    printf("argv[0] = %s\n",argv[0]);
     //    Read_Config();
     int invalidOptionFlag=0;
     int massFlag=0;
@@ -34,7 +34,7 @@ int main(int argc, const char * argv[])
     if (configMode==1)
     {
         invalidOptionFlag=1;
-        receiveCfg=Read_Config();
+        receiveCfg=Read_Config(argv[0]);
         MODE=(char)(48+receiveCfg.getMODE);
         TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
     }
@@ -173,7 +173,7 @@ int main(int argc, const char * argv[])
     {
         configMode=1;
         invalidOptionFlag=1;
-        receiveCfg=Read_Config();
+        receiveCfg=Read_Config(argv[0]);
         MODE=(char)(48+receiveCfg.getMODE);
         TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
         Show_MODE_Band(MODE);
@@ -311,7 +311,6 @@ int main(int argc, const char * argv[])
             {
                 multi_times=(int)(receiveCfg.extraOption)-48;
             }
-            printf("Multi Times = %d\n",multi_times);
         }
         
         double **A=Create_Matrix(Matrix_Description[0].m,Matrix_Description[0].n,Matrix_Description[0].Matrix_Name);
@@ -363,13 +362,13 @@ int main(int argc, const char * argv[])
         
         if (multiFlag==1)
         {
-            double **Temp_Result=Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "");
+            printf("\nMulti Times = %d",multi_times);
             for (i=1;i<=multi_times-1;i++)
             {
+                double **Temp_Result=Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "");
                 Matrix_Multiplication(Result_Matrix, Result_Matrix, Temp_Result, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m);
-                //            Matrix_Multiplication(<#double **A#>, <#double **B#>, <#double **Result_Matrix#>, <#int m_A#>, <#int n_A#>, <#int m_B#>, <#int n_B#>)
+                Result_Matrix=Temp_Result;
             }
-            Result_Matrix=Temp_Result;
         }
         
         puts("\n\n------------------------------------ Result ------------------------------------\n");
@@ -499,7 +498,7 @@ int main(int argc, const char * argv[])
                 Show_Matrix(Input_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
             else
                 Show_Matrix(Input_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
-            printf("Rank = %d\n",Find_Rank(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
+            printf("\nRank = %d\n",Find_Rank(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
         }
         Free_Matrix(Input_Matrix, Matrix_Description[0].m);
     }
@@ -554,7 +553,7 @@ int main(int argc, const char * argv[])
         puts("\n\n------------------------------------ Result ------------------------------------\n");
         if(Check_Linear_Equation_Solution_Existance(AB, Matrix_Description[0].m, Matrix_Description[0].n)==0)
         {
-            printf("This Linear Equation System does not have a solution\n");
+            printf("This Linear Equation System does not have a solution\n\n");
             return 0;
         }
         
@@ -578,8 +577,9 @@ int main(int argc, const char * argv[])
         }
         if (Matrix_Description[0].n-rank_of_A<=0)
         {
-            printf("\nThis Linear Equation Systems only exist one solution\n\n");
-            if (Homogeneous_Flag==0)puts(" = ZERO\n");
+            printf("\nThis Linear Equation Systems only exist one solution");
+            if (Homogeneous_Flag==0)puts(" = ZERO\n\n");
+            else printf("\n\n");
         }
         else
         {
@@ -591,6 +591,7 @@ int main(int argc, const char * argv[])
     }
     
     if (configMode==1) free(receiveCfg.getElements_One);
+    if (invalidOptionFlag==1) puts("");
     if(invalidOptionFlag==0)
     {
         if (massFlag==0) Safe_Flush(stdin);

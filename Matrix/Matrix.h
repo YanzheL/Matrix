@@ -14,6 +14,8 @@
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
+//#define GET_CURRENT_PATH_MODE
+#define CONFIG_FILE_NAME "config.json"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,7 +73,7 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n);
 
 
 //--------------------------------------------------------- Tools -----------------------------------------------------------
-sConfig Read_Config();
+sConfig Read_Config(const char* programPath);
 void Config_Fill_Matrix(double **Matrix,sConfig configSource,int TYPE);
 void User_Input_Matrix(double **Matrix,int m,int n,char *TYPE);
 void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test,int structElementNumber,int m_rand_min,int mRandMax,int nRandMin,int nRandMax);
