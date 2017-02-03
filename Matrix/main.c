@@ -6,21 +6,24 @@
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
 #include "Matrix.h"
-
 static char TEST_FLAG='0';
 static char MODE='0';
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, const char * argv[])
 {
-//    printf("argv[0] = %s\n",argv[0]);
-    //    Read_Config();
     int invalidOptionFlag=0;
+    int helpFlag=0;
+    int lordFlag=0;
     int massFlag=0;
     int configMode=0;
     int outputMode=0;
+    int invalidContinueFlag=0;
     char *outputFileName;
-    //    configMode=1;
+    invalidOptionFlag=Check_Known_Options(argc, argv,&invalidContinueFlag);
+    if (invalidOptionFlag!=0)
+        return 0;
+    
     sConfig receiveCfg={0,0,'n',0,0,0,0,NULL,NULL};//初始化
     if (Check_Option(argc, argv, "-c")!=0||Check_Option(argc, argv, "--config")!=0)configMode=1;
     if (Check_Option(argc, argv, "--mass-test")!=0)
@@ -28,12 +31,34 @@ int main(int argc, const char * argv[])
         massFlag=1;
         TEST_FLAG='1';
     }
-    if (Check_Option(argc, argv, "-o")!=0||Check_Option(argc, argv, "--out")!=0)outputMode=1;
+    if (invalidOptionFlag==0&&massFlag==0)
+    {
+#ifdef OSX
+        system("clear");
+#endif
+#ifdef WINDOWS
+        system("cls");
+#endif
+    }
+    
+    if (Check_Option(argc, argv, "-o")!=0||Check_Option(argc, argv, "--out")!=0)
+    {
+        if (configMode==0)
+        {
+            printf("\nOutput Mode is only available in Config Mode. Bypassing...\n\n");
+            return 0;
+        }
+        else
+        {
+            outputMode=1;
+            puts("\nOutput success\n");
+        }
+    }
     if (Check_Option(argc, argv, "--test")!=0) TEST_FLAG='1';
     
     if (configMode==1)
     {
-        invalidOptionFlag=1;
+        invalidContinueFlag=1;
         receiveCfg=Read_Config(argv[0]);
         MODE=(char)(48+receiveCfg.getMODE);
         TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
@@ -52,10 +77,13 @@ int main(int argc, const char * argv[])
         outTemp[strlen(outTemp)-1]=' ';
         strcat(outTemp, ".txt");
         outputFileName=outTemp;
-        freopen(outputFileName, "w", stdout);
+        if (configMode==1)freopen(outputFileName, "w", stdout);
     }
+    
     if (argc==2&&strcmp(argv[1], "--lord")==0)               //上帝模式，可以打印出程序自身源码
     {
+        lordFlag=1;
+        invalidContinueFlag=1;
         char passwd[15];
         int k,l;
         puts("So prove that you are the Lord");                   //需要输入密码
@@ -92,63 +120,71 @@ int main(int argc, const char * argv[])
         else puts("You are not my lord\n");
         return 0;
     }
+    
+//    if (invalidOptionFlag==0&&outputMode==0)
+//    {
+//#ifdef OSX
+//        system("clear");
+//#endif
+//#ifdef WINDOWS
+//        system("cls");
+//#endif
+//    }
+    
+    if(argc>=2&&(strcmp(argv[1], "--help")==0||strcmp(argv[1], "-h")==0))
+    {
+        helpFlag=1;
+        Show_Index_Page();
+        Show_Help_Page();
+        invalidContinueFlag=1;
+    }
+    if (argc>=2&&strcmp(argv[1], "--menu")==0)
+    {
+        invalidContinueFlag=1;
+        Show_Menu_Page();
+    }
+    
     if ((argc>=2&&strcmp(argv[1], "--mode-1")==0)||MODE=='1')
     {
         MODE='1';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-2")==0)||MODE=='2')
     {
         MODE='2';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-3")==0)||MODE=='3')
     {
         MODE='3';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-4")==0)||MODE=='4')
     {
         MODE='4';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-5")==0)||MODE=='5')
     {
         MODE='5';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-6")==0)||MODE=='6')
     {
         MODE='6';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-7")==0)||MODE=='7')
     {
         MODE='7';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
     else if ((argc>=2&&strcmp(argv[1], "--mode-8")==0)||MODE=='8')
     {
         MODE='8';
         Show_Index_Page();
-        Show_MODE_Band(MODE);
     }
-    else if (argc>=2&&strcmp(argv[1], "--menu")==0)
-        Show_Menu_Page();
-    else if(argc>=2&&(strcmp(argv[1], "--help")==0||strcmp(argv[1], "-h")==0))
-    {
-        Show_Index_Page();
-        Show_Help_Page();
-        invalidOptionFlag=1;
-    }
-    else if (((argc==1||(argc==2&&(TEST_FLAG!=0||outputMode==1))))&&configMode==0)
+    if ((argc==1||(   (argc==2)&&(  strcmp(argv[1],"--test")==0||strcmp(argv[1], "--mass-test")==0   )  ))&&configMode==0)
     {
         Show_Index_Page();
         Show_Menu_Page();
@@ -157,16 +193,11 @@ int main(int argc, const char * argv[])
         fflush(stdin);
         while ((MODE>'8'||MODE<'1')&&MODE!='c')
         {
-            printf("Unavailable Choice, please choose again\r");
-            //            Safe_Flush(stdin);
+            printf("\r");
+            printf("Unavailable Choice, please choose again:");
+            fflush(stdin);
             scanf("%c",&MODE);
         }
-    }
-    else if(argc>=2&&configMode==0)
-    {
-        printf("invalid option '%s'; type '--help' for a list.\n",argv[argc-1]);
-        puts("Syntax: Matrix [Commands] [options]");
-        invalidOptionFlag=1;
     }
     
     if (MODE=='c')
@@ -178,6 +209,8 @@ int main(int argc, const char * argv[])
         TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
         Show_MODE_Band(MODE);
     }
+    
+    Show_MODE_Band(MODE);
     
     //    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
     
@@ -225,6 +258,7 @@ int main(int argc, const char * argv[])
             Rand_Fill(Matrix, n, n,-10,10,0);
         
         Approximate(Matrix, n, n, 6);
+        
         puts("--------------------------------- Confirm Input --------------------------------\n");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
@@ -441,16 +475,21 @@ int main(int argc, const char * argv[])
             {
                 puts("Do you want Normalization? Please press y or n. (default n)");
                 if (massFlag==1)normFlag='y';
-                if (argc>=2&&massFlag==0)scanf("%c",&normFlag);
+                if ((argc>=2&&massFlag==0)||argc==1)
+                {
+                    fflush(stdin);
+                    scanf("%c",&normFlag);
+                }
             }
             else normFlag=receiveCfg.extraOption;
             
             if (normFlag=='\n') normFlag='n';
-            while (normFlag!='y'&&normFlag!='n'&&normFlag!='\n')
+            while ((normFlag!='y'&&normFlag!='n')||normFlag=='\n')
             {
+                printf("\r");
                 printf("Unavailable Choice, please choose again: ");
                 fflush(stdin);
-                scanf("%c",&MODE);
+                scanf("%c",&normFlag);
             }
             
             puts("--------------------------------- Confirm Input --------------------------------\n");
@@ -458,6 +497,7 @@ int main(int argc, const char * argv[])
                 Show_Matrix(Input_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
             else
                 Show_Matrix(Input_Matrix, 1,1,Matrix_Description[0].m, Matrix_Description[0].n,1);
+            printf("\nNeed Normalization = %c",normFlag);
             puts("\n\n------------------------------------ Result ------------------------------------\n");
             double **Result_Matrix=Schmidt_Orthogonalization(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
             Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
@@ -537,11 +577,6 @@ int main(int argc, const char * argv[])
         else
             Rand_Fill(AB, Matrix_Description[0].m, Matrix_Description[0].n,-10,10,0);
         
-        //        if (TEST_FLAG=='0')
-        //            User_Input_Matrix(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, " Augmented");
-        //        else
-        //            Rand_Fill(AB, Matrix_Description[0].m, Matrix_Description[0].n+1,50,1000,0);
-        
         Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, 6);
         
         puts("--------------------------------- Confirm Input --------------------------------\n");
@@ -591,8 +626,8 @@ int main(int argc, const char * argv[])
     }
     
     if (configMode==1) free(receiveCfg.getElements_One);
-    if (invalidOptionFlag==1) puts("");
-    if(invalidOptionFlag==0)
+    if (invalidContinueFlag==1) puts("");
+    if(invalidContinueFlag==0)
     {
         if (massFlag==0) Safe_Flush(stdin);
         puts("\nPress any key to run again or press 0 to exit");
@@ -602,24 +637,74 @@ int main(int argc, const char * argv[])
         if(continueFlag!='0')
         {
             fflush(stdin);
-            if ((argc>=2&&(TEST_FLAG!='0'||massFlag==1)))main(argc ,argv);
-            else
+            char *command;
+            if (argc>=2||argc==1)
             {
-                int argcNext=1;
-                const char** argvNext=(const char**)calloc(1, sizeof(char*));
-                argvNext[0]=(char*)calloc(1, sizeof(char));
-                argvNext[0]=argv[0];
-                main(argcNext, argvNext);
+                unsigned long argv0Length=strlen(argv[0]);
+                if(massFlag==1)
+                {
+                    
+                    command=(char*)calloc(argv0Length+strlen("--mode-0")+strlen(" --mass-test"), sizeof(char));
+                    
+                    strcpy(command, argv[0]);
+                    strcat(command, " --mode-");
+                    command[argv0Length+strlen("--mode- ")]=MODE;
+                    strcat(command, " --mass-test");
+                    
+                    FILE *tempComandFile=fopen("CommandTemp", "w");
+                    fputs(command, tempComandFile);
+                    fclose(tempComandFile);
+                    
+                    char *MassFilePath=GetFileExactPath(argv[0], "Mass_Test");
+                    
+                    FILE *commandFirst=fopen("CommandFirstTemp", "w");
+                    fputs(MassFilePath, commandFirst);
+                    fclose(commandFirst);
+                    free(MassFilePath);
+                }
+                else
+                {
+                    if (Check_Option(argc, argv, "--test")!=0)
+                    {
+                        if (argc>=3)
+                        {
+                            command=(char*)calloc(argv0Length+strlen("--mode-0")+strlen(" --test"), sizeof(char));
+                            strcpy(command, argv[0]);
+                            strcat(command, " --mode-");
+                            command[argv0Length+strlen("--mode- ")]=MODE;
+                        }
+                        else
+                        {
+                            command=(char*)calloc(argv0Length+strlen(" --test"), sizeof(char));
+                            strcpy(command, argv[0]);
+                        }
+                        strcat(command, " --test");
+                    }
+                    else
+                    {
+                        command=(char*)calloc(strlen(argv[0]), sizeof(char));
+                        strcpy(command, argv[0]);
+                    }
+                    
+                    FILE *tempComandFile=fopen("CommandTemp", "w");
+                    fputs(command, tempComandFile);
+                    fclose(tempComandFile);
+                    
+                    FILE *commandFirst=fopen("CommandFirstTemp", "w");
+                    fputs(command, tempComandFile);
+                    fclose(commandFirst);
+                }
             }
+            
+            free(command);
+            
+            
+            //            system(TextFile2Char(fopen("CommandTemp", "rt")));
+            //            main(argc, argv);
+            atexit(Next_Run);
+            
         }
     }
-    
-//    if (outputMode==1)
-//    {
-//        FILE *output=fopen(outputFileName, "rt");
-//        Show_File_Text(output);
-//        fclose(stdout);
-//    }
     
     return 0;
 }

@@ -16,7 +16,7 @@ double Determinant(double **Matrix,int n)
     Row_Echelon_Form(Matrix, n, n, 1);
     //    Show_Matrix(Matrix, 1, 1, n, n, 1);
     for (i=0; i<=n-1; i++)
-    result*=Matrix[i][i];
+        result*=Matrix[i][i];
     return result;
 }
 
@@ -53,19 +53,19 @@ int Row_Echelon_Form(double **Matrix,int m, int n,int DeterminantMODE)
                     k=(double)1/(Matrix[rowToBeExchanged][column]);                           // k等于第row_to_be_changed行第一个元素的倒数
                     Scalar_Multiplication(k, Matrix,rowToBeExchanged,m,n);
                     if (DeterminantMODE==1)
-                    coefficientOfEntireDeterminant*=1/k;
+                        coefficientOfEntireDeterminant*=1/k;
                 }
                 if(Matrix[j][column]!=0)                                                         // 从上到下找出首列元素不为零的行
                 {
                     k=(double)1/(Matrix[j][column]);                                             // k等于第j行第一个元素的倒数
                     Scalar_Multiplication(k, Matrix,j,m,n);                                      // k数乘第j行，使第j行第一个元素化为1
                     if (DeterminantMODE==1)
-                    coefficientOfEntireDeterminant*=1/k;
+                        coefficientOfEntireDeterminant*=1/k;
                     if(Matrix[rowToBeExchanged][column]==0)
                     {
                         Row_Exchange(Matrix, j,rowToBeExchanged,n);                           // 将第j行与第row_to_be_changed行交换
                         if (DeterminantMODE==1)
-                        coefficientOfEntireDeterminant*=(-1);
+                            coefficientOfEntireDeterminant*=(-1);
                     }
                     //printf("------------------------- Row %d <--> Row %d -----------------------\n",j+1,row_to_be_exchanged+1);
                     //Show_Matrix(Determinant, 1,1,n, n,1);
@@ -104,15 +104,15 @@ int Row_Echelon_Form(double **Matrix,int m, int n,int DeterminantMODE)
         last_1_LeadingCoefficient=Matrix[m-1][problemColumn+1];
         Scalar_Multiplication(1/last_2_LeadingCoefficient, Matrix,m-2,m,n);                         //先把倒数第二行首个非零元化为1
         if (DeterminantMODE==1)
-        coefficientOfEntireDeterminant*=last_2_LeadingCoefficient;
+            coefficientOfEntireDeterminant*=last_2_LeadingCoefficient;
         Scalar_Multiplication(1/last_1_LeadingCoefficient, Matrix,m-1,m,n);                         //再把倒数第一行首个非零元化为1
         if (DeterminantMODE==1)
-        coefficientOfEntireDeterminant*=last_1_LeadingCoefficient;
+            coefficientOfEntireDeterminant*=last_1_LeadingCoefficient;
         Row_Add(Matrix,m-1,m-2,n,1);                                                                 //倒数第一行减去倒数第二行，使成为阶梯
     }
     //    puts("-------------------------------------- Row Echelon Finish ---------------------------------------");
     if (DeterminantMODE==1)
-    Scalar_Multiplication(coefficientOfEntireDeterminant, Matrix, 0, m, n);
+        Scalar_Multiplication(coefficientOfEntireDeterminant, Matrix, 0, m, n);
     Approximate(Matrix, m, n, 6);
     //    if(n>9)Show_Matrix(Matrix, 1,n-9,n, n,1);
     //    else Show_Matrix(Matrix, 1,1,n, n,1);
@@ -172,9 +172,9 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
     {
         Solution_Matrix[i][0]=1;
         if(i<=m-1)
-        Solution_Matrix[i][n_of_Solution_Matrix-1]=AB[i][n];
+            Solution_Matrix[i][n_of_Solution_Matrix-1]=AB[i][n];
         else
-        Solution_Matrix[i][0]=1;
+            Solution_Matrix[i][0]=1;
     }
     int basicColumnCount=rankOf_A;
     
@@ -205,7 +205,7 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
     for (i=0; i<=n-1; i++)
     {
         if(i<=m-1)
-        row_i_LeadingColumn=Find_Leading_Column(AB, i, n);
+            row_i_LeadingColumn=Find_Leading_Column(AB, i, n);
         
         if (i!=row_i_LeadingColumn)
         {
@@ -285,7 +285,7 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     //        alpha[i]=Create_Matrix(m, 1, "Beta");
     double ***beta=(double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
     for (i=0; i<=n-1; i++)
-    beta[i]=Create_Matrix(m, 1, "Beta");
+        beta[i]=Create_Matrix(m, 1, "Beta");
     
     //    int r,s;
     
@@ -298,7 +298,7 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     //    }
     
     for (i=0; i<m; i++)
-    beta[0][i][0]=alpha[0][i][0];                                    //赋初始值beta1 = alpha1
+        beta[0][i][0]=alpha[0][i][0];                                    //赋初始值beta1 = alpha1
     
     int row=0,x=0;
     for (i=1; i<=n-1; i++)
@@ -309,7 +309,7 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
             double **temp=Create_Matrix(m, 1, "");
             
             for (row=0; row<m; row++)
-            temp[row][0]=beta[i-x-1][row][0];                          //复制Beta[i-1]的列向量到temp中
+                temp[row][0]=beta[i-x-1][row][0];                          //复制Beta[i-1]的列向量到temp中
             
             //            printf("------------------------------- temp[%d] -------------------------------\n",i-1);
             //            Show_Matrix(temp, 1, 1,m, 1, 1);
@@ -349,10 +349,10 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
     }
     
     for (i=0; i<n-1; i++)
-    Free_Matrix(alpha[i], m);
+        Free_Matrix(alpha[i], m);
     
     for (i=1; i<n-1; i++)
-    Free_Matrix(beta[i], m);
+        Free_Matrix(beta[i], m);
     
     return Result_Matrix;
 }

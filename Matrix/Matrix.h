@@ -50,7 +50,6 @@ typedef struct Config
 }sConfig;
 
 
-
 //--------------------------------------------------------- MODE ------------------------------------------------------------
 //MODE 1
 double Determinant(double **Matrix,int n);
@@ -73,6 +72,8 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n);
 
 
 //--------------------------------------------------------- Tools -----------------------------------------------------------
+char* TextFile2Char(FILE *fp);
+char* GetFileExactPath(const char* argvTemp,char *fileName);
 sConfig Read_Config(const char* programPath);
 void Config_Fill_Matrix(double **Matrix,sConfig configSource,int TYPE);
 void User_Input_Matrix(double **Matrix,int m,int n,char *TYPE);
@@ -85,6 +86,9 @@ double Mirror(double **Matrix, int row, int column, int m,int n);
 double Scalar_Product(double **Vector1,double **Vector2,int n);
 double** Vector_Normalization(double **Matrix,int m,int n);
 double** Matrix_Sum(double **A,double **B,int m,int n,int MODE);
+int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag);
+int Check_Option_Order(int argc, const char** argv, char *str1,unsigned long limN1,char *str2,unsigned long limN2);
+void Next_Run(void);
 //--------------------------------------------------------- Tools -----------------------------------------------------------
 
 

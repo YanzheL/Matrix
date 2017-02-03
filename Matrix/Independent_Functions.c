@@ -263,18 +263,30 @@ void Show_Menu_Page()
 
 void Show_Help_Page()
 {
-    puts("\nSyntax: Matrix [Commands] [options]");
+    puts("--------------------------------------------------------------------------------");
+    puts("\nSyntax: Matrix [Commands] [options]\n");
+    
     puts("Commands:");
-    puts("  -h --help        Show this help page");
+    puts("  -h --help        Show this help page\n");
+    
     puts("  -c --config      Read config file named 'config.json' from $DOCUMENT_ROOT");
+    puts("                   |You MUST write 'config.json' file in standard JSON format\n");
+    
     puts("     --menu        Show Mode Menu page");
     puts("     --mode-1      --mode-2      --mode-3");
     puts("     --mode-4      --mode-5      --mode-6");
-    puts("     --mode-7      --mode-8");
+    puts("     --mode-7      --mode-8\n");
+    
     puts("Options:");
     puts("  -o --out         Output stdout to FILE and store in $DOCUMENT_ROOT");
-    puts("     --test        Enable random fill test mode");
+    puts("     --test        Enable random fill test mode\n");
+    
     puts("     --mass-test   Enable Unstoppable test mode");
+    puts("                   |This mode will create 'Mass Test.txt' in $DOCUMENT_ROOT");
+    puts("                   |that store all the Command Line stdout ");
+    puts("                   |You MUST close the Command Line window mannually");
+    puts("                   |when you need to stop this process\n");
+    
     puts("Examples:");
     puts("  Matrix --help");
     puts("  Matrix -c");
@@ -344,6 +356,7 @@ void Show_MODE_Band(char MODE)
         }
     }
 }
+
 
 int Show_Header_Source()
 {
