@@ -9,3 +9,6 @@ According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determin
 <div align=center>
 <img src="https://github.com/YanzheL/Matrix_OSX/blob/master/main_menu.png">
 </div>
+<div align=center>
+<img src="https://github.com/YanzheL/Matrix_OSX/blob/master/help_page.png">
+</div>
