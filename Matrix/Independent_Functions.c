@@ -270,7 +270,7 @@ void Show_Help_Page()
     puts("Commands:");
     puts("  -h --help        Show this help page\n");
     
-    puts("  -c --config      Read config file named 'config.json' from $DOCUMENT_ROOT");
+    puts("  -c --config      Read config file named 'config.json' from $CURRENT_DIR");
     puts("                   |You MUST write 'config.json' file in standard JSON format\n");
     
     puts("     --menu        Show Mode Menu page");
@@ -279,11 +279,13 @@ void Show_Help_Page()
     puts("     --mode-7      --mode-8\n");
     
     puts("Options:");
-    puts("  -o --out         Output stdout to FILE and store in $DOCUMENT_ROOT");
+    puts("  -o --out         Output stdout to FILE and store in $CURRENT_DIR");
     puts("     --test        Enable random fill test mode\n");
     
     puts("     --mass-test   Enable Unstoppable test mode");
-    puts("                   |This mode will create 'Mass Test.txt' in $DOCUMENT_ROOT");
+    puts("                   |To use this mode, you MUST copy the 'Mass_Test' program");
+    puts("                   |to the same directory as the 'Matrix'");
+    puts("                   |This mode will create 'Mass Test.txt' in $CURRENT_DIR");
     puts("                   |that store all the Command Line stdout ");
     puts("                   |You MUST close the Command Line window mannually");
     puts("                   |when you need to stop this process\n");
