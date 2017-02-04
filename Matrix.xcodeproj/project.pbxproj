@@ -36,6 +36,7 @@
 		699B8E411E4342FD00ABB56C /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
 		699B8E421E43437900ABB56C /* MODE.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MODE.c; sourceTree = "<group>"; };
 		699B8E441E43462800ABB56C /* Tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Tools.c; sourceTree = "<group>"; };
+		69FA108C1E45D1B400485A30 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +53,7 @@
 		696F32581DEED93E002C8A51 = {
 			isa = PBXGroup;
 			children = (
+				69FA108C1E45D1B400485A30 /* .gitignore */,
 				696F32631DEED93E002C8A51 /* Matrix */,
 				696F32621DEED93E002C8A51 /* Products */,
 			);
