@@ -12,6 +12,6 @@ MODE.o : MODE.c Matrix.h
 Tools.o : Tools.c Matrix.h 
 	gcc -c Tools.c
 clean : 
-	sudo rm /usr/local/bin/Matrix main.o Independent_Functions.o cJSON.o MODE.o Tools.o
+	sudo rm /usr/local/bin/Matrix
 clean_o :
 	rm main.o Independent_Functions.o cJSON.o MODE.o Tools.o
