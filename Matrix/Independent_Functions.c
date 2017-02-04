@@ -268,11 +268,9 @@ void Show_Help_Page()
     puts("\nSyntax: Matrix [Commands] [options]\n");
     
     puts("Commands:");
-    puts("  -h --help        Show this help page\n");
-    
+    puts("  -h --help        Show this help page");
     puts("  -c --config      Read config file named 'config.json' from $CURRENT_DIR");
-    puts("                   |You MUST write 'config.json' file in standard JSON format\n");
-    
+    puts("                   |You MUST write 'config.json' file in standard JSON format");
     puts("     --menu        Show Mode Menu page");
     puts("     --mode-1      --mode-2      --mode-3");
     puts("     --mode-4      --mode-5      --mode-6");
@@ -280,8 +278,7 @@ void Show_Help_Page()
     
     puts("Options:");
     puts("  -o --out         Output stdout to FILE and store in $CURRENT_DIR");
-    puts("     --test        Enable random fill test mode\n");
-    
+    puts("     --test        Enable random fill test mode");
     puts("     --mass-test   Enable Unstoppable test mode");
     puts("                   |To use this mode, you MUST copy the 'Mass_Test' program");
     puts("                   |to the same directory as the 'Matrix'");
@@ -293,7 +290,8 @@ void Show_Help_Page()
     puts("Examples:");
     puts("  Matrix --help");
     puts("  Matrix -c");
-    puts("  Matrix --mode-8 --test -o");
+    puts("  Matrix -c -o");
+    puts("  Matrix --mode-8 --test");
     puts("  Matrix --mode-5 --mass-test");
 }
 
