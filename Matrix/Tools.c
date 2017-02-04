@@ -7,6 +7,7 @@
 //
 
 #include "Matrix.h"
+
 char* TextFile2Char(FILE *fp)
 {
     int i;
@@ -334,36 +335,86 @@ int Check_Option_Order(int argc, const char** argv, char *str1,unsigned long lim
     //return 9为 其中之一不存在
 }
 
-int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag)
+char** CommandList()
 {
-    int invalidOptionFlag=0;
-    int MAX_OPTIONS=17;
-    char **knownOptions=(char**)calloc(MAX_OPTIONS, sizeof(char*));
-    knownOptions[0]="-c";
+    char **allOptions=(char**)calloc(MAX_OPTIONS, sizeof(char*));
+    allOptions[0]="-c";
     int oNum;
     for (oNum=1; oNum<=8; oNum++)
     {
-        //        knownOptions[oNum]="--mode- ";
-        knownOptions[oNum]=(char*)calloc(9, sizeof(char));
-        strcpy(knownOptions[oNum], "--mode-");
+        allOptions[oNum]=(char*)calloc(9, sizeof(char));
+        strcpy(allOptions[oNum], "--mode-");
         char n[2]="0";
         n[0]=(char)('0'+oNum);
-        //        knownOptions[oNum]="--mode-";
-        strcat(knownOptions[oNum], n);
-        //        printf("modeOption = %s\n",modeOption);
-        //        *knownOptions[oNum]=*modeOption;
+        strcat(allOptions[oNum], n);
     }
-    knownOptions[9]="--config";
-    knownOptions[10]="-h";
-    knownOptions[11]="--help";
-    knownOptions[12]="--menu";
+    allOptions[9]="--config";
+    allOptions[10]="-h";
+    allOptions[11]="--help";
+    allOptions[12]="--menu";
     
     //---------- Options ----------
-    knownOptions[13]="-o";
-    knownOptions[14]="--out";
-    knownOptions[15]="--test";
-    knownOptions[16]="--mass-test";
-    int i,ini,j,k;
+    allOptions[13]="-o";
+    allOptions[14]="--out";
+    allOptions[15]="--test";
+    allOptions[16]="--mass-test";
+    
+    return allOptions;
+    
+}
+
+int Check_No_Command(int argc,const char** argv)
+{
+    char **allOptions=CommandList();
+    int i,j,existFlag;
+    existFlag=0;
+    int commandNum=0;
+    for (i=1; i<argc; i++)
+    {
+        for (j=0; j<MAX_OPTIONS; j++)                //确定传入参数是否在已知列表中
+        {
+            if (strcmp(argv[i], allOptions[j])==0)
+            {
+                existFlag=1;
+                break;
+            }
+        }
+        
+        if (existFlag==1)
+        {
+            for (j=0; j<=12; j++)
+            {
+                if (strcmp(argv[i], allOptions[j])==0)
+                {
+                    commandNum++;
+                    break;
+                }
+            }
+        }
+        else return 9;
+        existFlag=0;
+    }
+    
+    switch (commandNum)
+    {
+        case 0:
+        {
+            return 1;
+            break;
+        }
+        default:
+        {
+            return 0;
+            break;
+        }
+    }
+}
+
+int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag)
+{
+    int invalidOptionFlag=0;
+    char **knownOptions=CommandList();
+    int i,ini,j,k,oNum;
     int wrongOrderFlag=0;
     int problemOption=0;
     if(argc>=2)
@@ -374,7 +425,7 @@ int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag)
             
             for (j=13; j<=16; j++)
             {
-                if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), "--mode", 6)==0)
+                if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), "--mode-", 7)==0)
                 {
                     wrongOrderFlag=1;
                     break;
@@ -401,13 +452,22 @@ int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag)
                         break;
                     }
                 }
-                if (invalidOptionFlag==ini)
-                    problemOption=i;
+                if (invalidOptionFlag==ini) problemOption=i;
             }
             
         }
         
-        if (invalidOptionFlag!=0)
+        int noCommandFlag=0;
+        
+        if (argc>2&&Check_No_Command(argc, argv)==1)
+        {
+            printf("No command found; type '--help' for a list.\n");
+            puts("Syntax: Matrix [Commands] [Options]");
+            invalidOptionFlag=1;
+            noCommandFlag=1;
+        }
+        
+        if (invalidOptionFlag!=0&&noCommandFlag==0)
         {
             *invalidContinueFlag=1;
             if (wrongOrderFlag==0)
@@ -424,5 +484,7 @@ void Next_Run(void)
 {
     FILE *CommandFirst=fopen("CommandFirstTemp", "rt");
     char *command=TextFile2Char(CommandFirst);
+    fclose(CommandFirst);
+    remove("CommandFirstTemp");
     system(command);
 }

@@ -258,6 +258,7 @@ void Show_Menu_Page()
     puts("-     3----  Inverse Matrix  ----    4----   Matrix Multiplication   ----     --");
     puts("-     5---- Row Echelon Form ----    6----     Row Canonical Form    ----     --");
     puts("-     7---- Linear Equations ----    8---- Schmidt Orthogonalization ----     --");
+    puts("-     c----    Config Mode   ----    q----            Quit           ----     --");
     puts("--------------------------------------------------------------------------------");
 }
 

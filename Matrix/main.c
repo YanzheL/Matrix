@@ -191,7 +191,7 @@ int main(int argc, const char * argv[])
         printf("Please choose mode number: ");
         scanf("%c",&MODE);
         fflush(stdin);
-        while ((MODE>'8'||MODE<'1')&&MODE!='c')
+        while ((MODE>'8'||MODE<'1')&&MODE!='c'&&MODE!='q')
         {
             printf("\r");
             printf("Unavailable Choice, please choose again:");
@@ -200,6 +200,8 @@ int main(int argc, const char * argv[])
         }
     }
     
+    if (MODE=='q')return 0;
+    
     if (MODE=='c')
     {
         configMode=1;
@@ -207,7 +209,6 @@ int main(int argc, const char * argv[])
         receiveCfg=Read_Config(argv[0]);
         MODE=(char)(48+receiveCfg.getMODE);
         TEST_FLAG=(char)(48+receiveCfg.getTestFlag);
-        Show_MODE_Band(MODE);
     }
     
     Show_MODE_Band(MODE);
@@ -259,7 +260,7 @@ int main(int argc, const char * argv[])
         
         Approximate(Matrix, n, n, 6);
         
-        puts("--------------------------------- Confirm Input --------------------------------\n");
+        puts("\n--------------------------------- Confirm Input --------------------------------\n");
         if(n>9)
             Show_Matrix(Matrix, 1,n-9,n, n,1);
         else
@@ -374,7 +375,7 @@ int main(int argc, const char * argv[])
         
         Approximate(A, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
-        puts("--------------------------------- Confirm Input --------------------------------\n");
+        puts("\n--------------------------------- Confirm Input --------------------------------\n");
         if(Matrix_Description[1].n>14)
         {
             printf(" ----------------------------------- A %d X %d ---------------------------------\n",Matrix_Description[0].m,Matrix_Description[0].n);
@@ -492,7 +493,7 @@ int main(int argc, const char * argv[])
                 scanf("%c",&normFlag);
             }
             
-            puts("--------------------------------- Confirm Input --------------------------------\n");
+            puts("\n--------------------------------- Confirm Input --------------------------------\n");
             if(Matrix_Description[0].n>9)
                 Show_Matrix(Input_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
             else
@@ -516,7 +517,7 @@ int main(int argc, const char * argv[])
         
         else
         {
-            puts("--------------------------------- Confirm Input --------------------------------\n");
+            puts("\n--------------------------------- Confirm Input --------------------------------\n");
             if(Matrix_Description[0].n>9)
                 Show_Matrix(Input_Matrix, 1,Matrix_Description[0].n-9,Matrix_Description[0].m, Matrix_Description[0].n,1);
             else
@@ -579,7 +580,7 @@ int main(int argc, const char * argv[])
         
         Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n+1, 6);
         
-        puts("--------------------------------- Confirm Input --------------------------------\n");
+        puts("\n--------------------------------- Confirm Input --------------------------------\n");
         if(Matrix_Description[0].n>9)
             Show_Matrix(AB, 1,Matrix_Description[0].n+1-9,Matrix_Description[0].m, Matrix_Description[0].n+1,1);
         else
@@ -697,10 +698,7 @@ int main(int argc, const char * argv[])
             }
             
             free(command);
-            
-            
-            //            system(TextFile2Char(fopen("CommandTemp", "rt")));
-            //            main(argc, argv);
+
             atexit(Next_Run);
             
         }

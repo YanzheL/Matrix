@@ -14,6 +14,7 @@
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
+#define MAX_OPTIONS 17
 //#define GET_CURRENT_PATH_MODE
 #define CONFIG_FILE_NAME "config.json"
 
@@ -86,6 +87,8 @@ double Mirror(double **Matrix, int row, int column, int m,int n);
 double Scalar_Product(double **Vector1,double **Vector2,int n);
 double** Vector_Normalization(double **Matrix,int m,int n);
 double** Matrix_Sum(double **A,double **B,int m,int n,int MODE);
+char** CommandList();
+int Check_No_Command(int argc,const char** argv);
 int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag);
 int Check_Option_Order(int argc, const char** argv, char *str1,unsigned long limN1,char *str2,unsigned long limN2);
 void Next_Run(void);
