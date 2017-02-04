@@ -367,8 +367,8 @@ int Show_Header_Source()
     return Show_File_Text(fp);
 }
 
-#ifdef OSX
-//-------------------------------------------- 针对OSX系统，定义getch函数 --------------------------------------------
+#ifdef UNIX
+//-------------------------------------------- 针对UNIX系统，定义getch函数 --------------------------------------------
 #include <termios.h>
 
 /* Initialize new terminal i/o settings */

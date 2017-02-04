@@ -9,7 +9,7 @@
 #ifndef Matrix_h
 #define Matrix_h
 
-#define OSX
+#define UNIX
 #define M_RAND_MIN 20
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
@@ -126,8 +126,8 @@ int Show_Header_Source();
 void Show_MODE_Band(char MODE);
 int Check_Option(int argc, const char **argv, char *option);
 
-#ifdef OSX
-//---------------------------------- 针对OSX系统，定义getch函数 ----------------------------------
+#ifdef UNIX
+//---------------------------------- 针对UNIX系统，定义getch函数 ----------------------------------
 #include <termios.h>
 static struct termios old, new;
 

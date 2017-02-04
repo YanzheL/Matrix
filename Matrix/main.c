@@ -28,18 +28,18 @@ int main(int argc, const char * argv[])
     if (Check_Option(argc, argv, "-c")!=0||Check_Option(argc, argv, "--config")!=0)configMode=1;
     if (Check_Option(argc, argv, "--mass-test")!=0)
     {
-#ifdef OSX
+#ifdef UNIX
 		massFlag = 1;
 		TEST_FLAG = '1';
 #else
 		system("cls");
 		puts("\nMass Test mode is only available on UNIX platforms. Bypassing...");
 		return 0;
-#endif // OSX
+#endif // UNIX
     }
     if (invalidOptionFlag==0&&massFlag==0)
     {
-#ifdef OSX
+#ifdef UNIX
         system("clear");
 #endif
 #ifdef WINDOWS
@@ -56,14 +56,14 @@ int main(int argc, const char * argv[])
         }
         else
         {
-#ifdef OSX
+#ifdef UNIX
 			outputMode = 1;
 			puts("\nOutput success\n");
 #else
 			system("cls");
 			puts("\nOutput mode is only available on UNIX platforms. Bypassing...");
 			return 0;
-#endif // OSX
+#endif // UNIX
         }
     }
     if (Check_Option(argc, argv, "--test")!=0) TEST_FLAG='1';
@@ -101,7 +101,7 @@ int main(int argc, const char * argv[])
         puts("So prove that you are the Lord");                   //需要输入密码
         for(k=0;k<14;k++)
         {
-#ifdef OSX
+#ifdef UNIX
             passwd[k]=getch_(0);
 #endif
 #ifdef WINDOWS
@@ -135,7 +135,7 @@ int main(int argc, const char * argv[])
     
 //    if (invalidOptionFlag==0&&outputMode==0)
 //    {
-//#ifdef OSX
+//#ifdef UNIX
 //        system("clear");
 //#endif
 //#ifdef WINDOWS
