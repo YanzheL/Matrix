@@ -1,5 +1,6 @@
 Matrix : main.o Independent_Functions.o cJSON.o MODE.o Tools.o
 	sudo gcc -o /usr/local/bin/Matrix main.o Independent_Functions.o cJSON.o MODE.o Tools.o -lm
+	make clean_o
 main.o : main.c Matrix.h
 	gcc -c main.c
 Independent_Functions.o : Independent_Functions.c Matrix.h 
