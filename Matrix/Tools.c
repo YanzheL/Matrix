@@ -8,42 +8,56 @@
 
 #include "Matrix.h"
 
+char* TextFile2Char(FILE *fp)
+{
+    int i;
+    long int length;
+    fseek(fp,0L,SEEK_END);
+    length=ftell(fp);
+    fseek(fp,0L,SEEK_SET);
+    
+    //        printf("length = %ld\n",length);
+    
+    char *fstr=(char*)calloc(length, sizeof(char));
+    char C;
+    for (i=0;;i++)
+    {
+        C=fgetc(fp);
+        if (C==EOF)break;
+        fstr[i]=C;
+    }
+    return fstr;
+}
+
+char* GetFileExactPath(const char* argvTemp,char *fileName)
+{
+    char *filePath=(char*)calloc(strlen(argvTemp)-strlen("Matrix")+strlen(fileName), sizeof(char));
+    filePath=strncpy(filePath, argvTemp, strlen(argvTemp)-strlen("Matrix"));
+    strcat(filePath, fileName);
+    return filePath;
+}
+
 sConfig Read_Config(const char* programPath)
 {
     sConfig readResult;
     
 #ifdef GET_CURRENT_PATH_MODE
-    char *configPath=(char*)calloc(strlen(programPath)-strlen("Matrix")+strlen(CONFIG_FILE_NAME), sizeof(char));
-    configPath=strncpy(configPath, programPath, strlen(programPath)-strlen("Matrix"));
-    strcat(configPath, CONFIG_FILE_NAME);
-    
-//    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
+    char *configPath=GetFileExactPath(argv[0], CONFIG_FILE_NAME);
+    //    printf("Length = %lu\nPath = %s\n",strlen(configPath),configPath);
     FILE *fp=fopen(configPath,"rt");
 #else
     FILE *fp=fopen(CONFIG_FILE_NAME,"rt");
 #endif
     
     if (fp==NULL)
-    perror("Config open error");
+    {
+        perror("Config open error");
+        exit(0);
+    }
     else
     {
         int i;
-        long int length;
-        fseek(fp,0L,SEEK_END);
-        length=ftell(fp);
-        fseek(fp,0L,SEEK_SET);
-        
-        //        printf("length = %ld\n",length);
-        
-        char *fstr=(char*)calloc(length, sizeof(char));
-        char C;
-        for (i=0;;i++)
-        {
-            C=fgetc(fp);
-            if (C==EOF)break;
-            fstr[i]=C;
-        }
-        
+        char *fstr=TextFile2Char(fp);
         //        printf("%s\n",fstr);
         
         cJSON * root = cJSON_Parse(fstr);
@@ -78,13 +92,13 @@ sConfig Read_Config(const char* programPath)
         column=0;
         i=0;
         if (Elements_Two!=NULL)
-        for (row=0; row<readResult.getM_Two; row++)
-        {
-            for (column=0; column<readResult.getN_Two; column++,i++)
+            for (row=0; row<readResult.getM_Two; row++)
             {
-                readResult.getElements_Two[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_Two, row), column)->valuedouble;
+                for (column=0; column<readResult.getN_Two; column++,i++)
+                {
+                    readResult.getElements_Two[i]=cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_Two, row), column)->valuedouble;
+                }
             }
-        }
         free(fstr);
         //        printf("getMODE = %d\n",readResult.getMODE);
         //        printf("getTestFlag = %d\n",readResult.getTestFlag);
@@ -106,21 +120,21 @@ void Config_Fill_Matrix(double **Matrix,sConfig configSource,int TYPE)
     int i,j;
     int num=0;
     if (TYPE==1)
-    for (i=0; i<configSource.getM_One; i++)
-    {
-        for (j=0; j<configSource.getN_One; j++,num++)
+        for (i=0; i<configSource.getM_One; i++)
         {
-            Matrix[i][j]=configSource.getElements_One[num];
+            for (j=0; j<configSource.getN_One; j++,num++)
+            {
+                Matrix[i][j]=configSource.getElements_One[num];
+            }
         }
-    }
     if (TYPE==2)
-    for (i=0; i<configSource.getM_Two; i++)
-    {
-        for (j=0; j<configSource.getN_Two; j++,num++)
+        for (i=0; i<configSource.getM_Two; i++)
         {
-            Matrix[i][j]=configSource.getElements_Two[num];
+            for (j=0; j<configSource.getN_Two; j++,num++)
+            {
+                Matrix[i][j]=configSource.getElements_Two[num];
+            }
         }
-    }
 }
 
 void User_Input_Matrix(double **Matrix,int m,int n,char *TYPE)
@@ -171,7 +185,7 @@ int Find_Rank(double **Matrix,int m,int n)
     for (i=0; i<=m-1; i++)
     {
         for (j=0; j<=n-1; j++)
-        Copy_Of_Matrix[i][j]=Matrix[i][j];                        //把传来的矩阵元素复制到新的Copy矩阵里，防止影响原矩阵
+            Copy_Of_Matrix[i][j]=Matrix[i][j];                        //把传来的矩阵元素复制到新的Copy矩阵里，防止影响原矩阵
     }
     if(Row_Echelon_Form(Copy_Of_Matrix, m, n, 0)==0)return 0;
     else
@@ -194,7 +208,7 @@ int Check_Linear_Equation_Solution_Existance(double **AB,int m,int n)
     int rank_A=Find_Rank(AB, m, n),rank_AB=Find_Rank(AB, m, n+1);
     printf("Rank A = %d\nRank AB = %d\n",rank_A,rank_AB);
     if((rank_A!=rank_AB)||rank_A==0)
-    return 0;
+        return 0;
     else return 1;
 }
 
@@ -206,7 +220,7 @@ double** Transpose_Matrix(double **Matrix,int m,int n)
     for (i=0; i<=n-1; i++)
     {
         for (j=0; j<=m-1; j++)
-        Transpose_Matrix[i][j]=Matrix[j][i];
+            Transpose_Matrix[i][j]=Matrix[j][i];
     }
     return Transpose_Matrix;
 }
@@ -249,13 +263,13 @@ double Mirror(double **Matrix, int row, int column, int m,int n)                
         for (j=0; j<=n-2; j++)
         {
             if (i<row&&j<column)                                                            //通过跳过指定的行、列来创建余子矩阵
-            Mirror_Matrix[i][j]=Matrix[i][j];
+                Mirror_Matrix[i][j]=Matrix[i][j];
             else if(i<row&&j>=column)
-            Mirror_Matrix[i][j]=Matrix[i][j+1];
+                Mirror_Matrix[i][j]=Matrix[i][j+1];
             else if(i>=row&&j<column)
-            Mirror_Matrix[i][j]=Matrix[i+1][j];
+                Mirror_Matrix[i][j]=Matrix[i+1][j];
             else if(i>=row&&j>=column)
-            Mirror_Matrix[i][j]=Matrix[i+1][j+1];
+                Mirror_Matrix[i][j]=Matrix[i+1][j+1];
         }
     }
     result=Determinant(Mirror_Matrix, n-1);
@@ -298,6 +312,179 @@ double** Vector_Normalization(double **Matrix,int m,int n)
     
     free(product);
     for (i=0; i<n; i++)
-    Free_Matrix(vector_System[i], m);
+        Free_Matrix(vector_System[i], m);
     return Result_Matrix;
+}
+
+int Check_Option_Order(int argc, const char** argv, char *str1,unsigned long limN1,char *str2,unsigned long limN2)
+{
+    int i;
+    int addr1=0;
+    int addr2=0;
+    for (i=0; i<argc; i++)
+    {
+        if (strncmp(argv[i], str1, limN1)==0)
+            addr1=i;
+        if (strncmp(argv[i], str2, limN2)==0)
+            addr2=i;
+    }
+    if (addr1==0||addr2==0) return 9;
+    return (addr1<=addr2)?0:1;
+    //return 0为 顺序 str1 str2
+    //return 1为 逆序 str2 str1
+    //return 9为 其中之一不存在
+}
+
+char** CommandList()
+{
+    char **allOptions=(char**)calloc(MAX_OPTIONS, sizeof(char*));
+    allOptions[0]="-c";
+    int oNum;
+    for (oNum=1; oNum<=8; oNum++)
+    {
+        allOptions[oNum]=(char*)calloc(9, sizeof(char));
+        strcpy(allOptions[oNum], "--mode-");
+        char n[2]="0";
+        n[0]=(char)('0'+oNum);
+        strcat(allOptions[oNum], n);
+    }
+    allOptions[9]="--config";
+    allOptions[10]="-h";
+    allOptions[11]="--help";
+    allOptions[12]="--menu";
+    
+    //---------- Options ----------
+    allOptions[13]="-o";
+    allOptions[14]="--out";
+    allOptions[15]="--test";
+    allOptions[16]="--mass-test";
+    
+    return allOptions;
+    
+}
+
+int Check_No_Command(int argc,const char** argv)
+{
+    char **allOptions=CommandList();
+    int i,j,existFlag;
+    existFlag=0;
+    int commandNum=0;
+    for (i=1; i<argc; i++)
+    {
+        for (j=0; j<MAX_OPTIONS; j++)                //确定传入参数是否在已知列表中
+        {
+            if (strcmp(argv[i], allOptions[j])==0)
+            {
+                existFlag=1;
+                break;
+            }
+        }
+        
+        if (existFlag==1)
+        {
+            for (j=0; j<=12; j++)
+            {
+                if (strcmp(argv[i], allOptions[j])==0)
+                {
+                    commandNum++;
+                    break;
+                }
+            }
+        }
+        else return 9;
+        existFlag=0;
+    }
+    
+    switch (commandNum)
+    {
+        case 0:
+        {
+            return 1;
+            break;
+        }
+        default:
+        {
+            return 0;
+            break;
+        }
+    }
+}
+
+int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag)
+{
+    int invalidOptionFlag=0;
+    char **knownOptions=CommandList();
+    int i,ini,j,k,oNum;
+    int wrongOrderFlag=0;
+    int problemOption=0;
+    if(argc>=2)
+    {
+        invalidOptionFlag=argc-1;
+        for (i=1; i<argc; i++)
+        {
+            
+            for (j=13; j<=16; j++)
+            {
+                if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), "--mode-", 7)==0)
+                {
+                    wrongOrderFlag=1;
+                    break;
+                }
+                for (k=10; k<=12; k++)
+                {
+                    if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), knownOptions[k], strlen(knownOptions[k]))==0)
+                    {
+                        wrongOrderFlag=1;
+                        break;
+                    }
+                }
+            }
+            if (wrongOrderFlag==0)
+            {
+                ini=invalidOptionFlag;
+                for (oNum=0; oNum<MAX_OPTIONS; oNum++)
+                {
+                    //                printf("argc = %d\nargv[%d] = %s\nknownOptions[%d] = %s\n",argc,i,argv[i],oNum,knownOptions[oNum]);
+                    if (strcmp(argv[i], knownOptions[oNum])==0)
+                    {
+                        //                    printf("Bingo\n");
+                        invalidOptionFlag--;
+                        break;
+                    }
+                }
+                if (invalidOptionFlag==ini) problemOption=i;
+            }
+            
+        }
+        
+        int noCommandFlag=0;
+        
+        if (argc>2&&Check_No_Command(argc, argv)==1)
+        {
+            printf("No command found; type '--help' for a list.\n");
+            puts("Syntax: Matrix [Commands] [Options]");
+            invalidOptionFlag=1;
+            noCommandFlag=1;
+        }
+        
+        if (invalidOptionFlag!=0&&noCommandFlag==0)
+        {
+            *invalidContinueFlag=1;
+            if (wrongOrderFlag==0)
+                printf("Invalid option '%s'; type '--help' for a list.\n",argv[problemOption]);
+            else
+                printf("Invalid command order; type '--help' for a list.\n");
+            puts("Syntax: Matrix [Commands] [Options]");
+        }
+    }
+    return invalidOptionFlag;
+}
+
+void Next_Run(void)
+{
+    FILE *CommandFirst=fopen("CommandFirstTemp", "rt");
+    char *command=TextFile2Char(CommandFirst);
+    fclose(CommandFirst);
+    remove("CommandFirstTemp");
+    system(command);
 }

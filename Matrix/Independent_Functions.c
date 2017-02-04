@@ -258,23 +258,38 @@ void Show_Menu_Page()
     puts("-     3----  Inverse Matrix  ----    4----   Matrix Multiplication   ----     --");
     puts("-     5---- Row Echelon Form ----    6----     Row Canonical Form    ----     --");
     puts("-     7---- Linear Equations ----    8---- Schmidt Orthogonalization ----     --");
+    puts("-     c----    Config Mode   ----    q----            Quit           ----     --");
     puts("--------------------------------------------------------------------------------");
 }
 
 void Show_Help_Page()
 {
-    puts("\nSyntax: Matrix [Commands] [options]");
+    puts("--------------------------------------------------------------------------------");
+    puts("\nSyntax: Matrix [Commands] [options]\n");
+    
     puts("Commands:");
-    puts("  -h --help        Show this help page");
-    puts("  -c --config      Read config file named 'config.json' from $DOCUMENT_ROOT");
+    puts("  -h --help        Show this help page\n");
+    
+    puts("  -c --config      Read config file named 'config.json' from $CURRENT_DIR");
+    puts("                   |You MUST write 'config.json' file in standard JSON format\n");
+    
     puts("     --menu        Show Mode Menu page");
     puts("     --mode-1      --mode-2      --mode-3");
     puts("     --mode-4      --mode-5      --mode-6");
-    puts("     --mode-7      --mode-8");
+    puts("     --mode-7      --mode-8\n");
+    
     puts("Options:");
-    puts("  -o --out         Output stdout to FILE and store in $DOCUMENT_ROOT");
-    puts("     --test        Enable random fill test mode");
+    puts("  -o --out         Output stdout to FILE and store in $CURRENT_DIR");
+    puts("     --test        Enable random fill test mode\n");
+    
     puts("     --mass-test   Enable Unstoppable test mode");
+    puts("                   |To use this mode, you MUST copy the 'Mass_Test' program");
+    puts("                   |to the same directory as the 'Matrix'");
+    puts("                   |This mode will create 'Mass Test.txt' in $CURRENT_DIR");
+    puts("                   |that store all the Command Line stdout ");
+    puts("                   |You MUST close the Command Line window mannually");
+    puts("                   |when you need to stop this process\n");
+    
     puts("Examples:");
     puts("  Matrix --help");
     puts("  Matrix -c");
@@ -345,14 +360,15 @@ void Show_MODE_Band(char MODE)
     }
 }
 
+
 int Show_Header_Source()
 {
     FILE *fp = fopen(__FILE__, "r");
     return Show_File_Text(fp);
 }
 
-#ifdef OSX
-//-------------------------------------------- 针对OSX系统，定义getch函数 --------------------------------------------
+#ifdef UNIX
+//-------------------------------------------- 针对UNIX系统，定义getch函数 --------------------------------------------
 #include <termios.h>
 
 /* Initialize new terminal i/o settings */
