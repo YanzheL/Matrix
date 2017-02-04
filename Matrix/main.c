@@ -81,9 +81,9 @@ int main(int argc, const char * argv[])
         time_t timeRaw;
         time(&timeRaw);
         outputFileName=ctime(&timeRaw);
-        char *outTemp=(char*)calloc(strlen("【MODE 0】OUTPUT")+strlen(outputFileName)+strlen(".txt"), sizeof(char));
-        strcpy(outTemp, "【MODE  】");
-        outTemp[strlen("【MODE ")]=MODE;
+        char *outTemp=(char*)calloc(strlen("[MODE 0]OUTPUT")+strlen(outputFileName)+strlen(".txt"), sizeof(char));
+        strcpy(outTemp, "[MODE  ]");
+        outTemp[strlen("[MODE ")]=MODE;
         strcat(outTemp, "OUTPUT ");
         strcat(outTemp, outputFileName);
         outTemp[strlen(outTemp)-1]=' ';
