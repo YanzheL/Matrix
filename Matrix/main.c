@@ -89,6 +89,7 @@ int main(int argc, const char * argv[])
         outTemp[strlen(outTemp)-1]=' ';
         strcat(outTemp, ".txt");
         outputFileName=outTemp;
+        strrpl(outputFileName, ' ', '_', strlen(outputFileName));
         if (configMode==1)freopen(outputFileName, "w", stdout);
     }
     

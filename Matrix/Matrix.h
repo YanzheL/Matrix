@@ -91,6 +91,7 @@ char** CommandList();
 int Check_No_Command(int argc,const char** argv);
 int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag);
 int Check_Option_Order(int argc, const char** argv, char *str1,unsigned long limN1,char *str2,unsigned long limN2);
+void strrpl(char* src, char ch1,char ch2,unsigned long length);
 void Next_Run(void);
 //--------------------------------------------------------- Tools -----------------------------------------------------------
 

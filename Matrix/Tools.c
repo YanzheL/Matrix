@@ -480,6 +480,15 @@ int Check_Known_Options(int argc,const char** argv,int *invalidContinueFlag)
     return invalidOptionFlag;
 }
 
+void strrpl(char* src, char ch1,char ch2,unsigned long length)
+{
+    int i;
+    for (i=0; i<length-1; i++)
+    {
+        if (src[i]==ch1) src[i]=ch2;
+    }
+}
+
 void Next_Run(void)
 {
     FILE *CommandFirst=fopen("CommandFirstTemp", "rt");
