@@ -130,11 +130,11 @@ int Row_Canonical_Form(double **Matrix,int m, int n)
     {
         returnValueOf_Find_Leading_Column=Find_Leading_Column(Matrix, i, n);
         if (returnValueOf_Find_Leading_Column!=0)
-        {
             lastNoZeroRow=i;
-        }
+        
         rowLastCoefficient=Matrix[lastNoZeroRow][Find_Leading_Column(Matrix, lastNoZeroRow, n)];
-        if (rowLastCoefficient!=0)Scalar_Multiplication(1/rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
+        if (rowLastCoefficient!=0)
+            Scalar_Multiplication(1/rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
     }
     
     for (row=0; row<=m-2; row++)
@@ -211,10 +211,7 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
         {
             for (j=0; j<=n-rankOf_A-1; j++)
             {
-                if (i==non_basic_column_array[0][j])
-                {
-                    break;
-                }
+                if (i==non_basic_column_array[0][j]) break;
             }
             Solution_Matrix[i][j+1]=1;
         }
@@ -228,10 +225,7 @@ void Build_Solution_Matrix(double **AB,double **Solution_Matrix,int m,int n,int 
                     Solution_Matrix[i][j+1]=-AB[i][(int)non_basic_column_array[0][j]];
                 }
             }
-            else
-            {
-                Solution_Matrix[i][j+1]=1;
-            }
+            else Solution_Matrix[i][j+1]=1;
             
         }
     }
@@ -253,13 +247,9 @@ int Reverse_Matrix(double **Matrix,int n)
             for (j=0; j<=2*n-1; j++)
             {
                 if (j<=n-1)
-                {
                     Combined_Matrix[i][j]=Matrix[i][j];
-                }
                 else
-                {
                     Combined_Matrix[i][j]=(i==(j-n))?1:0;
-                }
             }
         }
         Row_Canonical_Form(Combined_Matrix, n, 2*n);
@@ -309,7 +299,9 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
             double **temp=Create_Matrix(m, 1, "");
             
             for (row=0; row<m; row++)
+            {
                 temp[row][0]=beta[i-x-1][row][0];                          //复制Beta[i-1]的列向量到temp中
+            }
             
             //            printf("------------------------------- temp[%d] -------------------------------\n",i-1);
             //            Show_Matrix(temp, 1, 1,m, 1, 1);
@@ -327,10 +319,8 @@ double** Schmidt_Orthogonalization(double **Matrix,int m,int n)
             //            Show_Matrix(temp, 1, 1,m, 1, 1);
             
             sum=Matrix_Sum(sum, temp, m, 1, 0);
-            
             //            printf("------------------------------- Sum[%d] -------------------------------\n",x);
             //            Show_Matrix(sum, 1, 1, m, 1, 1);
-            
             Free_Matrix(temp, m);
             Free_Matrix(transpose_temp, 1);
         }

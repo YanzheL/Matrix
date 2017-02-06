@@ -29,12 +29,12 @@ int main(int argc, const char * argv[])
     if (Check_Option(argc, argv, "--mass-test")!=0)
     {
 #ifdef UNIX
-		massFlag = 1;
-		TEST_FLAG = '1';
+        massFlag = 1;
+        TEST_FLAG = '1';
 #else
-		system("cls");
-		puts("\nMass Test mode is only available on UNIX platforms. Bypassing...");
-		return 0;
+        system("cls");
+        puts("\nMass Test mode is only available on UNIX platforms. Bypassing...");
+        return 0;
 #endif // UNIX
     }
     if (invalidOptionFlag==0&&massFlag==0)
@@ -57,12 +57,12 @@ int main(int argc, const char * argv[])
         else
         {
 #ifdef UNIX
-			outputMode = 1;
-			puts("\nOutput success\n");
+            outputMode = 1;
+            puts("\nOutput success\n");
 #else
-			system("cls");
-			puts("\nOutput mode is only available on UNIX platforms. Bypassing...");
-			return 0;
+            system("cls");
+            puts("\nOutput mode is only available on UNIX platforms. Bypassing...");
+            return 0;
 #endif // UNIX
         }
     }
@@ -134,15 +134,15 @@ int main(int argc, const char * argv[])
         return 0;
     }
     
-//    if (invalidOptionFlag==0&&outputMode==0)
-//    {
-//#ifdef UNIX
-//        system("clear");
-//#endif
-//#ifdef WINDOWS
-//        system("cls");
-//#endif
-//    }
+    //    if (invalidOptionFlag==0&&outputMode==0)
+    //    {
+    //#ifdef UNIX
+    //        system("clear");
+    //#endif
+    //#ifdef WINDOWS
+    //        system("cls");
+    //#endif
+    //    }
     
     if(argc>=2&&(strcmp(argv[1], "--help")==0||strcmp(argv[1], "-h")==0))
     {
@@ -711,7 +711,7 @@ int main(int argc, const char * argv[])
             }
             
             free(command);
-
+            
             atexit(Next_Run);
             
         }
