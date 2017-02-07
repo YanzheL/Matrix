@@ -23,7 +23,9 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#ifdef UNIX
 #include <unistd.h>
+#endif
 #include "cJSON.h"
 
 #ifdef WINDOWS
