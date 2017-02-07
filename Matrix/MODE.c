@@ -83,7 +83,7 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 
 		//puts("------------------------ Add Finish ------------------------------");
 		//Show_Matrix(AB, m, n,1);
-//		noZeroRowCount = 0;
+		noZeroRowCount = 0;
 
 		//printf("------------------------- Column %d Finish ------------------------\n\n",column+1);
 	}
