@@ -1,4 +1,4 @@
-#Matrix
+﻿#Matrix
 
 ###Matrix is a command line application which is used for solving simple linear algebra problems.<br>
 ###This program mainly suit for UNIX plaforms, but files in "Matrix" folder is still compatible with Windows (With some functions disabled)<br>
