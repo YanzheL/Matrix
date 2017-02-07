@@ -651,7 +651,7 @@ int main(int argc, const char * argv[])
         if(continueFlag!='0')
         {
             fflush(stdin);
-            char *command;
+            char *command="";
             if (argc>=2||argc==1)
             {
                 unsigned long argv0Length=strlen(argv[0]);
