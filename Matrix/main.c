@@ -5,7 +5,6 @@
 //  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
-
 #include "Matrix.h"
 static char TEST_FLAG = '0';
 static char MODE = '0';
@@ -14,8 +13,8 @@ static char MODE = '0';
 int main(int argc, const char * argv[])
 {
 	int invalidOptionFlag = 0;
-//	int helpFlag = 0;
-//	int lordFlag = 0;
+	int helpFlag = 0;
+	int lordFlag = 0;
 	int massFlag = 0;
 	int configMode = 0;
 	int outputMode = 0;
@@ -96,7 +95,7 @@ int main(int argc, const char * argv[])
 
 	if (argc == 2 && strcmp(argv[1], "--lord") == 0)               //上帝模式，可以打印出程序自身源码
 	{
-//		lordFlag = 1;
+		lordFlag = 1;
 		invalidContinueFlag = 1;
 		char passwd[15];
 		int k, l;
@@ -147,7 +146,7 @@ int main(int argc, const char * argv[])
 
 	if (argc >= 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0))
 	{
-//		helpFlag = 1;
+		helpFlag = 1;
 		Show_Index_Page();
 		Show_Help_Page();
 		invalidContinueFlag = 1;
