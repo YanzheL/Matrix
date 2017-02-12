@@ -658,7 +658,13 @@ int main(int argc, const char * argv[])
     if (invalidContinueFlag == 1) puts("");
     
     int robotFlag=1;
+#ifdef UNIX
     if (access("robotBegin", 0)==-1)robotFlag=0;
+#endif
+#ifdef WINDOWS
+    if (_access("robotBegin", 0)==-1)robotFlag=0;
+#endif
+    
     if (invalidContinueFlag == 0)
     {
         if (massFlag == 0) Safe_Flush(stdin);
