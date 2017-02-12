@@ -12,6 +12,7 @@ static char MODE = '0';
 //-----------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, const char * argv[])
 {
+    srand((unsigned)time(0));
     int invalidOptionFlag = 0;
     int helpFlag = 0;
     int lordFlag = 0;
@@ -321,8 +322,8 @@ int main(int argc, const char * argv[])
         
         if (TEST_FLAG != '0')
         {
-            Test_Scanf(Matrix_Description, 1, M_RAND_MIN, M_RAND_MAX, N_RAND_MIN, N_RAND_MAX);
-            Test_Scanf(Matrix_Description, 2, M_RAND_MIN, M_RAND_MAX, N_RAND_MIN, N_RAND_MAX);
+            Test_Scanf(Matrix_Description, 1, M_RAND_MIN, M_RAND_MAX+rand()%500, N_RAND_MIN, N_RAND_MAX+rand()%500);
+            Test_Scanf(Matrix_Description, 2, M_RAND_MIN, M_RAND_MAX, 3+rand()%3, N_RAND_MAX+rand()%500);
             Matrix_Description[1].m = Matrix_Description[0].n;
         }
         else if (configMode == 0)
@@ -387,19 +388,30 @@ int main(int argc, const char * argv[])
         }
         else
         {
-            Rand_Fill(A, Matrix_Description[0].m, Matrix_Description[0].n, 50, 500, 0);
-            Rand_Fill(B, Matrix_Description[1].m, Matrix_Description[1].n, 50, 500, 0);
+            Rand_Fill(A, Matrix_Description[0].m, Matrix_Description[0].n, -250, 500, 0);
+            Rand_Fill(B, Matrix_Description[1].m, Matrix_Description[1].n, -250, 500, 0);
         }
+        
         
         Approximate(A, Matrix_Description[0].m, Matrix_Description[0].n, 6);
         
         puts("\n--------------------------------- Confirm Input --------------------------------\n");
-        if (Matrix_Description[1].n > 14)
+        if (Matrix_Description[0].n > 8||Matrix_Description[1].n > 8)
         {
             printf(" ----------------------------------- A %d X %d ---------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
-            Show_Matrix(A, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+            if (Matrix_Description[0].n > 8)
+            {
+                printf("  -------------------------------- Last 8 Columns ---------------------------- \n");
+                Show_Matrix(A, 1, Matrix_Description[0].n - 7, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+            }
+            else Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
             printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
-            Show_Matrix(B, 1, Matrix_Description[1].n - 9, Matrix_Description[1].m, Matrix_Description[1].n, 1);
+            if (Matrix_Description[1].n > 8)
+            {
+                printf("  -------------------------------- Last 8 Columns ---------------------------- \n");
+                Show_Matrix(B, 1, Matrix_Description[1].n - 7, Matrix_Description[1].m, Matrix_Description[1].n, 1);
+            }
+            else Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
         }
         else
         {
@@ -428,14 +440,15 @@ int main(int argc, const char * argv[])
         
         Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[1].n, 5);
         
-        if (Matrix_Description[1].n > 14)
+        if (Matrix_Description[1].n >= 8)
         {
 //            printf(" ----------------------------------- A %d X %d ---------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
 //            Show_Matrix(A, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
 //            printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
 //            Show_Matrix(B, 1, Matrix_Description[1].n - 9, Matrix_Description[1].m, Matrix_Description[1].n, 1);
             printf(" ----------------------------------- A B %d X %d -------------------------------\n", Matrix_Description[0].m, Matrix_Description[1].n);
-            Show_Matrix(Result_Matrix, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[1].n, 1);
+            printf("  -------------------------------- Last 8 Columns ---------------------------- \n");
+            Show_Matrix(Result_Matrix, 1, Matrix_Description[1].n - 7, Matrix_Description[0].m, Matrix_Description[1].n, 1);
         }
         else
         {
