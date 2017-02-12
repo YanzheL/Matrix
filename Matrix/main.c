@@ -656,13 +656,16 @@ int main(int argc, const char * argv[])
 
 	if (configMode == 1) free(receiveCfg.getElements_One);
 	if (invalidContinueFlag == 1) puts("");
+    
+    int robotFlag=1;
+    if (access("robotBegin", 0)==-1)robotFlag=0;
 	if (invalidContinueFlag == 0)
 	{
 		if (massFlag == 0) Safe_Flush(stdin);
 		puts("\nPress any key to run again or press 0 to exit");
 		char continueFlag = '0';
 		if (massFlag == 0) scanf("%c", &continueFlag);
-		if (massFlag == 1)continueFlag = '1';
+		if (massFlag == 1&&robotFlag==0)continueFlag = '1';
 		if (continueFlag != '0')
 		{
 			fflush(stdin);
@@ -686,12 +689,12 @@ int main(int argc, const char * argv[])
 
 					char *MassFilePath = GetFileExactPath(argv[0], "Mass_Test");
 
-					FILE *commandFirst = fopen("CommandFirstTemp", "w");
-					fputs(MassFilePath, commandFirst);
-					fclose(commandFirst);
+                        FILE *commandFirst = fopen("CommandFirstTemp", "w");
+                        fputs(MassFilePath, commandFirst);
+                        fclose(commandFirst);
 					free(MassFilePath);
 				}
-				else
+				else if (massFlag != 1)
 				{
 					if (Check_Option(argc, argv, "--test") != 0)
 					{
@@ -725,10 +728,8 @@ int main(int argc, const char * argv[])
 				}
 			}
 
-			free(command);
-
-			atexit(Next_Run);
-
+                free(command);
+                atexit(Next_Run);
 		}
 	}
 
