@@ -398,26 +398,26 @@ int main(int argc, const char * argv[])
         puts("\n--------------------------------- Confirm Input --------------------------------\n");
         if (Matrix_Description[0].n > 8||Matrix_Description[1].n > 8)
         {
-            printf(" ----------------------------------- A %d X %d ---------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
+            printf(" --------------------------------- A %d X %d --------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
             if (Matrix_Description[0].n > 8)
             {
-                printf("  -------------------------------- Last 8 Columns ---------------------------- \n");
+            printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
                 Show_Matrix(A, 1, Matrix_Description[0].n - 7, Matrix_Description[0].m, Matrix_Description[0].n, 1);
             }
             else Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-            printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
+            printf(" --------------------------------- B %d X %d --------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
             if (Matrix_Description[1].n > 8)
             {
-                printf("  -------------------------------- Last 8 Columns ---------------------------- \n");
+            printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
                 Show_Matrix(B, 1, Matrix_Description[1].n - 7, Matrix_Description[1].m, Matrix_Description[1].n, 1);
             }
             else Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
         }
         else
         {
-            printf(" ----------------------------------- A %d X %d ---------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
+            printf(" --------------------------------- A %d X %d --------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
             Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-            printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
+            printf(" --------------------------------- B %d X %d --------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
             Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
         }
         
@@ -446,8 +446,8 @@ int main(int argc, const char * argv[])
 //            Show_Matrix(A, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
 //            printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
 //            Show_Matrix(B, 1, Matrix_Description[1].n - 9, Matrix_Description[1].m, Matrix_Description[1].n, 1);
-            printf(" ----------------------------------- A B %d X %d -------------------------------\n", Matrix_Description[0].m, Matrix_Description[1].n);
-            printf("  -------------------------------- Last 8 Columns ---------------------------- \n");
+            printf(" --------------------------------- A B %d X %d ------------------------------\n", Matrix_Description[0].m, Matrix_Description[1].n);
+            printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
             Show_Matrix(Result_Matrix, 1, Matrix_Description[1].n - 7, Matrix_Description[0].m, Matrix_Description[1].n, 1);
         }
         else
