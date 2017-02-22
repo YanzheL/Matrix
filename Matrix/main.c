@@ -140,7 +140,14 @@ int main(int argc, const char * argv[])
         strcat(outTemp, ".txt");
         outputFileName = outTemp;
         strrpl(outputFileName, ' ', '_', strlen(outputFileName));
-        if (configMode == 1)freopen(outputFileName, "w", stdout);
+        if (configMode == 1)
+        {
+            if(freopen(outputFileName, "w", stdout)==NULL)
+            {
+                perror("freopen error");
+                exit(1);
+            }
+        }
     }
     
     if (argc == 2 && strcmp(argv[1], "--lord") == 0)               //上帝模式，可以打印出程序自身源码

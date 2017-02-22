@@ -153,7 +153,11 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE)
 		printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
 		for (j = 0; j <= n - 1; j++)
 		{
-			scanf("%lf", &Matrix[i][j]);
+			if(scanf("%lf", &Matrix[i][j])!=1)
+            {
+                puts("Input error");
+                exit(1);
+            }
 			printf("\b");
 		}
 	}
