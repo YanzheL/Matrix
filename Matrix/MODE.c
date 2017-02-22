@@ -199,7 +199,7 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 	double **non_basic_column_array = Create_Matrix(1, n - rankOf_A, "Non Basic Column Array");
 	double *pointer = &non_basic_column_array[0][0];
 
-	for (i = 0; i <= n - 1; i++)
+	for (i = 0; i < basicColumnCount; i++)
 	{
 		if (i != basic_column_array[0][i])                                   //找出自由未知量所在的列号，存入数组
 		{
