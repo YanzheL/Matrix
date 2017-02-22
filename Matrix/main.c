@@ -14,7 +14,7 @@ int main(int argc, const char * argv[])
 {
     srand((unsigned)time(0));
     int invalidOptionFlag = 0;
-    int helpFlag = 0;
+//    int helpFlag = 0;
     int lordFlag = 0;
     int massFlag = 0;
     int configMode = 0;
@@ -33,7 +33,20 @@ int main(int argc, const char * argv[])
         massFlag = 1;
         TEST_FLAG = '1';
 #else
-        system("cls");
+        switch (system("cls"))
+        {
+            case 127:
+                perror("System('cls') return 127");
+                exit(1);
+                break;
+            case -1:
+                perror("System('cls') return -1");
+                exit(1);
+                break;
+            default:
+                break;
+        }
+        
         puts("\nMass Test mode is only available on UNIX platforms. Bypassing...");
         return 0;
 #endif // UNIX
@@ -41,10 +54,34 @@ int main(int argc, const char * argv[])
     if (invalidOptionFlag == 0 && massFlag == 0)
     {
 #ifdef UNIX
-        system("clear");
+        switch (system("clear"))
+        {
+            case 127:
+                perror("System('clear') return 127");
+                exit(1);
+                break;
+            case -1:
+                perror("System('clear') return -1");
+                exit(1);
+                break;
+            default:
+                break;
+        }
 #endif
 #ifdef WINDOWS
-        system("cls");
+        switch (system("cls"))
+        {
+            case 127:
+                perror("System('cls') return 127");
+                exit(1);
+                break;
+            case -1:
+                perror("System('cls') return -1");
+                exit(1);
+                break;
+            default:
+                break;
+        }
 #endif
     }
     
@@ -61,7 +98,19 @@ int main(int argc, const char * argv[])
             outputMode = 1;
             puts("\nOutput success\n");
 #else
-            system("cls");
+            switch (system("cls"))
+            {
+                case 127:
+                    perror("System('cls') return 127");
+                    exit(1);
+                    break;
+                case -1:
+                    perror("System('cls') return -1");
+                    exit(1);
+                    break;
+                default:
+                    break;
+            }
             puts("\nOutput mode is only available on UNIX platforms. Bypassing...");
             return 0;
 #endif // UNIX
@@ -147,7 +196,7 @@ int main(int argc, const char * argv[])
     
     if (argc >= 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0))
     {
-        helpFlag = 1;
+//        helpFlag = 1;
         Show_Index_Page();
         Show_Help_Page();
         invalidContinueFlag = 1;
@@ -203,14 +252,22 @@ int main(int argc, const char * argv[])
         Show_Index_Page();
         Show_Menu_Page();
         printf("Please choose mode number: ");
-        scanf("%c", &MODE);
+        if(scanf("%c", &MODE)!=1)
+        {
+            puts("Input error");
+            exit(1);
+        }
         fflush(stdin);
         while ((MODE > '8' || MODE < '1') && MODE != 'c'&&MODE != 'q')
         {
             printf("\r");
             printf("Unavailable Choice, please choose again:");
             fflush(stdin);
-            scanf("%c", &MODE);
+            if(scanf("%c", &MODE)!=1)
+            {
+                puts("Input error");
+                exit(1);
+            }
         }
     }
     
@@ -233,7 +290,11 @@ int main(int argc, const char * argv[])
     {
         printf("Press any key to test or press 0 to manually input\n");
         Safe_Flush(stdin);
-        scanf("%c", &TEST_FLAG);
+        if(scanf("%c", &TEST_FLAG)!=1)
+        {
+            puts("Input error");
+            exit(1);
+        }
         //        printf("TEST_FLAG = %c\n",TEST_FLAG);
         fflush(stdin);
     }
@@ -248,7 +309,11 @@ int main(int argc, const char * argv[])
         else if (configMode == 0)
         {
             printf("\nPlease input 'n' : ");
-            scanf("%d", &n);
+            if(scanf("%d", &n)!=1)
+            {
+                puts("Input error");
+                exit(1);
+            }
             puts("");
         }
         else if (configMode == 1)
@@ -331,9 +396,17 @@ int main(int argc, const char * argv[])
             for (i = 0;; i++)
             {
                 printf("\nPlease input 'm' and 'n' of A Matrix : ");
-                scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n);
+                if(scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n)!=2)
+                {
+                    puts("Input error");
+                    exit(1);
+                }
                 printf("Please input 'm' and 'n' of B Matrix : ");
-                scanf("%d %d", &Matrix_Description[1].m, &Matrix_Description[1].n);
+                if(scanf("%d %d", &Matrix_Description[1].m, &Matrix_Description[1].n)!=2)
+                {
+                    puts("Input error");
+                    exit(1);
+                }
                 if (Matrix_Description[0].n == Matrix_Description[1].m) break;
                 else printf("A and B cannot be multiplied, Please input again: \n");
             }
@@ -356,7 +429,11 @@ int main(int argc, const char * argv[])
                 printf("\nIt seems like AB is a square matrix.\nSo input how many times you want to multipy in total: ");
                 for (i = 0;; i++)
                 {
-                    scanf("%d", &multi_times);
+                    if(scanf("%d", &multi_times)!=1)
+                    {
+                        puts("Input error");
+                        exit(1);
+                    }
                     if (multi_times >= 1) break;
                     else printf("Wrong answer. Please input again: ");
                 }
@@ -481,7 +558,11 @@ int main(int argc, const char * argv[])
         else if (configMode == 0)
         {
             printf("\nPlease input 'm' and 'n' : ");
-            scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n);
+            if(scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n)!=2)
+            {
+                puts("Input error");
+                exit(1);
+            }
             puts("");
         }
         else if (configMode == 1)
@@ -517,7 +598,11 @@ int main(int argc, const char * argv[])
                 if ((argc >= 2 && massFlag == 0) || argc == 1)
                 {
                     fflush(stdin);
-                    scanf("%c", &normFlag);
+                    if(scanf("%c", &normFlag)!=1)
+                    {
+                        puts("Input error");
+                        exit(1);
+                    }
                 }
             }
             else normFlag = receiveCfg.extraOption;
@@ -528,7 +613,11 @@ int main(int argc, const char * argv[])
                 printf("\r");
                 printf("Unavailable Choice, please choose again: ");
                 fflush(stdin);
-                scanf("%c", &normFlag);
+                if(scanf("%c", &normFlag)!=1)
+                {
+                    puts("Input error");
+                    exit(1);
+                }
             }
             
             puts("\n--------------------------------- Confirm Input --------------------------------\n");
@@ -600,7 +689,12 @@ int main(int argc, const char * argv[])
         else if (configMode == 0)
         {
             printf("\nPlease input 'm' and 'n' : ");
-            scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n);
+            if(scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n)!=2)
+            {
+                puts("Input error");
+                exit(1);
+            }
+            
             puts("");
         }
         else if (configMode == 1)
@@ -685,7 +779,14 @@ int main(int argc, const char * argv[])
         if (massFlag == 0) Safe_Flush(stdin);
         puts("\nPress any key to run again or press 0 to exit");
         char continueFlag = '0';
-        if (massFlag == 0) scanf("%c", &continueFlag);
+        if (massFlag == 0)
+        {
+            if(scanf("%c", &continueFlag)!=1)
+            {
+                puts("Input error");
+                exit(1);
+            }
+        }
         if (massFlag == 1&&robotFlag==0)continueFlag = '1';
         if (continueFlag != '0')
         {

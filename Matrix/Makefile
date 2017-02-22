@@ -1,16 +1,16 @@
 Matrix : main.o Independent_Functions.o cJSON.o MODE.o Tools.o
-	sudo gcc -o /usr/local/bin/Matrix main.o Independent_Functions.o cJSON.o MODE.o Tools.o -lm
+	sudo gcc -O3 -o /usr/local/bin/Matrix main.o Independent_Functions.o cJSON.o MODE.o Tools.o -lm
 	make clean_o
 main.o : main.c Matrix.h
-	gcc -c main.c
+	gcc -O3 -c main.c
 Independent_Functions.o : Independent_Functions.c Matrix.h 
-	gcc -c Independent_Functions.c
+	gcc -O3 -c Independent_Functions.c
 cJSON.o : cJSON.c cJSON.h
-	gcc -c cJSON.c
+	gcc -O3 -c cJSON.c
 MODE.o : MODE.c Matrix.h 
-	gcc -c MODE.c
+	gcc -O3 -c MODE.c
 Tools.o : Tools.c Matrix.h 
-	gcc -c Tools.c
+	gcc -O3 -c Tools.c
 clean : 
 	sudo rm /usr/local/bin/Matrix
 clean_o :

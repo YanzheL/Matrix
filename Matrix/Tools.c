@@ -96,8 +96,7 @@ sConfig Read_Config(const char* programPath)
 				readResult.getElements_One[i] = cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_One, row), column)->valuedouble;
 			}
 		}
-		row = 0;
-		column = 0;
+        
 		i = 0;
 		if (Elements_Two != NULL)
 			for (row = 0; row < readResult.getM_Two; row++)
@@ -519,5 +518,17 @@ void Next_Run(void)
 	char *command = TextFile2Char(CommandFirst);
 	fclose(CommandFirst);
 	remove("CommandFirstTemp");
-	system(command);
+    switch (system(command))
+    {
+        case 127:
+            perror("System(command) return 127");
+            exit(1);
+            break;
+        case -1:
+            perror("System(command) return -1");
+            exit(1);
+            break;
+        default:
+            break;
+    }
 }
