@@ -151,7 +151,7 @@ void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                  
 int Find_No_Zero_Row(double **Matrix, int column, int m)                                       //从上到下找出第column列中最后一个非零元所在的行号
 {
 	int count = 0, row;
-	for (row = 0; row <= m - 1; row++)
+	for (row = 0; row < m; row++)
 	{
 		if (fabs(Matrix[row][column]) != 0)count = row;
 	}

@@ -172,7 +172,7 @@ int Check_Echelon(double **Matrix, int m, int n)                                
 {
 	int formerColumnNoZeroCount, nextColumnNoZeroCount;
 	int i;
-	for (i = 0; i <= n - 2; i++)
+	for (i = 0; i < n - 1; i++)
 	{
 		formerColumnNoZeroCount = Find_No_Zero_Row(Matrix, i, m) + 1;
 		nextColumnNoZeroCount = Find_No_Zero_Row(Matrix, i + 1, m) + 1;
