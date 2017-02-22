@@ -12,7 +12,7 @@ According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determin
 <div align=center>
 <img src="https://github.com/YanzheL/Matrix/blob/master_OSX/help_page.png">
 </div>
-##Some examples<br>
+####Some examples<br>
 <div align=center>
 <img src="https://github.com/YanzheL/Matrix/blob/master_OSX/MODE8-A.png">
 </div>
@@ -25,6 +25,7 @@ According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determin
 <div align=center>
 <img src="https://github.com/YanzheL/Matrix/blob/master_OSX/MODE7.png">
 </div>
+####Example Configuration File in JSON format<br>
 <div align=center>
 <img src="https://github.com/YanzheL/Matrix/blob/master_OSX/Example_Config.png">
 </div>
