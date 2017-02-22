@@ -7,8 +7,24 @@ Some MODE will ask you to input the value of 'm' or ‘n', which represents row 
 According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determinant are only available for Square Matrix.<br><br>
 ###Here shows some screen-cut image<br>
 <div align=center>
-<img src="https://github.com/YanzheL/Matrix/blob/master/main_menu.png">
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/main_menu.png">
 </div>
 <div align=center>
-<img src="https://github.com/YanzheL/Matrix/blob/master/help_page.png">
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/help_page.png">
+</div>
+##Some examples<br>
+<div align=center>
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/MODE8-A.png">
+</div>
+<div align=center>
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/MODE8-B.png">
+</div>
+<div align=center>
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/MODE2.png">
+</div>
+<div align=center>
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/MODE7.png">
+</div>
+<div align=center>
+<img src="https://github.com/YanzheL/Matrix/blob/master_OSX/Example_Config.png">
 </div>
