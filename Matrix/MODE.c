@@ -357,14 +357,6 @@ double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
 	return Result_Matrix;
 }
 
-
-
-
-
-
-
-
-
 int Matrix_Multiplication(double **A, double **B, double **Result_Matrix, int m_A, int n_A, int m_B, int n_B)
 {
 	int i, j, r;

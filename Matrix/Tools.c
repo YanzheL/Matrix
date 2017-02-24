@@ -88,7 +88,6 @@ sConfig Read_Config(const char* programPath)
 		readResult.getElements_One = (double*)calloc(readResult.getM_One*readResult.getN_One, sizeof(double));
 		readResult.getElements_Two = (double*)calloc(readResult.getM_One*readResult.getN_One, sizeof(double));
 
-
 		int row, column;
 		i = 0;
 		for (row = 0; row < readResult.getM_One; row++)
@@ -98,7 +97,7 @@ sConfig Read_Config(const char* programPath)
 				readResult.getElements_One[i] = cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_One, row), column)->valuedouble;
 			}
 		}
-        
+
 		i = 0;
 		if (Elements_Two != NULL)
 			for (row = 0; row < readResult.getM_Two; row++)
@@ -119,7 +118,6 @@ sConfig Read_Config(const char* programPath)
 		//            printf("%lf ",readResult.getElements[i]);
 		//        }
 	}
-
 	fclose(fp);
 	return readResult;
 }
@@ -155,11 +153,11 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE)
 		printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
 		for (j = 0; j <= n - 1; j++)
 		{
-			if(scanf("%lf", &Matrix[i][j])!=1)
-            {
-                puts("Input error");
-                exit(1);
-            }
+			if (scanf("%lf", &Matrix[i][j]) != 1)
+			{
+				puts("Input error");
+				exit(1);
+			}
 			printf("\b");
 		}
 	}
@@ -260,7 +258,6 @@ double** Matrix_Sum(double **A, double **B, int m, int n, int MODE)
 			}
 			default:break;
 			}
-
 		}
 	}
 	return Result_Matrix;
@@ -275,7 +272,7 @@ double Mirror(double **Matrix, int row, int column, int m, int n)               
 	{
 		for (j = 0; j <= n - 2; j++)
 		{
-			if (i < row&&j < column)                                                            //通过跳过指定的行、列来创建余子矩阵
+			if (i < row&&j < column)                                                         //通过跳过指定的行、列来创建余子矩阵
 				Mirror_Matrix[i][j] = Matrix[i][j];
 			else if (i < row&&j >= column)
 				Mirror_Matrix[i][j] = Matrix[i][j + 1];
@@ -389,7 +386,6 @@ char** CommandList()
 	allOptions[16] = "--mass-test";
 
 	return allOptions;
-
 }
 
 int Check_No_Command(int argc, const char** argv)
@@ -400,7 +396,7 @@ int Check_No_Command(int argc, const char** argv)
 	int commandNum = 0;
 	for (i = 1; i < argc; i++)
 	{
-		for (j = 0; j < MAX_OPTIONS; j++)                //确定传入参数是否在已知列表中
+		for (j = 0; j < MAX_OPTIONS; j++)                                     //确定传入参数是否在已知列表中
 		{
 			if (strcmp(argv[i], allOptions[j]) == 0)
 			{
@@ -427,15 +423,11 @@ int Check_No_Command(int argc, const char** argv)
 	switch (commandNum)
 	{
 	case 0:
-	{
 		return 1;
 		break;
-	}
 	default:
-	{
 		return 0;
 		break;
-	}
 	}
 }
 
@@ -483,7 +475,6 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 				}
 				if (invalidOptionFlag == ini) problemOption = i;
 			}
-
 		}
 
 		int noCommandFlag = 0;
@@ -524,17 +515,17 @@ void Next_Run(void)
 	char *command = TextFile2Char(CommandFirst);
 	fclose(CommandFirst);
 	remove("CommandFirstTemp");
-    switch (system(command))
-    {
-        case 127:
-            perror("System(command) return 127");
-            exit(1);
-            break;
-        case -1:
-            perror("System(command) return -1");
-            exit(1);
-            break;
-        default:
-            break;
-    }
+	switch (system(command))
+	{
+	case 127:
+		perror("System(command) return 127");
+		exit(1);
+		break;
+	case -1:
+		perror("System(command) return -1");
+		exit(1);
+		break;
+	default:
+		break;
+	}
 }
