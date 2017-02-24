@@ -29,6 +29,7 @@
 #include "cJSON.h"
 
 #ifdef WINDOWS
+#include <io.h>
 #include <conio.h>
 #endif
 

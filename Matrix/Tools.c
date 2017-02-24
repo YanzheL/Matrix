@@ -98,8 +98,7 @@ sConfig Read_Config(const char* programPath)
 				readResult.getElements_One[i] = cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_One, row), column)->valuedouble;
 			}
 		}
-		row = 0;
-		column = 0;
+        
 		i = 0;
 		if (Elements_Two != NULL)
 			for (row = 0; row < readResult.getM_Two; row++)
@@ -156,17 +155,21 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE)
 		printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
 		for (j = 0; j <= n - 1; j++)
 		{
-			scanf("%lf", &Matrix[i][j]);
+			if(scanf("%lf", &Matrix[i][j])!=1)
+            {
+                puts("Input error");
+                exit(1);
+            }
 			printf("\b");
 		}
 	}
 }
 
-void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int m_rand_min, int mRandMax, int nRandMin, int nRandMax)
+void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int mRandMin, int mRandMax, int nRandMin, int nRandMax)
 {
 	srand((unsigned)time(NULL));
 	//srand((unsigned)20);
-	Recive_mn_for_Test[structElementNumber - 1].m = m_rand_min + rand() % (mRandMax - m_rand_min);       //测试需要
+	Recive_mn_for_Test[structElementNumber - 1].m = mRandMin + rand() % (mRandMax - mRandMin);       //测试需要
 	Recive_mn_for_Test[structElementNumber - 1].n = nRandMin + rand() % (nRandMax - nRandMin);
 }
 
@@ -174,7 +177,7 @@ int Check_Echelon(double **Matrix, int m, int n)                                
 {
 	int formerColumnNoZeroCount, nextColumnNoZeroCount;
 	int i;
-	for (i = 0; i <= n - 2; i++)
+	for (i = 0; i < n - 1; i++)
 	{
 		formerColumnNoZeroCount = Find_No_Zero_Row(Matrix, i, m) + 1;
 		nextColumnNoZeroCount = Find_No_Zero_Row(Matrix, i + 1, m) + 1;
@@ -521,5 +524,17 @@ void Next_Run(void)
 	char *command = TextFile2Char(CommandFirst);
 	fclose(CommandFirst);
 	remove("CommandFirstTemp");
-	system(command);
+    switch (system(command))
+    {
+        case 127:
+            perror("System(command) return 127");
+            exit(1);
+            break;
+        case -1:
+            perror("System(command) return -1");
+            exit(1);
+            break;
+        default:
+            break;
+    }
 }
