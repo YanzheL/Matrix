@@ -444,7 +444,7 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 		for (i = 1; i < argc; i++)
 		{
 
-			for (j = 14; j <= MAX_OPTIONS-1; j++)
+			for (j = 14; j <= MAX_OPTIONS - 1; j++)
 			{
 				if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), "--mode-", 7) == 0)
 				{

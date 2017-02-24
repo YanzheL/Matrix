@@ -82,16 +82,16 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 			Row_Add(Matrix, r, column, n, 1);
 		}
 
-//		puts("------------------------ Add Finish ------------------------------");
-//        Show_Matrix(Matrix, 1, 1, m, n, 1);
-        
+		//		puts("------------------------ Add Finish ------------------------------");
+		//        Show_Matrix(Matrix, 1, 1, m, n, 1);
+
 		noZeroRowCount = 0;
 
-//		printf("------------------------- Column %d Finish ------------------------\n\n",column+1);
+		//		printf("------------------------- Column %d Finish ------------------------\n\n",column+1);
 	}
-//    printf("--------------------------------------- Fix Before ---------------------------------------\n\n");
-//    Show_Matrix(Matrix, 1, 1, m, n, 1);
-//    puts("--------------------------------------- Fix Begin ----------------------------------------");
+	//    printf("--------------------------------------- Fix Before ---------------------------------------\n\n");
+	//    Show_Matrix(Matrix, 1, 1, m, n, 1);
+	//    puts("--------------------------------------- Fix Begin ----------------------------------------");
 
 	int problemColumn = 0;
 	if (Check_Echelon(Matrix, m, n) != 0)problemColumn = Check_Echelon(Matrix, m, n);                    //检查是否已经化为行阶梯
@@ -100,32 +100,32 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 	if (problemColumn != 0)
 	{
 		double last_2_LeadingCoefficient, last_1_LeadingCoefficient;
-        int lastNoZeroRow=m-1;
-        int v;
-        for (v=m-1; v>=0; v--)
-        {
-            if (Find_Leading_Column(Matrix, v, n)!=0)
-            {
-                lastNoZeroRow=v;
-                break;
-            }
-        }
-        
-		last_2_LeadingCoefficient = Matrix[lastNoZeroRow-1][problemColumn + 1];
+		int lastNoZeroRow = m - 1;
+		int v;
+		for (v = m - 1; v >= 0; v--)
+		{
+			if (Find_Leading_Column(Matrix, v, n) != 0)
+			{
+				lastNoZeroRow = v;
+				break;
+			}
+		}
+
+		last_2_LeadingCoefficient = Matrix[lastNoZeroRow - 1][problemColumn + 1];
 		last_1_LeadingCoefficient = Matrix[lastNoZeroRow][problemColumn + 1];
-		Scalar_Multiplication(1 / last_2_LeadingCoefficient, Matrix, lastNoZeroRow-1, m, n);                         //先把倒数第二行首个非零元化为1
+		Scalar_Multiplication(1 / last_2_LeadingCoefficient, Matrix, lastNoZeroRow - 1, m, n);                         //先把倒数第二行首个非零元化为1
 		if (DeterminantMODE == 1)
 			coefficientOfEntireDeterminant *= last_2_LeadingCoefficient;
 		Scalar_Multiplication(1 / last_1_LeadingCoefficient, Matrix, lastNoZeroRow, m, n);                         //再把倒数第一行首个非零元化为1
 		if (DeterminantMODE == 1)
 			coefficientOfEntireDeterminant *= last_1_LeadingCoefficient;
-		Row_Add(Matrix, lastNoZeroRow, lastNoZeroRow-1, n, 1);                                                                 //倒数第一行减去倒数第二行，使成为阶梯
+		Row_Add(Matrix, lastNoZeroRow, lastNoZeroRow - 1, n, 1);                                                                 //倒数第一行减去倒数第二行，使成为阶梯
 	}
-//    puts("-------------------------------------- Row Echelon Finish ---------------------------------------");
+	//    puts("-------------------------------------- Row Echelon Finish ---------------------------------------");
 	if (DeterminantMODE == 1)
-        Scalar_Multiplication(coefficientOfEntireDeterminant, Matrix, 0, m, n);
+		Scalar_Multiplication(coefficientOfEntireDeterminant, Matrix, 0, m, n);
 	Approximate(Matrix, m, n, 6);
-//    Show_Matrix(Matrix, 1, 1, m, n, 1);
+	//    Show_Matrix(Matrix, 1, 1, m, n, 1);
 	return coefficientOfEntireDeterminant;
 }
 
