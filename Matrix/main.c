@@ -5,8 +5,6 @@
 //  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
-
-#include "stdafx.h"
 #include "Matrix.h"
 static char TEST_FLAG = '0';
 static char MODE = '0';

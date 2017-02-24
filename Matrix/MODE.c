@@ -5,8 +5,6 @@
 //  Created by LI YANZHE on 02/02/2017.
 //  Copyright © 2017 Yanzhe Lee. All rights reserved.
 //
-
-#include "stdafx.h"
 #include "Matrix.h"
 
 double Determinant(double **Matrix, int n)
