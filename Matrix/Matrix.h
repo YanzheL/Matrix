@@ -14,7 +14,7 @@
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
 #define N_RAND_MAX 9
-#define MAX_OPTIONS 17
+#define MAX_OPTIONS 18
 //#define GET_CURRENT_PATH_MODE
 #define CONFIG_FILE_NAME "config.json"
 

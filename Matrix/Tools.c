@@ -378,12 +378,12 @@ char** CommandList()
 	allOptions[10] = "-h";
 	allOptions[11] = "--help";
 	allOptions[12] = "--menu";
-
+	allOptions[13] = "--lord";
 	//---------- Options ----------
-	allOptions[13] = "-o";
-	allOptions[14] = "--out";
-	allOptions[15] = "--test";
-	allOptions[16] = "--mass-test";
+	allOptions[14] = "-o";
+	allOptions[15] = "--out";
+	allOptions[16] = "--test";
+	allOptions[17] = "--mass-test";
 
 	return allOptions;
 }
@@ -407,7 +407,7 @@ int Check_No_Command(int argc, const char** argv)
 
 		if (existFlag == 1)
 		{
-			for (j = 0; j <= 12; j++)
+			for (j = 0; j <= 13; j++)
 			{
 				if (strcmp(argv[i], allOptions[j]) == 0)
 				{
@@ -444,14 +444,14 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 		for (i = 1; i < argc; i++)
 		{
 
-			for (j = 13; j <= 16; j++)
+			for (j = 14; j <= MAX_OPTIONS-1; j++)
 			{
 				if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), "--mode-", 7) == 0)
 				{
 					wrongOrderFlag = 1;
 					break;
 				}
-				for (k = 10; k <= 12; k++)
+				for (k = 10; k <= 13; k++)
 				{
 					if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), knownOptions[k], strlen(knownOptions[k])) == 0)
 					{
@@ -500,7 +500,7 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 	return invalidOptionFlag;
 }
 
-void strrpl(char* src, char ch1, char ch2, unsigned long length)
+void strrpl(char* src, char ch1, char ch2, unsigned long length)		//用于替换字符，遇到ch1就换为ch2
 {
 	unsigned int i;
 	for (i = 0; i < length - 1; i++)

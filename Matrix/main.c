@@ -28,7 +28,7 @@ int main(int argc, const char * argv[])
     if (invalidOptionFlag != 0)
         return 0;
     
-    sConfig receiveCfg = { 0,0,'n',0,0,0,0,NULL,NULL };//初始化
+    sConfig receiveCfg = { 0,0,'n',0,0,0,0,NULL,NULL };														//结构体初始化
     if (Check_Option(argc, argv, "-c") != 0 || Check_Option(argc, argv, "--config") != 0)configMode = 1;
     if (Check_Option(argc, argv, "--mass-test") != 0)
     {
