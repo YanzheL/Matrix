@@ -22,7 +22,7 @@
 
  /* cJSON */
  /* JSON parser in C. */
-
+#include "stdafx.h"
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
