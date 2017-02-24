@@ -273,25 +273,28 @@ void Show_Help_Page()
 	puts("\nSyntax: Matrix [Commands] [options]\n");
 
 	puts("Commands:");
-	puts("  -h --help        Show this help page");
-	puts("  -c --config      Read config file named 'config.json' from $CURRENT_DIR");
-	puts("                   |You MUST write 'config.json' file in standard JSON format");
-	puts("     --menu        Show Mode Menu page");
-	puts("     --mode-1      --mode-2      --mode-3");
-	puts("     --mode-4      --mode-5      --mode-6");
-	puts("     --mode-7      --mode-8\n");
+	puts("  -h --help       Show this help page");
+	puts("  -c --config     Read config file named 'config.json' from $CURRENT_DIR");
+	puts("                  -------------------------------------------------------------");
+	puts("                  | You MUST write 'config.json' file in standard JSON format |");
+	puts("                  -------------------------------------------------------------");
+	puts("     --menu       Show Mode Menu page");
+	puts("     --mode-1     --mode-2      --mode-3");
+	puts("     --mode-4     --mode-5      --mode-6");
+	puts("     --mode-7     --mode-8\n");
 
 	puts("Options:");
-	puts("  -o --out         Output stdout to FILE and store in $CURRENT_DIR");
-	puts("     --test        Enable random fill test mode");
-	puts("     --mass-test   Enable Unstoppable test mode");
-	puts("                   |To use this mode, you MUST copy the 'Mass_Test' program");
-	puts("                   |to the same directory as the 'Matrix'");
-	puts("                   |This mode will create 'Mass Test.txt' in $CURRENT_DIR");
-	puts("                   |that store all the Command Line stdout ");
-	puts("                   |You MUST close the Command Line window mannually");
-	puts("                   |when you need to stop this process\n");
-
+	puts("  -o --out        Output stdout to FILE and store in $CURRENT_DIR");
+	puts("     --test       Enable random fill test mode");
+	puts("     --mass-test  Enable Unstoppable test mode");
+	puts("                  -------------------------------------------------------------");
+	puts("                  | To use this mode, you MUST copy the 'Mass_Test' program   |");
+	puts("                  |   to the same directory as the 'Matrix'                   |");
+	puts("                  | This mode will create 'Mass Test.txt' in $CURRENT_DIR     |");
+	puts("                  |   that store all the Command Line stdout                  |");
+	puts("                  | You MUST close the Command Line window mannually when     |");
+	puts("                  |   you need to stop this process                           |");
+	puts("                  -------------------------------------------------------------\n");;
 	puts("Examples:");
 	puts("  Matrix --help");
 	puts("  Matrix -c");
