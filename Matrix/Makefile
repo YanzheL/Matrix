@@ -15,3 +15,6 @@ clean :
 	sudo rm /usr/local/bin/Matrix
 clean_o :
 	rm main.o Independent_Functions.o cJSON.o MODE.o Tools.o
+update :
+	make clean
+	make
