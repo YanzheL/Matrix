@@ -14,7 +14,7 @@ double Determinant(double **Matrix, int n)
 	//    Determinant_Row_Echelon_Form(Matrix, n);
 	Row_Echelon_Form(Matrix, n, n, 1);
 	//    Show_Matrix(Matrix, 1, 1, n, n, 1);
-	for (i = 0; i <= n - 1; i++)
+	for (i = 0; i <= n - 1; ++i)
 		result *= Matrix[i][i];
 	return result;
 }
@@ -23,9 +23,9 @@ double** Adjoint_Matrix(double **Matrix, int m, int n)
 {
 	double **Result_Matrix = Create_Matrix(m, n, "");
 	int i, j;
-	for (i = 0; i <= m - 1; i++)
+	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 		{
 			Result_Matrix[i][j] = pow(-1, i + j)*Mirror(Matrix, i, j, m, n);
 		}
@@ -38,13 +38,13 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 	int r, j, column, rowToBeExchanged, noZeroRowCount = 0;
 	double k, coefficientOfEntireDeterminant = 1;
 	if (Check_Zero_Matrix(Matrix, m, n) == -1)return 0;
-	for (column = 0; column <= n - 1 && column <= m - 1; column++)
+	for (column = 0; column <= n - 1 && column <= m - 1; ++column)
 	{
 		//        printf("\n\n-------------------------- Column %d Begin ------------------------\n",column+1);
-		for (rowToBeExchanged = column; rowToBeExchanged <= m - 2; rowToBeExchanged++)        // 将第column列从上到下化为1,1,...,1,...,0,0,...,0
+		for (rowToBeExchanged = column; rowToBeExchanged <= m - 2; ++rowToBeExchanged)        // 将第column列从上到下化为1,1,...,1,...,0,0,...,0
 		{
 
-			for (j = rowToBeExchanged; j <= m - 1; j++)
+			for (j = rowToBeExchanged; j <= m - 1; ++j)
 			{
 				if (Matrix[rowToBeExchanged][column] != 0)
 				{
@@ -75,7 +75,7 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 
 		//printf("------------------ Column %d No Zero Row Count = %d ----------------\n",column+1,no_zero_row_count);
 		//Show_Matrix(Determinant, 1,1,n, n,1);
-		for (r = column + 1; r <= noZeroRowCount - 1; r++)
+		for (r = column + 1; r <= noZeroRowCount - 1; ++r)
 		{
 			Row_Add(Matrix, r, column, n, 1);
 		}
@@ -145,9 +145,9 @@ int Row_Canonical_Form(double **Matrix, int m, int n)
 			Scalar_Multiplication(1 / rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
 	}
 
-	for (row = 0; row <= m - 2; row++)
+	for (row = 0; row <= m - 2; ++row)
 	{
-		for (i = row + 1; i <= m - 1; i++)
+		for (i = row + 1; i <= m - 1; ++i)
 		{
 			//            row_row_leading_column=Find_Leading_Column(Matrix, row, n);
 			row_i_LeadingColumn = Find_Leading_Column(Matrix, i, n);
@@ -176,7 +176,7 @@ int Row_Canonical_Form(double **Matrix, int m, int n)
 void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, int n_of_Solution_Matrix, int rankOf_A)
 {
 	int i, j, row_i_LeadingColumn = 0;
-	for (i = 0; i <= n - 1; i++)
+	for (i = 0; i <= n - 1; ++i)
 	{
 		Solution_Matrix[i][0] = 1;
 		if (i <= m - 1)
@@ -187,7 +187,7 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 	int basicColumnCount = rankOf_A;
 
 	double **basic_column_array = Create_Matrix(1, basicColumnCount, "Basic Column Array");
-	for (i = 0; i <= basicColumnCount - 1; i++)
+	for (i = 0; i <= basicColumnCount - 1; ++i)
 	{
 		basic_column_array[0][i] = Find_Leading_Column(AB, i, n);            //找出基础未知量所在的列号，存入数组
 	}
@@ -198,7 +198,7 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 	double **non_basic_column_array = Create_Matrix(1, n - rankOf_A, "Non Basic Column Array");
 	double *pointer = &non_basic_column_array[0][0];
 
-	for (i = 0; i < basicColumnCount; i++)
+	for (i = 0; i < basicColumnCount; ++i)
 	{
 		if (i != basic_column_array[0][i])                                   //找出自由未知量所在的列号，存入数组
 		{
@@ -210,14 +210,14 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 	//    Show_Matrix(non_basic_column_array, 1, n-rank_of_A, 1);
 	//    Show_Matrix(non_basic_column_array, 1, 1,1,n-rank_of_A, 1);
 
-	for (i = 0; i <= n - 1; i++)
+	for (i = 0; i <= n - 1; ++i)
 	{
 		if (i <= m - 1)
 			row_i_LeadingColumn = Find_Leading_Column(AB, i, n);
 
 		if (i != row_i_LeadingColumn)
 		{
-			for (j = 0; j <= n - rankOf_A - 1; j++)
+			for (j = 0; j <= n - rankOf_A - 1; ++j)
 			{
 				if (i == non_basic_column_array[0][j]) break;
 			}
@@ -228,7 +228,7 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 			j = 0;
 			if (i <= m - 1)
 			{
-				for (j = 0; j <= n - rankOf_A - 1; j++)
+				for (j = 0; j <= n - rankOf_A - 1; ++j)
 				{
 					Solution_Matrix[i][j + 1] = -AB[i][(int)non_basic_column_array[0][j]];
 				}
@@ -250,9 +250,9 @@ int Reverse_Matrix(double **Matrix, int n)
 	else
 	{
 		double **Combined_Matrix = Create_Matrix(n, 2 * n, "Combined Matrix");
-		for (i = 0; i <= n - 1; i++)
+		for (i = 0; i <= n - 1; ++i)
 		{
-			for (j = 0; j <= 2 * n - 1; j++)
+			for (j = 0; j <= 2 * n - 1; ++j)
 			{
 				if (j <= n - 1)
 					Combined_Matrix[i][j] = Matrix[i][j];
@@ -261,9 +261,9 @@ int Reverse_Matrix(double **Matrix, int n)
 			}
 		}
 		Row_Canonical_Form(Combined_Matrix, n, 2 * n);
-		for (i = 0; i <= n - 1; i++)
+		for (i = 0; i <= n - 1; ++i)
 		{
-			for (j = 0; j <= n - 1; j++)
+			for (j = 0; j <= n - 1; ++j)
 			{
 				Matrix[i][j] = Combined_Matrix[i][j + n];
 			}
@@ -279,34 +279,24 @@ double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
 
 	//    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
 	double ***alpha = Column_Vector_Extract(Matrix, m, n);
-	//    for (i=0; i<=n-1; i++)
+	//    for (i=0; i<=n-1; ++i)
 	//        alpha[i]=Create_Matrix(m, 1, "Beta");
 	double ***beta = (double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
-	for (i = 0; i <= n - 1; i++)
+	for (i = 0; i <= n - 1; ++i)
 		beta[i] = Create_Matrix(m, 1, "Beta");
 
-	//    int r,s;
-
-	//    for (s=0; s<n; s++)
-	//    {
-	//        for (r=0; r<m; r++)
-	//        {
-	//            alpha[s][r][0]=Matrix[r][s];                                 //提取Matrix中的列向量到alpha[]，准备正交化
-	//        }
-	//    }
-
-	for (i = 0; i < m; i++)
+	for (i = 0; i < m; ++i)
 		beta[0][i][0] = alpha[0][i][0];                                    //赋初始值beta1 = alpha1
 
 	int row = 0, x = 0;
-	for (i = 1; i <= n - 1; i++)
+	for (i = 1; i <= n - 1; ++i)
 	{
 		double **sum = Create_Matrix(m, 1, "");                            //sum得到正交化公式中后面项的和向量
-		for (x = 0; x < i; x++)
+		for (x = 0; x < i; ++x)
 		{
 			double **temp = Create_Matrix(m, 1, "");
 
-			for (row = 0; row < m; row++)
+			for (row = 0; row < m; ++row)
 			{
 				temp[row][0] = beta[i - x - 1][row][0];                          //复制Beta[i-1]的列向量到temp中
 			}
@@ -338,18 +328,18 @@ double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
 
 	double **Result_Matrix = Create_Matrix(m, n, "Schmidt Result");
 
-	for (i = 0; i <= m - 1; i++)
+	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 		{
 			Result_Matrix[i][j] = beta[j][i][0];
 		}
 	}
 
-	for (i = 0; i < n - 1; i++)
+	for (i = 0; i < n - 1; ++i)
 		Free_Matrix(alpha[i], m);
 
-	for (i = 1; i < n - 1; i++)
+	for (i = 1; i < n - 1; ++i)
 		Free_Matrix(beta[i], m);
 
 	return Result_Matrix;
@@ -359,11 +349,11 @@ int Matrix_Multiplication(double **A, double **B, double **Result_Matrix, int m_
 {
 	int i, j, r;
 	double **Temp = Create_Matrix(m_A, n_B, "Multi Temp");
-	for (i = 0; i < m_A; i++)
+	for (i = 0; i < m_A; ++i)
 	{
-		for (j = 0; j < n_B; j++)
+		for (j = 0; j < n_B; ++j)
 		{
-			for (r = 0; r < n_A; r++)
+			for (r = 0; r < n_A; ++r)
 			{
 				Temp[i][j] += A[i][r] * B[r][j];
 			}

@@ -12,7 +12,7 @@ int Check_Option(int argc, const char **argv, char *option)
 {
 	int optionCheck;
 	int flag = 0;
-	for (optionCheck = 0; optionCheck < argc; optionCheck++)
+	for (optionCheck = 0; optionCheck < argc; ++optionCheck)
 	{
 		if (strcmp(argv[optionCheck], option) == 0)
 		{
@@ -59,7 +59,7 @@ double** Create_Matrix(int m, int n, char *DISPLAY)
 		return NULL;
 	}
 
-	for (i = 0; i < m; i++)
+	for (i = 0; i < m; ++i)
 	{
 		Matrix[i] = (double*)calloc(n, sizeof(double));
 	}
@@ -69,7 +69,7 @@ double** Create_Matrix(int m, int n, char *DISPLAY)
 void Free_Matrix(double **Matrix, int m)
 {
 	int i;
-	for (i = 0; i < m; i++)
+	for (i = 0; i < m; ++i)
 	{
 		free(Matrix[i]);
 	}
@@ -79,16 +79,16 @@ void Free_Matrix(double **Matrix, int m)
 void Scalar_Multiplication(double k, double **Matrix, int r, int m, int n)                           //数乘运算 用k数乘第r行
 {
 	int j;
-	for (j = 0; j <= n - 1; j++)
+	for (j = 0; j <= n - 1; ++j)
 		Matrix[r][j] *= k;
 }
 
 void Show_Matrix(double **Matrix, int startRow, int startColumn, int endRow, int endColumn, int displayFlag)
 {                                                                                                 //用于向屏幕打印整个矩阵
 	int i, j;
-	for (i = startRow - 1; i <= endRow - 1; i++)
+	for (i = startRow - 1; i <= endRow - 1; ++i)
 	{
-		for (j = startColumn - 1; j <= endColumn - 1; j++)
+		for (j = startColumn - 1; j <= endColumn - 1; ++j)
 		{
 			if (displayFlag == 1)
 			{
@@ -109,9 +109,9 @@ void Approximate(double **Matrix, int m, int n, int index)
 {
 	int i, j;
 	double p = pow(10, -index);
-	for (i = 0; i <= m - 1; i++)
+	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 		{
 			if (Matrix[i][j] - floor(Matrix[i][j]) < p)
 				Matrix[i][j] = floor(Matrix[i][j]);                                            //近似运算
@@ -125,7 +125,7 @@ void Row_Exchange(double **Matrix, int r1, int r2, int n)                       
 {
 	double temp = 0;
 	int j;
-	for (j = 0; j <= n - 1; j++)
+	for (j = 0; j <= n - 1; ++j)
 	{
 		temp = Matrix[r1][j];
 		Matrix[r1][j] = Matrix[r2][j];
@@ -142,7 +142,7 @@ void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                  
 			Matrix[r1][c] += Matrix[r2][c];
 		}
 	if (flag == 1)                                                                              //flag=1时进行r1行减r2行
-		for (c = 0; c <= n - 1; c++)
+		for (c = 0; c <= n - 1; ++c)
 		{
 			Matrix[r1][c] -= Matrix[r2][c];
 		}
@@ -151,7 +151,7 @@ void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                  
 int Find_No_Zero_Row(double **Matrix, int column, int m)                                       //从上到下找出第column列中最后一个非零元所在的行号
 {
 	int count = 0, row;
-	for (row = 0; row < m; row++)
+	for (row = 0; row < m; ++row)
 	{
 		if (fabs(Matrix[row][column]) != 0)count = row;
 	}
@@ -173,9 +173,9 @@ int Find_Leading_Column(double **Matrix, int row, int n)
 int Check_Zero_Matrix(double **Matrix, int m, int n)
 {
 	int zeroElementCount = 0, i, j;
-	for (i = 0; i <= m - 1; i++)                                                                   //数出增广矩阵中零元素的个数
+	for (i = 0; i <= m - 1; ++i)                                                                   //数出增广矩阵中零元素的个数
 	{
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 		{
 			if (Matrix[i][j] == 0)zeroElementCount++;
 		}
@@ -192,9 +192,9 @@ void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE)
 {
 	int i, j;
 	srand((unsigned)time(NULL));
-	for (i = 0; i <= m - 1; i++)
+	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; j++)                                                               //测试需要 随机整数填充增广矩阵
+		for (j = 0; j <= n - 1; ++j)                                                               //测试需要 随机整数填充增广矩阵
 		{
 			if (MODE == 1)
 				Matrix[i][j] = MIN + rand() % (MAX - MIN - 1) + (double)rand() / RAND_MAX;                 //随机小数填充
@@ -212,12 +212,12 @@ double*** Column_Vector_Extract(double **Matrix, int m, int n)
 		perror("vector_System");
 		exit(1);
 	}
-	for (i = 0; i < n; i++)
+	for (i = 0; i < n; ++i)
 		vector_System[i] = Create_Matrix(m, 1, "Vector System");
 
-	for (s = 0; s < n; s++)
+	for (s = 0; s < n; ++s)
 	{
-		for (r = 0; r < m; r++)
+		for (r = 0; r < m; ++r)
 		{
 			vector_System[s][r][0] = Matrix[r][s];
 		}
@@ -228,9 +228,9 @@ double*** Column_Vector_Extract(double **Matrix, int m, int n)
 void Column_Vector_Refill(double ***vector_System, double **Matrix, int m, int n)
 {
 	int r, s;
-	for (s = 0; s < n; s++)
+	for (s = 0; s < n; ++s)
 	{
-		for (r = 0; r < m; r++)
+		for (r = 0; r < m; ++r)
 		{
 			Matrix[r][s] = vector_System[s][r][0];
 		}

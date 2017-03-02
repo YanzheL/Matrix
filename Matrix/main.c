@@ -158,7 +158,7 @@ int main(int argc, const char * argv[])
 		char passwd[15];
 		int k, l;
 		puts("So prove that you are the Lord");                   //需要输入密码
-		for (k = 0; k < 14; k++)
+		for (k = 0; k < 14; ++k)
 		{
 #ifdef UNIX
 			passwd[k] = getch_(0);
@@ -172,18 +172,18 @@ int main(int argc, const char * argv[])
 		printf("\n");
 		if (strcmp(passwd, "LYZ18679853316") == 0)
 		{
-			for (l = 1; l <= 3; l++)
+			for (l = 1; l <= 3; ++l)
 			{
-				for (k = 1; k <= 230; k++)printf("#");
+				for (k = 1; k <= 230; ++k)printf("#");
 				puts("");
 			}
 			printf("Main Source __FILE__ PATH = %s\n", __FILE__);
 			FILE *fSOURCE = fopen(__FILE__, "r");
 			if (Show_File_Text(fSOURCE) != 0)return 1;
 			puts("");
-			for (l = 1; l <= 3; l++)
+			for (l = 1; l <= 3; ++l)
 			{
-				for (k = 1; k <= 230; k++)printf("#");
+				for (k = 1; k <= 230; ++k)printf("#");
 				puts("");
 			}
 			if (Show_Header_Source() != 0)return 1;
@@ -401,7 +401,7 @@ int main(int argc, const char * argv[])
 		}
 		else if (configMode == 0)
 		{
-			for (i = 0;; i++)
+			for (i = 0;; ++i)
 			{
 				printf("\nPlease input 'm' and 'n' of A Matrix : ");
 				if (scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n) != 2)
@@ -435,7 +435,7 @@ int main(int argc, const char * argv[])
 			if (configMode == 0)
 			{
 				printf("\nIt seems like AB is a square matrix.\nSo input how many times you want to multipy in total: ");
-				for (i = 0;; i++)
+				for (i = 0;; ++i)
 				{
 					if (scanf("%d", &multi_times) != 1)
 					{
@@ -513,7 +513,7 @@ int main(int argc, const char * argv[])
 		if (multiFlag == 1)
 		{
 			printf("\nMulti Times = %d", multi_times);
-			for (i = 1; i <= multi_times - 1; i++)
+			for (i = 1; i <= multi_times - 1; ++i)
 			{
 				double **Temp_Result = Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "");
 				Matrix_Multiplication(Result_Matrix, Result_Matrix, Temp_Result, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m);

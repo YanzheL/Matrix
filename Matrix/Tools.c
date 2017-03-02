@@ -24,7 +24,7 @@ char* TextFile2Char(FILE *fp)
 		exit(0);
 	}
 	char C;
-	for (i = 0;; i++)
+	for (i = 0;; ++i)
 	{
 		C = fgetc(fp);
 		if (C == EOF)break;
@@ -88,9 +88,9 @@ sConfig Read_Config(const char* programPath)
 
 		int row, column;
 		i = 0;
-		for (row = 0; row < readResult.getM_One; row++)
+		for (row = 0; row < readResult.getM_One; ++row)
 		{
-			for (column = 0; column < readResult.getN_One; column++, i++)
+			for (column = 0; column < readResult.getN_One; ++column, ++i)
 			{
 				readResult.getElements_One[i] = cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_One, row), column)->valuedouble;
 			}
@@ -98,9 +98,9 @@ sConfig Read_Config(const char* programPath)
 
 		i = 0;
 		if (Elements_Two != NULL)
-			for (row = 0; row < readResult.getM_Two; row++)
+			for (row = 0; row < readResult.getM_Two; ++row)
 			{
-				for (column = 0; column < readResult.getN_Two; column++, i++)
+				for (column = 0; column < readResult.getN_Two; ++column, ++i)
 				{
 					readResult.getElements_Two[i] = cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_Two, row), column)->valuedouble;
 				}
@@ -111,7 +111,7 @@ sConfig Read_Config(const char* programPath)
 		//        printf("getM = %d\n",readResult.getM);
 		//        printf("getN = %d\n",readResult.getN);
 		//        puts("Elements");
-		//        for (i=0; i<readResult.getM*readResult.getN; i++)
+		//        for (i=0; i<readResult.getM*readResult.getN; ++i)
 		//        {
 		//            printf("%lf ",readResult.getElements[i]);
 		//        }
@@ -125,17 +125,17 @@ void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE)
 	int i, j;
 	int num = 0;
 	if (TYPE == 1)
-		for (i = 0; i < configSource.getM_One; i++)
+		for (i = 0; i < configSource.getM_One; ++i)
 		{
-			for (j = 0; j < configSource.getN_One; j++, num++)
+			for (j = 0; j < configSource.getN_One; ++j, ++num)
 			{
 				Matrix[i][j] = configSource.getElements_One[num];
 			}
 		}
 	if (TYPE == 2)
-		for (i = 0; i < configSource.getM_Two; i++)
+		for (i = 0; i < configSource.getM_Two; ++i)
 		{
-			for (j = 0; j < configSource.getN_Two; j++, num++)
+			for (j = 0; j < configSource.getN_Two; ++j, ++num)
 			{
 				Matrix[i][j] = configSource.getElements_Two[num];
 			}
@@ -146,10 +146,10 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE)
 {
 	int i, j;
 	Safe_Flush(stdin);
-	for (i = 0; i <= m - 1; i++)                                                                       //用户输入矩阵
+	for (i = 0; i <= m - 1; ++i)                                                                       //用户输入矩阵
 	{
 		printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 		{
 			if (scanf("%lf", &Matrix[i][j]) != 1)
 			{
@@ -173,7 +173,7 @@ int Check_Echelon(double **Matrix, int m, int n)                                
 {
 	int formerColumnNoZeroCount, nextColumnNoZeroCount;
 	int i;
-	for (i = 0; i < n - 1; i++)
+	for (i = 0; i < n - 1; ++i)
 	{
 		formerColumnNoZeroCount = Find_No_Zero_Row(Matrix, i, m) + 1;
 		nextColumnNoZeroCount = Find_No_Zero_Row(Matrix, i + 1, m) + 1;
@@ -191,9 +191,9 @@ int Find_Rank(double **Matrix, int m, int n)
 {
 	double **Copy_Of_Matrix = Create_Matrix(m, n, "Copy of Matrix");
 	int i, j, rank = 0;
-	for (i = 0; i <= m - 1; i++)
+	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 			Copy_Of_Matrix[i][j] = Matrix[i][j];                        //把传来的矩阵元素复制到新的Copy矩阵里，防止影响原矩阵
 	}
 	if (Row_Echelon_Form(Copy_Of_Matrix, m, n, 0) == 0)return 0;
@@ -226,9 +226,9 @@ double** Transpose_Matrix(double **Matrix, int m, int n)
 	int i = 0, j = 0;
 	double **Transpose_Matrix;
 	Transpose_Matrix = Create_Matrix(n, m, "Transpose");
-	for (i = 0; i <= n - 1; i++)
+	for (i = 0; i <= n - 1; ++i)
 	{
-		for (j = 0; j <= m - 1; j++)
+		for (j = 0; j <= m - 1; ++j)
 			Transpose_Matrix[i][j] = Matrix[j][i];
 	}
 	return Transpose_Matrix;
@@ -238,9 +238,9 @@ double** Matrix_Sum(double **A, double **B, int m, int n, int MODE)
 {
 	int i, j;
 	double **Result_Matrix = Create_Matrix(m, n, "Matrix Sum");
-	for (i = 0; i <= m - 1; i++)
+	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; j++)
+		for (j = 0; j <= n - 1; ++j)
 		{
 			switch (MODE)
 			{
@@ -266,9 +266,9 @@ double Mirror(double **Matrix, int row, int column, int m, int n)               
 	double **Mirror_Matrix = Create_Matrix(m - 1, n - 1, "");
 	int i, j;
 	double result;
-	for (i = 0; i <= m - 2; i++)
+	for (i = 0; i <= m - 2; ++i)
 	{
-		for (j = 0; j <= n - 2; j++)
+		for (j = 0; j <= n - 2; ++j)
 		{
 			if (i < row&&j < column)                                                         //通过跳过指定的行、列来创建余子矩阵
 				Mirror_Matrix[i][j] = Matrix[i][j];
@@ -309,7 +309,7 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 	int i;
 	double ***vector_System = Column_Vector_Extract(Matrix, m, n);
 
-	for (i = 0; i < n; i++)
+	for (i = 0; i < n; ++i)
 	{
 		product[i] = sqrt(Scalar_Product(vector_System[i], vector_System[i], m));
 		if (product[i] != 0)
@@ -324,7 +324,7 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 	Column_Vector_Refill(vector_System, Result_Matrix, m, n);
 
 	free(product);
-	for (i = 0; i < n; i++)
+	for (i = 0; i < n; ++i)
 		Free_Matrix(vector_System[i], m);
 	return Result_Matrix;
 }
@@ -334,7 +334,7 @@ int Check_Option_Order(int argc, const char** argv, char *str1, unsigned long li
 	int i;
 	int addr1 = 0;
 	int addr2 = 0;
-	for (i = 0; i < argc; i++)
+	for (i = 0; i < argc; ++i)
 	{
 		if (strncmp(argv[i], str1, limN1) == 0)
 			addr1 = i;
@@ -358,7 +358,7 @@ char** CommandList()
 	}
 	allOptions[0] = "-c";
 	int oNum;
-	for (oNum = 1; oNum <= 8; oNum++)
+	for (oNum = 1; oNum <= 8; ++oNum)
 	{
 		allOptions[oNum] = (char*)calloc(9, sizeof(char));
 		if (allOptions[oNum] == NULL)
@@ -392,9 +392,9 @@ int Check_No_Command(int argc, const char** argv)
 	int i, j, existFlag;
 	existFlag = 0;
 	int commandNum = 0;
-	for (i = 1; i < argc; i++)
+	for (i = 1; i < argc; ++i)
 	{
-		for (j = 0; j < MAX_OPTIONS; j++)                                     //确定传入参数是否在已知列表中
+		for (j = 0; j < MAX_OPTIONS; ++j)                                     //确定传入参数是否在已知列表中
 		{
 			if (strcmp(argv[i], allOptions[j]) == 0)
 			{
@@ -405,7 +405,7 @@ int Check_No_Command(int argc, const char** argv)
 
 		if (existFlag == 1)
 		{
-			for (j = 0; j <= 13; j++)
+			for (j = 0; j <= 13; ++j)
 			{
 				if (strcmp(argv[i], allOptions[j]) == 0)
 				{
@@ -439,17 +439,17 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 	if (argc >= 2)
 	{
 		invalidOptionFlag = argc - 1;
-		for (i = 1; i < argc; i++)
+		for (i = 1; i < argc; ++i)
 		{
 
-			for (j = 14; j <= MAX_OPTIONS - 1; j++)
+			for (j = 14; j <= MAX_OPTIONS - 1; ++j)
 			{
 				if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), "--mode-", 7) == 0)
 				{
 					wrongOrderFlag = 1;
 					break;
 				}
-				for (k = 10; k <= 13; k++)
+				for (k = 10; k <= 13; ++k)
 				{
 					if (Check_Option_Order(argc, argv, knownOptions[j], strlen(knownOptions[j]), knownOptions[k], strlen(knownOptions[k])) == 0)
 					{
@@ -461,7 +461,7 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 			if (wrongOrderFlag == 0)
 			{
 				ini = invalidOptionFlag;
-				for (oNum = 0; oNum < MAX_OPTIONS; oNum++)
+				for (oNum = 0; oNum < MAX_OPTIONS; ++oNum)
 				{
 					//                printf("argc = %d\nargv[%d] = %s\nknownOptions[%d] = %s\n",argc,i,argv[i],oNum,knownOptions[oNum]);
 					if (strcmp(argv[i], knownOptions[oNum]) == 0)
@@ -501,7 +501,7 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 void strrpl(char* src, char ch1, char ch2, unsigned long length)		//用于替换字符，遇到ch1就换为ch2
 {
 	unsigned int i;
-	for (i = 0; i < length - 1; i++)
+	for (i = 0; i < length - 1; ++i)
 	{
 		if (src[i] == ch1) src[i] = ch2;
 	}
