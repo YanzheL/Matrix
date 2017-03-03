@@ -6,6 +6,7 @@
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
 
+#include "stdafx.h"
 #include "Matrix.h"
 
 int Check_Option(int argc, const char **argv, char *option)

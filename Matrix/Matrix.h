@@ -9,7 +9,7 @@
 #ifndef Matrix_h
 #define Matrix_h
 
-#define UNIX
+#define WINDOWS
 #define M_RAND_MIN 20
 #define M_RAND_MAX 50
 #define N_RAND_MIN 5
