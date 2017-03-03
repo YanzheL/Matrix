@@ -13,7 +13,10 @@ static char MODE = '0';
 //-----------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, const char * argv[])
 {
-	srand((unsigned)time(0));
+    struct timespec acuTime;
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &acuTime);                                                       //提供ns级的随机数种子
+	srand((unsigned)acuTime.tv_nsec);
+    
 	int invalidOptionFlag = 0;
 	//    int helpFlag = 0;
 	int lordFlag = 0;
@@ -311,7 +314,7 @@ int main(int argc, const char * argv[])
 		int n = 1;
 		if (TEST_FLAG != '0')
 		{
-			srand((unsigned)time(NULL));                                                    //测试需要 获取随机的m和n
+//			srand((unsigned)time(NULL));                                                    //测试需要 获取随机的m和n
 			n = 4 + rand() % 4;
 		}
 		else if (configMode == 0)

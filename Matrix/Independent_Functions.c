@@ -191,7 +191,7 @@ int Check_Zero_Matrix(double **Matrix, int m, int n)
 void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE)
 {
 	int i, j;
-	srand((unsigned)time(NULL));
+//	srand((unsigned)time(NULL));
 	for (i = 0; i <= m - 1; ++i)
 	{
 		for (j = 0; j <= n - 1; ++j)                                                               //测试需要 随机整数填充增广矩阵
@@ -293,6 +293,8 @@ void Show_Help_Page()
 	puts("                  |   that store all the Command Line stdout                  |");
 	puts("                  | You MUST close the Command Line window mannually when     |");
 	puts("                  |   you need to stop this process                           |");
+    puts("                  | After finishing the process, you should delete the file   |");
+    puts("                  |  'RobotBegin' mannually in $CURRENT_DIR                   |");
 	puts("                  -------------------------------------------------------------\n");;
 	puts("Examples:");
 	puts("  Matrix --help");

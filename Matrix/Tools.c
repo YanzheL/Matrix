@@ -163,8 +163,7 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE)
 
 void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int mRandMin, int mRandMax, int nRandMin, int nRandMax)
 {
-	srand((unsigned)time(NULL));
-	//srand((unsigned)20);
+//	srand((unsigned)time(NULL));
 	Recive_mn_for_Test[structElementNumber - 1].m = mRandMin + rand() % (mRandMax - mRandMin);       //测试需要
 	Recive_mn_for_Test[structElementNumber - 1].n = nRandMin + rand() % (nRandMax - nRandMin);
 }
