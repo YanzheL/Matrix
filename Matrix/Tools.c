@@ -200,7 +200,7 @@ int Find_Rank(double **Matrix, int m, int n)
 	{
 		for (i = m - 1; i >= 0; i--)
 		{
-			if (Find_Leading_Column(Copy_Of_Matrix, i, n) != 0)
+			if (Find_Leading_Column(Copy_Of_Matrix, i, n))
 			{
 				rank = i + 1;
 				break;
@@ -311,7 +311,7 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 	for (i = 0; i < n; ++i)
 	{
 		product[i] = sqrt(Scalar_Product(vector_System[i], vector_System[i], m));
-		if (product[i] != 0)
+		if (product[i])
 		{
 			double **temp_Tranpose = Transpose_Matrix(vector_System[i], m, 1);
 			Scalar_Multiplication(1 / product[i], temp_Tranpose, 0, 1, m);

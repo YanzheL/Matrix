@@ -26,12 +26,12 @@ int main(int argc, const char * argv[])
 	int invalidContinueFlag = 0;
 	char *outputFileName;
 	invalidOptionFlag = Check_Known_Options(argc, argv, &invalidContinueFlag);
-	if (invalidOptionFlag != 0)
+	if (invalidOptionFlag)
 		return 0;
 
 	sConfig receiveCfg = { 0,0,'n',0,0,0,0,NULL,NULL };														//结构体初始化
 	if (Check_Option(argc, argv, "-c") != 0 || Check_Option(argc, argv, "--config") != 0)configMode = 1;
-	if (Check_Option(argc, argv, "--mass-test") != 0)
+	if (Check_Option(argc, argv, "--mass-test"))
 	{
 #ifdef UNIX
 		massFlag = 1;
@@ -120,7 +120,7 @@ int main(int argc, const char * argv[])
 #endif // UNIX
 		}
 	}
-	if (Check_Option(argc, argv, "--test") != 0) TEST_FLAG = '1';
+	if (Check_Option(argc, argv, "--test")) TEST_FLAG = '1';
 
 	if (configMode == 1)
 	{
@@ -182,14 +182,14 @@ int main(int argc, const char * argv[])
 			}
 			printf("Main Source __FILE__ PATH = %s\n", __FILE__);
 			FILE *fSOURCE = fopen(__FILE__, "r");
-			if (Show_File_Text(fSOURCE) != 0)return 1;
+			if (Show_File_Text(fSOURCE))return 1;
 			puts("");
 			for (l = 1; l <= 3; ++l)
 			{
 				for (k = 1; k <= 230; ++k)printf("#");
 				puts("");
 			}
-			if (Show_Header_Source() != 0)return 1;
+			if (Show_Header_Source())return 1;
 		}
 		else puts("You are not my lord\n");
 		return 0;
@@ -749,7 +749,7 @@ int main(int argc, const char * argv[])
 		Approximate(Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 5);
 
 		int Homogeneous_Flag = Find_No_Zero_Row(Solution_Matrix, n_of_Solution_Matrix - 1, Matrix_Description[0].n);
-		if (Homogeneous_Flag != 0)
+		if (Homogeneous_Flag)
 		{
 			puts("\n------------------------------ Particular Solution -----------------------------\n");
 			Show_Matrix(Solution_Matrix, 1, n_of_Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 1);
@@ -825,7 +825,7 @@ int main(int argc, const char * argv[])
 				}
 				else if (massFlag != 1)
 				{
-					if (Check_Option(argc, argv, "--test") != 0)
+					if (Check_Option(argc, argv, "--test"))
 					{
 						if (argc >= 3)
 						{

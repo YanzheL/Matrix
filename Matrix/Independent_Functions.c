@@ -153,7 +153,7 @@ int Find_No_Zero_Row(double **Matrix, int column, int m)                        
 	int count = 0, row;
 	for (row = 0; row < m; ++row)
 	{
-		if (fabs(Matrix[row][column]) != 0)count = row;
+		if (fabs(Matrix[row][column]))count = row;
 	}
 
 	return count;
@@ -164,7 +164,7 @@ int Find_Leading_Column(double **Matrix, int row, int n)
 	int count = 0, column;
 	for (column = n - 1; column >= 0; column--)
 	{
-		if (fabs(Matrix[row][column]) != 0)count = column;
+		if (fabs(Matrix[row][column]))count = column;
 	}
 
 	return count;
