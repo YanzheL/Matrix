@@ -568,6 +568,16 @@ int main(int argc, const char * argv[])
 			Test_Scanf(Matrix_Description, 1, M_RAND_MIN, M_RAND_MAX, N_RAND_MIN, N_RAND_MAX);
 		else if (configMode == 0)
 		{
+            if (MODE=='8')
+            {
+                puts("--------------------------------------------------------------------------------");
+                puts("| In MODE 8, the Vector System should be positioned vertically as the          |");
+                puts("|    columns of the Matrix that you input                                      |");
+                puts("| It means you MUST input the Matrix as the format below                       |");
+                puts("|    Matrix = [⍺1,⍺2,⍺3,...,⍺n]            'm' is the dimension of ⍺i          |");
+                puts("|    ⍺i are the COLUMN Vectors that you want to transform                      |");
+                puts("--------------------------------------------------------------------------------");;
+            }
 			printf("\nPlease input 'm' and 'n' : ");
 			if (scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n) != 2)
 			{
@@ -698,7 +708,7 @@ int main(int argc, const char * argv[])
 		if (configMode == 0)
 		{
 			puts("--------------------------------------------------------------------------------");
-			puts("| Test mode is not supported, you should input the Augmented Matrix mannually. |");
+			puts("| Test mode is deprecated, you should input the Augmented Matrix manually.     |");
 			puts("| The 'm' & 'n' represent row & column number of the Coefficient Matrix of     |");
 			puts("| a linear equation system.                                                    |");
 			puts("--------------------------------------------------------------------------------");

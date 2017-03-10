@@ -278,23 +278,23 @@ void Show_Help_Page()
 	puts("                  | You MUST write 'config.json' file in standard JSON format |");
 	puts("                  -------------------------------------------------------------");
 	puts("     --menu       Show Mode Menu page");
-	puts("     --mode-1     --mode-2      --mode-3");
-	puts("     --mode-4     --mode-5      --mode-6");
-	puts("     --mode-7     --mode-8\n");
-
-	puts("Options:");
+	puts("     --mode-1     --mode-2      --mode-3 ");
+	puts("     --mode-4     --mode-5      --mode-6 ");
+    puts("     --mode-7     --mode-8             \n");
+    
+    puts("Options:");
 	puts("  -o --out        Output stdout to FILE and store in $CURRENT_DIR");
 	puts("     --test       Enable random fill test mode");
 	puts("     --mass-test  Enable Unstoppable test mode");
 	puts("                  -------------------------------------------------------------");
 	puts("                  | To use this mode, you MUST copy the 'Mass_Test' program   |");
-	puts("                  |   to the same directory as the 'Matrix'                   |");
+	puts("                  |    to the same directory as the 'Matrix'                  |");
 	puts("                  | This mode will create 'Mass Test.txt' in $CURRENT_DIR     |");
-	puts("                  |   that store all the Command Line stdout                  |");
-	puts("                  | You MUST close the Command Line window mannually when     |");
-	puts("                  |   you need to stop this process                           |");
+	puts("                  |    that store all the Command Line stdout                 |");
+	puts("                  | You MUST close the Command Line window manually when      |");
+	puts("                  |    you need to stop this process                          |");
     puts("                  | After finishing the process, you should delete the file   |");
-    puts("                  |  'RobotBegin' mannually in $CURRENT_DIR                   |");
+    puts("                  |   'RobotBegin' manually in $CURRENT_DIR                   |");
 	puts("                  -------------------------------------------------------------\n");;
 	puts("Examples:");
 	puts("  Matrix --help");
