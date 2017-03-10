@@ -15,9 +15,10 @@ static char MODE = '0';
 //-----------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, const char * argv[])
 {
-    struct timespec acuTime;
-    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &acuTime);                                                       //提供ns级的随机数种子
-	srand((unsigned)acuTime.tv_nsec);
+ //   struct timespec acuTime;
+ //   clock_gettime(CLOCK_THREAD_CPUTIME_ID, &acuTime);                                                       //提供ns级的随机数种子
+	//srand((unsigned)acuTime.tv_nsec);
+	srand((unsigned)time(NULL));
     
 	int invalidOptionFlag = 0;
 	//    int helpFlag = 0;
@@ -573,11 +574,11 @@ int main(int argc, const char * argv[])
             if (MODE=='8')
             {
                 puts("--------------------------------------------------------------------------------");
-                puts("| In MODE 8, the Vector System should be positioned vertically as the          |");
-                puts("|    columns of the Matrix that you input                                      |");
-                puts("| It means you MUST input the Matrix as the format below                       |");
-                puts("|    Matrix = [⍺1,⍺2,⍺3,...,⍺n]            'm' is the dimension of ⍺i          |");
-                puts("|    ⍺i are the COLUMN Vectors that you want to transform                      |");
+                puts("|    In MODE 8, the Vector System should be positioned vertically as the       |");
+                puts("|       columns of the Matrix that you input                                   |");
+                puts("|    It means you MUST input the Matrix as the format below                    |");
+                puts("|       Matrix = [a1,a2,a3,...,an]            'm' is the dimension of ai       |");
+                puts("|       ai are the COLUMN Vectors that you want to transform                   |");
                 puts("--------------------------------------------------------------------------------");;
             }
 			printf("\nPlease input 'm' and 'n' : ");
