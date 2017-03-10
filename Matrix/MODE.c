@@ -48,14 +48,14 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 
 			for (j = rowToBeExchanged; j <= m - 1; ++j)
 			{
-				if (Matrix[rowToBeExchanged][column] != 0)
+				if (Matrix[rowToBeExchanged][column])
 				{
 					k = (double)1 / (Matrix[rowToBeExchanged][column]);                           // k等于第row_to_be_changed行第一个元素的倒数
 					Scalar_Multiplication(k, Matrix, rowToBeExchanged, m, n);
 					if (DeterminantMODE == 1)
 						coefficientOfEntireDeterminant *= 1 / k;
 				}
-				if (Matrix[j][column] != 0)                                                         // 从上到下找出首列元素不为零的行
+				if (Matrix[j][column])                                                         // 从上到下找出首列元素不为零的行
 				{
 					k = (double)1 / (Matrix[j][column]);                                             // k等于第j行第一个元素的倒数
 					Scalar_Multiplication(k, Matrix, j, m, n);                                      // k数乘第j行，使第j行第一个元素化为1
@@ -94,17 +94,17 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 	//    puts("--------------------------------------- Fix Begin ----------------------------------------");
 
 	int problemColumn = 0;
-	if (Check_Echelon(Matrix, m, n) != 0)problemColumn = Check_Echelon(Matrix, m, n);                    //检查是否已经化为行阶梯
+	if (Check_Echelon(Matrix, m, n))problemColumn = Check_Echelon(Matrix, m, n);                    //检查是否已经化为行阶梯
 
 //    printf("Problem column = %d\n",problemColumn+1);
-	if (problemColumn != 0)
+	if (problemColumn)
 	{
 		double last_2_LeadingCoefficient, last_1_LeadingCoefficient;
 		int lastNoZeroRow = m - 1;
 		int v;
 		for (v = m - 1; v >= 0; v--)
 		{
-			if (Find_Leading_Column(Matrix, v, n) != 0)
+			if (Find_Leading_Column(Matrix, v, n))
 			{
 				lastNoZeroRow = v;
 				break;
@@ -139,11 +139,11 @@ int Row_Canonical_Form(double **Matrix, int m, int n)
 	for (i = m - 1; i >= 0; i--)
 	{
 		returnValueOf_Find_Leading_Column = Find_Leading_Column(Matrix, i, n);
-		if (returnValueOf_Find_Leading_Column != 0)
+		if (returnValueOf_Find_Leading_Column)
 			lastNoZeroRow = i;
 
 		rowLastCoefficient = Matrix[lastNoZeroRow][Find_Leading_Column(Matrix, lastNoZeroRow, n)];
-		if (rowLastCoefficient != 0)
+		if (rowLastCoefficient)
 			Scalar_Multiplication(1 / rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
 	}
 
@@ -168,7 +168,8 @@ int Row_Canonical_Form(double **Matrix, int m, int n)
 		}
 		//}
 		row_row_LeadingCoefficient = Matrix[row][Find_Leading_Column(Matrix, row, n)];
-		if (row_row_LeadingCoefficient != 0)Scalar_Multiplication(1 / row_row_LeadingCoefficient, Matrix, row, m, n);
+		if (row_row_LeadingCoefficient)
+            Scalar_Multiplication(1 / row_row_LeadingCoefficient, Matrix, row, m, n);
 	}
 	//puts("----------------------- Row Canonical Finish -----------------------");
 	//Show_Matrix(AB, m, n,1);
