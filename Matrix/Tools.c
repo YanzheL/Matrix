@@ -507,24 +507,3 @@ void strrpl(char* src, char ch1, char ch2, unsigned long length)		//用于替换
 		if (src[i] == ch1) src[i] = ch2;
 	}
 }
-
-void Next_Run(void)
-{
-	FILE *CommandFirst = fopen("CommandFirstTemp", "rt");
-	char *command = TextFile2Char(CommandFirst);
-	fclose(CommandFirst);
-	remove("CommandFirstTemp");
-	switch (system(command))
-	{
-	case 127:
-		perror("System(command) return 127");
-		exit(1);
-		break;
-	case -1:
-		perror("System(command) return -1");
-		exit(1);
-		break;
-	default:
-		break;
-	}
-}
