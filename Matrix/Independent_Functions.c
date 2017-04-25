@@ -42,7 +42,7 @@ int Show_File_Text(FILE *fp)
 	return 0;
 }
 
-void Safe_Flush(FILE *fp)                                                                    //用于清空scanf缓冲区
+void Safe_Flush(FILE *fp)																		//用于清空scanf缓冲区
 {
 	int ch;
 	while ((ch = fgetc(fp)) != EOF && ch != '\n');
@@ -76,7 +76,7 @@ void Free_Matrix(double **Matrix, int m)
 	free(Matrix);
 }
 
-void Scalar_Multiplication(double k, double **Matrix, int r, int m, int n)                           //数乘运算 用k数乘第r行
+void Scalar_Multiplication(double k, double **Matrix, int r, int m, int n)						//数乘运算 用k数乘第r行
 {
 	int j;
 	for (j = 0; j <= n - 1; ++j)
@@ -84,7 +84,7 @@ void Scalar_Multiplication(double k, double **Matrix, int r, int m, int n)      
 }
 
 void Show_Matrix(double **Matrix, int startRow, int startColumn, int endRow, int endColumn, int displayFlag)
-{                                                                                                 //用于向屏幕打印整个矩阵
+{																								//用于向屏幕打印整个矩阵
 	int i, j;
 	for (i = startRow - 1; i <= endRow - 1; ++i)
 	{
@@ -114,7 +114,7 @@ void Approximate(double **Matrix, int m, int n, int index)
 		for (j = 0; j <= n - 1; ++j)
 		{
 			if (Matrix[i][j] - floor(Matrix[i][j]) < p)
-				Matrix[i][j] = floor(Matrix[i][j]);                                            //近似运算
+				Matrix[i][j] = floor(Matrix[i][j]);												//近似运算
 			else if (ceil(Matrix[i][j]) - Matrix[i][j] < p)
 				Matrix[i][j] = ceil(Matrix[i][j]);
 		}
@@ -133,7 +133,7 @@ void Row_Exchange(double **Matrix, int r1, int r2, int n)                       
 	}
 }
 
-void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                                   //行加减运算
+void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                                  //行加减运算
 {
 	int c;
 	if (flag == 0)                                                                              //flag=0时进行r1行加r2行
@@ -148,7 +148,7 @@ void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                  
 		}
 }
 
-int Find_No_Zero_Row(double **Matrix, int column, int m)                                       //从上到下找出第column列中最后一个非零元所在的行号
+int Find_No_Zero_Row(double **Matrix, int column, int m)										//从上到下找出第column列中最后一个非零元所在的行号
 {
 	int count = 0, row;
 	for (row = 0; row < m; ++row)
@@ -173,7 +173,7 @@ int Find_Leading_Column(double **Matrix, int row, int n)
 int Check_Zero_Matrix(double **Matrix, int m, int n)
 {
 	int zeroElementCount = 0, i, j;
-	for (i = 0; i <= m - 1; ++i)                                                                   //数出增广矩阵中零元素的个数
+	for (i = 0; i <= m - 1; ++i)																//数出增广矩阵中零元素的个数
 	{
 		for (j = 0; j <= n - 1; ++j)
 		{
@@ -183,7 +183,7 @@ int Check_Zero_Matrix(double **Matrix, int m, int n)
 	if (zeroElementCount == (m)*(n))
 	{
 		//        printf("Zero Element = %d\n",zeroElementCount);
-		return -1;                                                                           //如果用户输入的矩阵元素全为0，则不用化简，直接返回
+		return -1;																				//如果用户输入的矩阵元素全为0，则不用化简，直接返回
 	}
 	else return zeroElementCount;
 }
@@ -194,11 +194,11 @@ void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE)
 //	srand((unsigned)time(NULL));
 	for (i = 0; i <= m - 1; ++i)
 	{
-		for (j = 0; j <= n - 1; ++j)                                                               //测试需要 随机整数填充增广矩阵
+		for (j = 0; j <= n - 1; ++j)															//测试需要 随机整数填充增广矩阵
 		{
 			if (MODE == 1)
-				Matrix[i][j] = MIN + rand() % (MAX - MIN - 1) + (double)rand() / RAND_MAX;                 //随机小数填充
-			else Matrix[i][j] = MIN + rand() % MAX;                                                //随机整数填充
+				Matrix[i][j] = MIN + rand() % (MAX - MIN - 1) + (double)rand() / RAND_MAX;		//随机小数填充
+			else Matrix[i][j] = MIN + rand() % MAX;												//随机整数填充
 		}
 	}
 }
@@ -285,17 +285,8 @@ void Show_Help_Page()
     puts("Options:");
 	puts("  -o --out        Output stdout to FILE and store in $CURRENT_DIR");
 	puts("     --test       Enable random fill test mode");
-	puts("     --mass-test  Enable Unstoppable test mode");
-	puts("                  -------------------------------------------------------------");
-	puts("                  | To use this mode, you MUST copy the 'Mass_Test' program   |");
-	puts("                  |    to the same directory as the 'Matrix'                  |");
-	puts("                  | This mode will create 'Mass Test.txt' in $CURRENT_DIR     |");
-	puts("                  |    that store all the Command Line stdout                 |");
-	puts("                  | You MUST close the Command Line window manually when      |");
-	puts("                  |    you need to stop this process                          |");
-    puts("                  | After finishing the process, you should delete the file   |");
-    puts("                  |   'RobotBegin' manually in $CURRENT_DIR                   |");
-	puts("                  -------------------------------------------------------------\n");;
+	puts("     --mass-test  Enable Unstoppable test mode\n");
+	
 	puts("Examples:");
 	puts("  Matrix --help");
 	puts("  Matrix -c");

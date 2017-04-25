@@ -31,34 +31,14 @@ int main(int argc, const char * argv[])
 		int invalidContinueFlag = 0;
 		char *outputFileName;
 		invalidOptionFlag = Check_Known_Options(argc, argv, &invalidContinueFlag);
-		if (invalidOptionFlag)
-			return 0;
+		if (invalidOptionFlag)return 0;
 		
 		sConfig receiveCfg = { 0,0,'n',0,0,0,0,NULL,NULL };														//结构体初始化
 		if (Check_Option(argc, argv, "-c") != 0 || Check_Option(argc, argv, "--config") != 0)configMode = 1;
 		if (Check_Option(argc, argv, "--mass-test"))
 		{
-#ifdef UNIX
 			massFlag = 1;
 			TEST_FLAG = '1';
-#else
-			switch (system("cls"))
-			{
-				case 127:
-					perror("System('cls') return 127");
-					exit(1);
-					break;
-				case -1:
-					perror("System('cls') return -1");
-					exit(1);
-					break;
-				default:
-					break;
-			}
-			
-			puts("\nMass Test mode is only available on UNIX platforms. Bypassing...");
-			return 0;
-#endif // UNIX
 		}
 		if (invalidOptionFlag == 0 && massFlag == 0)
 		{
