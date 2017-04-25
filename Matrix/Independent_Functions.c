@@ -249,7 +249,7 @@ void Show_Index_Page()
 	puts("|                                                                              |");
 	puts("|         This is free software: you are free to change and redistribute it    |");
 	puts("|                                                                              |");
-	puts("|         Email: lee.yanzhe@yanzhe.org           Version 1.2.2                 |");
+	puts("|         Email: lee.yanzhe@yanzhe.org           Version 1.2.3                 |");
 	puts("|                                                                              |");
 	puts("--------------------------------------------------------------------------------");
 	puts("          Please maximize your window to get a better display effect            ");
