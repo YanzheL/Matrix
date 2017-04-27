@@ -293,10 +293,7 @@ int main(int argc, const char * argv[])
 			fflush(stdin);
 		}
 		
-		
-		
-		
-		
+
 		//-------------------------------------- 进入运算 --------------------------------------
 		
 		sMatrix Calculate_Result={0,0,0,0,NULL};
@@ -801,7 +798,7 @@ int main(int argc, const char * argv[])
 		}
 		else
 		{
-			printf("%s",Result2JSON(Calculate_Result,1));
+			printf("%s",Result2JSON(Calculate_Result,0));
 		}
 		Free_Matrix(Calculate_Result.content, Calculate_Result.m);
 		
