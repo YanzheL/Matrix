@@ -53,6 +53,15 @@ typedef struct Config
 	double *getElements_Two;
 }sConfig;
 
+typedef struct sMatrix
+{
+	int mode;
+	int m;
+	int n;
+	double value;
+	double** content;
+}sMatrix;
+
 //--------------------------------------------------------- MODE ------------------------------------------------------------
 //MODE 1
 double Determinant(double **Matrix, int n);
@@ -78,6 +87,7 @@ double** Schmidt_Orthogonalization(double **Matrix, int m, int n);
 char* TextFile2Char(FILE *fp);
 char* GetFileExactPath(const char* argvTemp, char *fileName);
 sConfig Read_Config(const char* programPath);
+char* Result2JSON(sMatrix rawResult,unsigned formatFlag);
 void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE);
 void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE);
 void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int m_rand_min, int mRandMax, int nRandMin, int nRandMax);
@@ -94,6 +104,8 @@ int Check_No_Command(int argc, const char** argv);
 int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag);
 int Check_Option_Order(int argc, const char** argv, char *str1, unsigned long limN1, char *str2, unsigned long limN2);
 void strrpl(char* src, char ch1, char ch2, unsigned long length);
+
+void Matrix_Copy(double **dst,double **src,int m,int n);
 //--------------------------------------------------------- Tools -----------------------------------------------------------
 
 

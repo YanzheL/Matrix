@@ -24,17 +24,24 @@ int main(int argc, const char * argv[])
 		
 		int invalidOptionFlag = 0;
 		//    int helpFlag = 0;
-		int lordFlag = 0;
-		int massFlag = 0;
-		int configMode = 0;
-		int outputMode = 0;
+		unsigned lordFlag = 0;
+		unsigned massFlag = 0;
+		unsigned configMode = 0;
+		unsigned outputMode = 0;
 		int invalidContinueFlag = 0;
+		unsigned serverMode=0;
 		char *outputFileName;
+		
 		invalidOptionFlag = Check_Known_Options(argc, argv, &invalidContinueFlag);
 		if (invalidOptionFlag)return 0;
 		
 		sConfig receiveCfg = { 0,0,'n',0,0,0,0,NULL,NULL };														//结构体初始化
-		if (Check_Option(argc, argv, "-c") != 0 || Check_Option(argc, argv, "--config") != 0)configMode = 1;
+		if (Check_Option(argc, argv, "-c") != 0 || Check_Option(argc, argv, "--config") != 0)
+		{
+			configMode = 1;
+			if (Check_Option(argc, argv, "--server") != 0 )
+				serverMode = 1;
+		}
 		if (Check_Option(argc, argv, "--mass-test"))
 		{
 			massFlag = 1;
@@ -180,16 +187,6 @@ int main(int argc, const char * argv[])
 			return 0;
 		}
 		
-		//    if (invalidOptionFlag==0&&outputMode==0)
-		//    {
-		//#ifdef UNIX
-		//        system("clear");
-		//#endif
-		//#ifdef WINDOWS
-		//        system("cls");
-		//#endif
-		//    }
-		
 		if (argc >= 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0))
 		{
 			//        helpFlag = 1;
@@ -206,44 +203,45 @@ int main(int argc, const char * argv[])
 		if ((argc >= 2 && strcmp(argv[1], "--mode-1") == 0) || MODE == '1')
 		{
 			MODE = '1';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
+			
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-2") == 0) || MODE == '2')
 		{
 			MODE = '2';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-3") == 0) || MODE == '3')
 		{
 			MODE = '3';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-4") == 0) || MODE == '4')
 		{
 			MODE = '4';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-5") == 0) || MODE == '5')
 		{
 			MODE = '5';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-6") == 0) || MODE == '6')
 		{
 			MODE = '6';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-7") == 0) || MODE == '7')
 		{
 			MODE = '7';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-8") == 0) || MODE == '8')
 		{
 			MODE = '8';
-			Show_Index_Page();
+			if (serverMode==0) Show_Index_Page();
 		}
-		if ((argc == 1 || ((argc == 2) && (strcmp(argv[1], "--test") == 0 || strcmp(argv[1], "--mass-test") == 0))) && configMode == 0)
+		if ((argc == 1||((argc == 2)&&(strcmp(argv[1], "--test") == 0 || strcmp(argv[1], "--mass-test") == 0))) && configMode == 0)
 		{
 			Show_Index_Page();
 			Show_Menu_Page();
@@ -278,7 +276,7 @@ int main(int argc, const char * argv[])
 			TEST_FLAG = (char)(48 + receiveCfg.getTestFlag);
 		}
 		
-		Show_MODE_Band(MODE);
+		if (serverMode==0) Show_MODE_Band(MODE);
 		
 		//    if (argc>=2&&strcmp(argv[argc-1], "--test")==0)TEST_FLAG='1';
 		
@@ -294,8 +292,18 @@ int main(int argc, const char * argv[])
 			//        printf("TEST_FLAG = %c\n",TEST_FLAG);
 			fflush(stdin);
 		}
+		
+		
+		
+		
+		
+		//-------------------------------------- 进入运算 --------------------------------------
+		
+		sMatrix Calculate_Result={0,0,0,0,NULL};
+		
 		if (MODE == '1' || MODE == '2' || MODE == '3')
 		{
+			Calculate_Result.mode=(int)(MODE-'0');
 			int n = 1;
 			if (TEST_FLAG != '0')
 			{
@@ -317,7 +325,7 @@ int main(int argc, const char * argv[])
 				if (receiveCfg.getM_One != receiveCfg.getN_One)
 				{
 					puts("Your input Matrix is not a Square Matrix");
-					return 0;
+					exit(1);
 				}
 				else n = receiveCfg.getN_One;
 			}
@@ -335,40 +343,40 @@ int main(int argc, const char * argv[])
 			
 			Approximate(Matrix, n, n, 6);
 			
-			puts("\n--------------------------------- Confirm Input --------------------------------\n");
-			if (n > 9)
-				Show_Matrix(Matrix, 1, n - 9, n, n, 1);
-			else
-				Show_Matrix(Matrix, 1, 1, n, n, 1);
-			puts("\n\n------------------------------------ Result ------------------------------------\n");
+			if (serverMode==0)
+			{
+				puts("\n--------------------------------- Confirm Input --------------------------------\n");
+				if (n > 9)
+					Show_Matrix(Matrix, 1, n - 9, n, n, 1);
+				else
+					Show_Matrix(Matrix, 1, 1, n, n, 1);
+			}
+			
+			Calculate_Result.m=n;
+			Calculate_Result.n=n;
+			
 			if (MODE == '1')
 			{
-				printf("Determinant Value = %lf\n", Determinant(Matrix, n));
-				Free_Matrix(Matrix, n);
+				Calculate_Result.content=Matrix;
+				Calculate_Result.value=Determinant(Calculate_Result.content, n);
 			}
 			if (MODE == '2')
 			{
-				double **Adjoint = Adjoint_Matrix(Matrix, n, n);
-				Approximate(Adjoint, n, n, 5);
-				Show_Matrix(Adjoint, 1, 1, n, n, 1);
-				Free_Matrix(Adjoint, n);
+				Calculate_Result.content = Adjoint_Matrix(Matrix, n, n);
+				Approximate(Calculate_Result.content, n, n, 5);
 				Free_Matrix(Matrix, n);
 			}
 			if (MODE == '3')
 			{
-				if (Reverse_Matrix(Matrix, n) == 0)
+				Calculate_Result.content=Matrix;
+				if (Reverse_Matrix(Calculate_Result.content, n) == 0)
 					printf("The Inverse Matrix doesn't Exist\n");
-				else
-				{
-					if (n > 9)Show_Matrix(Matrix, 1, n - 9, n, n, 1);
-					else Show_Matrix(Matrix, 1, 1, n, n, 1);
-				}
-				Free_Matrix(Matrix, n);
 			}
 		}
 		
 		if (MODE == '4')
 		{
+			Calculate_Result.mode=(int)(MODE-'0');
 			int i;
 			
 			struct Characteristic_of_Matrix *Matrix_Description;
@@ -442,7 +450,9 @@ int main(int argc, const char * argv[])
 			
 			double **A = Create_Matrix(Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[0].Matrix_Name);
 			double **B = Create_Matrix(Matrix_Description[1].m, Matrix_Description[1].n, Matrix_Description[1].Matrix_Name);
-			double **Result_Matrix = Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "MODE 4 Result");
+			Calculate_Result.m=Matrix_Description[0].m;
+			Calculate_Result.n=Matrix_Description[1].n;
+			Calculate_Result.content = Create_Matrix(Calculate_Result.m, Calculate_Result.n, "MODE 4 Result");
 			
 			if (TEST_FLAG == '0')
 			{
@@ -468,78 +478,66 @@ int main(int argc, const char * argv[])
 			
 			Approximate(A, Matrix_Description[0].m, Matrix_Description[0].n, 6);
 			
-			puts("\n--------------------------------- Confirm Input --------------------------------\n");
-			if (Matrix_Description[0].n > 8 || Matrix_Description[1].n > 8)
+			if (serverMode==0)
 			{
-				printf(" --------------------------------- A %d X %d --------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
-				if (Matrix_Description[0].n > 8)
+				puts("\n--------------------------------- Confirm Input --------------------------------\n");
+				if (Matrix_Description[0].n > 8 || Matrix_Description[1].n > 8)
 				{
-					printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
-					Show_Matrix(A, 1, Matrix_Description[0].n - 7, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+					printf(" --------------------------------- A %d X %d --------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
+					if (Matrix_Description[0].n > 8)
+					{
+						printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
+						Show_Matrix(A, 1, Matrix_Description[0].n - 7, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+					}
+					else Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+					printf(" --------------------------------- B %d X %d --------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
+					if (Matrix_Description[1].n > 8)
+					{
+						printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
+						Show_Matrix(B, 1, Matrix_Description[1].n - 7, Matrix_Description[1].m, Matrix_Description[1].n, 1);
+					}
+					else Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
 				}
-				else Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				printf(" --------------------------------- B %d X %d --------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
-				if (Matrix_Description[1].n > 8)
+				else
 				{
-					printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
-					Show_Matrix(B, 1, Matrix_Description[1].n - 7, Matrix_Description[1].m, Matrix_Description[1].n, 1);
+					printf(" --------------------------------- A %d X %d --------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
+					Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+					printf(" --------------------------------- B %d X %d --------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
+					Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
 				}
-				else Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
-			}
-			else
-			{
-				printf(" --------------------------------- A %d X %d --------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
-				Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				printf(" --------------------------------- B %d X %d --------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
-				Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
 			}
 			
-			if (Matrix_Multiplication(A, B, Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n) == 0)
-				Show_Matrix(Result_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[1].n, 0);
+			if (Matrix_Multiplication(A, B, Calculate_Result.content, Matrix_Description[0].m, Matrix_Description[0].n, Matrix_Description[1].m, Matrix_Description[1].n) == 0&&serverMode==0)
+				Show_Matrix(Calculate_Result.content, 1, 1, Calculate_Result.m, Calculate_Result.n, 0);
 			
 			
 			if (multiFlag == 1)
 			{
-				printf("\nMulti Times = %d", multi_times);
+				if (serverMode==0)
+				{
+					printf("\nMulti Times = %d", multi_times);
+				}
 				for (i = 1; i <= multi_times - 1; ++i)
 				{
 					double **Temp_Result = Create_Matrix(Matrix_Description[0].m, Matrix_Description[1].n, "");
-					Matrix_Multiplication(Result_Matrix, Result_Matrix, Temp_Result, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m);
-					Result_Matrix = Temp_Result;
+					Matrix_Multiplication(Calculate_Result.content, Calculate_Result.content, Temp_Result, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m, Matrix_Description[0].m);
+					
+					Free_Matrix(Calculate_Result.content, Calculate_Result.m);
+					
+					Calculate_Result.content = Temp_Result;
 				}
 			}
 			
-			puts("\n\n------------------------------------ Result ------------------------------------\n");
-			
-			Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[1].n, 5);
-			
-			if (Matrix_Description[1].n >= 8)
-			{
-				//            printf(" ----------------------------------- A %d X %d ---------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
-				//            Show_Matrix(A, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				//            printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
-				//            Show_Matrix(B, 1, Matrix_Description[1].n - 9, Matrix_Description[1].m, Matrix_Description[1].n, 1);
-				printf(" --------------------------------- A B %d X %d ------------------------------\n", Matrix_Description[0].m, Matrix_Description[1].n);
-				printf("  ------------------------------- Last 8 Columns ---------------------------- \n");
-				Show_Matrix(Result_Matrix, 1, Matrix_Description[1].n - 7, Matrix_Description[0].m, Matrix_Description[1].n, 1);
-			}
-			else
-			{
-				//            printf(" ----------------------------------- A %d X %d ---------------------------------\n", Matrix_Description[0].m, Matrix_Description[0].n);
-				//            Show_Matrix(A, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				//            printf(" ----------------------------------- B %d X %d ---------------------------------\n", Matrix_Description[1].m, Matrix_Description[1].n);
-				//            Show_Matrix(B, 1, 1, Matrix_Description[1].m, Matrix_Description[1].n, 1);
-				printf(" ----------------------------------- A B %d X %d -------------------------------\n", Matrix_Description[0].m, Matrix_Description[1].n);
-				Show_Matrix(Result_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[1].n, 1);
-			}
+			Approximate(Calculate_Result.content, Matrix_Description[0].m, Matrix_Description[1].n, 5);
+
 			
 			Free_Matrix(A, Matrix_Description[0].m);
 			Free_Matrix(B, Matrix_Description[1].m);
-			Free_Matrix(Result_Matrix, Matrix_Description[0].m);
 		}
 		
 		if (MODE == '5' || MODE == '6' || MODE == '8')
 		{
+			Calculate_Result.mode=(int)(MODE-'0');
 			struct Characteristic_of_Matrix *Matrix_Description;
 			Matrix_Description = (struct Characteristic_of_Matrix*)calloc(1, sizeof(struct Characteristic_of_Matrix));
 			if (Matrix_Description == NULL)
@@ -576,20 +574,22 @@ int main(int argc, const char * argv[])
 				Matrix_Description[0].m = receiveCfg.getM_One;
 				Matrix_Description[0].n = receiveCfg.getN_One;
 			}
+			sMatrix Input_Matrix={(int)(MODE-'0'),Matrix_Description[0].m,Matrix_Description[0].n,0,NULL};
 			
-			double **Input_Matrix = Create_Matrix(Matrix_Description[0].m, Matrix_Description[0].n, "MODE 5&6&8");
+			
+			Input_Matrix.content = Create_Matrix(Matrix_Description[0].m, Matrix_Description[0].n, "MODE 5&6&8");
 			
 			if (TEST_FLAG == '0')
 			{
 				if (configMode == 0)
-					User_Input_Matrix(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, "");
+					User_Input_Matrix(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, "");
 				else
-					Config_Fill_Matrix(Input_Matrix, receiveCfg, 1);
+					Config_Fill_Matrix(Input_Matrix.content, receiveCfg, 1);
 			}
 			else
-				Rand_Fill(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, -10, 10, 0);
+				Rand_Fill(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, -10, 10, 0);
 			
-			Approximate(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 6);
+			Approximate(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, 6);
 			
 			if (MODE == '8')
 			{
@@ -626,55 +626,61 @@ int main(int argc, const char * argv[])
 					}
 				}
 				
-				puts("\n--------------------------------- Confirm Input --------------------------------\n");
-				if (Matrix_Description[0].n > 9)
-					Show_Matrix(Input_Matrix, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				else
-					Show_Matrix(Input_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				printf("\nNeed Normalization = %c", normFlag);
-				puts("\n\n------------------------------------ Result ------------------------------------\n");
-				double **Result_Matrix = Schmidt_Orthogonalization(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
-				Approximate(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
+				if (serverMode==0)
+				{
+					puts("\n--------------------------------- Confirm Input --------------------------------\n");
+					if (Input_Matrix.n > 9)
+						Show_Matrix(Input_Matrix.content, 1, Input_Matrix.n - 9, Input_Matrix.m, Input_Matrix.n, 1);
+					else
+						Show_Matrix(Input_Matrix.content, 1, 1, Input_Matrix.m, Input_Matrix.n, 1);
+					printf("\nNeed Normalization = %c", normFlag);
+				}
+				
+				//--------------------------------- Result --------------------------------
+				Calculate_Result.m=Input_Matrix.m;
+				Calculate_Result.n=Input_Matrix.n;
+				Calculate_Result.content = Schmidt_Orthogonalization(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n);
+				Approximate(Calculate_Result.content, Calculate_Result.m, Calculate_Result.n, 5);
 				
 				if (normFlag == 'y')
 				{
-					double **temp_Result = Vector_Normalization(Result_Matrix, Matrix_Description[0].m, Matrix_Description[0].n);
-					Result_Matrix = temp_Result;
+					double **temp_Result = Vector_Normalization(Calculate_Result.content, Calculate_Result.m, Calculate_Result.n);
+					Free_Matrix(Calculate_Result.content, Calculate_Result.m);
+					Calculate_Result.content = temp_Result;
+					Approximate(Calculate_Result.content, Calculate_Result.m, Calculate_Result.n, 5);
 				}
-				if (Matrix_Description[0].n > 9)
-					Show_Matrix(Result_Matrix, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				else
-					Show_Matrix(Result_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				Free_Matrix(Result_Matrix, Matrix_Description[0].m);
 			}
 			
 			else
 			{
-				puts("\n--------------------------------- Confirm Input --------------------------------\n");
-				if (Matrix_Description[0].n > 9)
-					Show_Matrix(Input_Matrix, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				else
-					Show_Matrix(Input_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
 				
-				puts("\n\n------------------------------------ Result ------------------------------------\n");
+				if (serverMode==0)
+				{
+					puts("\n--------------------------------- Confirm Input --------------------------------\n");
+					if (Input_Matrix.n > 9)
+						Show_Matrix(Input_Matrix.content, 1, Input_Matrix.n - 9, Input_Matrix.m, Input_Matrix.n, 1);
+					else
+						Show_Matrix(Input_Matrix.content, 1, 1, Input_Matrix.m, Input_Matrix.n, 1);
+					puts("\n\n------------------------------------ Result ------------------------------------\n");
+				}
 				if (MODE == '5')
 				{
-					if (Row_Echelon_Form(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 0) == 0)
-						Show_Matrix(Input_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
+					Row_Echelon_Form(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, 0);
 				}
 				else if (MODE == '6')
 				{
-					if (Row_Canonical_Form(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n) == 0)
-						Show_Matrix(Input_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 0);
+					Row_Canonical_Form(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n);
 				}
-				Approximate(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, 5);
-				if (Matrix_Description[0].n > 9)
-					Show_Matrix(Input_Matrix, 1, Matrix_Description[0].n - 9, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				else
-					Show_Matrix(Input_Matrix, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n, 1);
-				printf("\nRank = %d\n", Find_Rank(Input_Matrix, Matrix_Description[0].m, Matrix_Description[0].n));
+				Approximate(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, 5);
+				
+				Calculate_Result.m=Input_Matrix.m;
+				Calculate_Result.n=Input_Matrix.n;
+				Calculate_Result.content=Create_Matrix(Calculate_Result.m, Calculate_Result.n, "");
+				Matrix_Copy(Calculate_Result.content, Input_Matrix.content, Input_Matrix.m, Input_Matrix.n);
+				
+				
 			}
-			Free_Matrix(Input_Matrix, Matrix_Description[0].m);
+			Free_Matrix(Input_Matrix.content, Matrix_Description[0].m);
 		}
 		
 		if (MODE == '7')
@@ -764,6 +770,51 @@ int main(int argc, const char * argv[])
 			Free_Matrix(AB, Matrix_Description[0].m);
 			Free_Matrix(Solution_Matrix, Matrix_Description[0].n);
 		}
+		
+		
+		
+		
+		
+		if (serverMode==0&&MODE!='7')
+		{
+			puts("\n\n------------------------------------ Result ------------------------------------\n");
+			switch (MODE)
+			{
+				case '1':
+					printf("Determinant Value = %lf\n", Calculate_Result.value);
+					break;
+					
+				case '4':
+					printf(" --------------------------------- A B %d X %d ------------------------------\n", Calculate_Result.m, Calculate_Result.n);
+					break;
+				default:
+					break;
+			}
+			
+			if (MODE!='1')
+			{
+				if (Calculate_Result.n > 9)
+					Show_Matrix(Calculate_Result.content, 1, Calculate_Result.n - 9, Calculate_Result.m, Calculate_Result.n, 1);
+				else
+					Show_Matrix(Calculate_Result.content, 1, 1, Calculate_Result.m, Calculate_Result.n, 1);
+			}
+		}
+		else
+		{
+			printf("%s",Result2JSON(Calculate_Result,1));
+		}
+		Free_Matrix(Calculate_Result.content, Calculate_Result.m);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		if (configMode == 1) free(receiveCfg.getElements_One);
 		if (invalidContinueFlag == 1) puts("");

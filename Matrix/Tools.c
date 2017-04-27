@@ -120,6 +120,40 @@ sConfig Read_Config(const char* programPath)
 	return readResult;
 }
 
+char* Result2JSON(sMatrix rawResult,unsigned formatFlag)
+{
+	
+	char* jsonData="";
+	
+	cJSON *root=cJSON_CreateObject();
+	cJSON_AddItemToObject(root, "MODE", cJSON_CreateNumber(rawResult.mode));
+	cJSON_AddItemToObject(root, "Row_Number", cJSON_CreateNumber(rawResult.m));
+	cJSON_AddItemToObject(root, "Column_Number", cJSON_CreateNumber(rawResult.n));
+	
+	if (rawResult.mode==1)
+	{
+		cJSON_AddItemToObject(root, "Value", cJSON_CreateNumber(rawResult.value));
+	}
+	
+	cJSON *matrixContent=cJSON_CreateArray();
+	
+	for (int i=0; i<rawResult.m; ++i)
+	{
+		cJSON_AddItemToArray(matrixContent, cJSON_CreateDoubleArray(rawResult.content[i], rawResult.n));
+	}
+	
+	cJSON_AddItemToObject(root, "Matrix_Content", matrixContent);
+	
+	switch (formatFlag)
+	{
+	case 0:jsonData=cJSON_PrintUnformatted(root);break;
+	case 1:jsonData=cJSON_Print(root);break;
+	}
+	
+	return jsonData;
+	
+}
+
 void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE)
 {
 	int i, j;
@@ -375,7 +409,7 @@ char** CommandList()
 	allOptions[10] = "-h";
 	allOptions[11] = "--help";
 	allOptions[12] = "--menu";
-	allOptions[13] = "--lord";
+	allOptions[13] = "--server";
 	//---------- Options ----------
 	allOptions[14] = "-o";
 	allOptions[15] = "--out";
@@ -503,5 +537,16 @@ void strrpl(char* src, char ch1, char ch2, unsigned long length)		//用于替换
 	for (i = 0; i < length - 1; ++i)
 	{
 		if (src[i] == ch1) src[i] = ch2;
+	}
+}
+
+void Matrix_Copy(double **dst,double **src,int m,int n)
+{
+	for (int i=0; i<m; ++i)
+	{
+		for (int j=0; j<n; ++j)
+		{
+			dst[i][j]=src[i][j];
+		}
 	}
 }
