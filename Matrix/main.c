@@ -204,7 +204,6 @@ int main(int argc, const char * argv[])
 		{
 			MODE = '1';
 			if (serverMode==0) Show_Index_Page();
-			
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-2") == 0) || MODE == '2')
 		{
@@ -293,14 +292,14 @@ int main(int argc, const char * argv[])
 			fflush(stdin);
 		}
 		
-
+		
 		//-------------------------------------- 进入运算 --------------------------------------
 		
-		sMatrix Calculate_Result={0,0,0,0,NULL};
+		sMatrix Calculate_Result={0,0,0,0,NULL,1,0,0};
+		Calculate_Result.mode=(int)(MODE-'0');
 		
 		if (MODE == '1' || MODE == '2' || MODE == '3')
 		{
-			Calculate_Result.mode=(int)(MODE-'0');
 			int n = 1;
 			if (TEST_FLAG != '0')
 			{
@@ -373,7 +372,6 @@ int main(int argc, const char * argv[])
 		
 		if (MODE == '4')
 		{
-			Calculate_Result.mode=(int)(MODE-'0');
 			int i;
 			
 			struct Characteristic_of_Matrix *Matrix_Description;
@@ -526,7 +524,7 @@ int main(int argc, const char * argv[])
 			}
 			
 			Approximate(Calculate_Result.content, Matrix_Description[0].m, Matrix_Description[1].n, 5);
-
+			
 			
 			Free_Matrix(A, Matrix_Description[0].m);
 			Free_Matrix(B, Matrix_Description[1].m);
@@ -534,7 +532,6 @@ int main(int argc, const char * argv[])
 		
 		if (MODE == '5' || MODE == '6' || MODE == '8')
 		{
-			Calculate_Result.mode=(int)(MODE-'0');
 			struct Characteristic_of_Matrix *Matrix_Description;
 			Matrix_Description = (struct Characteristic_of_Matrix*)calloc(1, sizeof(struct Characteristic_of_Matrix));
 			if (Matrix_Description == NULL)
@@ -545,19 +542,12 @@ int main(int argc, const char * argv[])
 			Matrix_Description[0].Matrix_Name = "MODE 5&6&8 Input";
 			
 			if (TEST_FLAG != '0')
+			{
 				Test_Scanf(Matrix_Description, 1, M_RAND_MIN, M_RAND_MAX, N_RAND_MIN, N_RAND_MAX);
+
+			}
 			else if (configMode == 0)
 			{
-				if (MODE=='8')
-				{
-					puts("--------------------------------------------------------------------------------");
-					puts("| In MODE 8, the Vector System should be positioned vertically as the          |");
-					puts("|    columns of the Matrix that you input                                      |");
-					puts("| It means you MUST input the Matrix as the format below                       |");
-					puts("|    Matrix = [⍺1,⍺2,⍺3,...,⍺n]            'm' is the dimension of ⍺i          |");
-					puts("|    ⍺i are the COLUMN Vectors that you want to transform                      |");
-					puts("--------------------------------------------------------------------------------");;
-				}
 				printf("\nPlease input 'm' and 'n' : ");
 				if (scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n) != 2)
 				{
@@ -571,7 +561,7 @@ int main(int argc, const char * argv[])
 				Matrix_Description[0].m = receiveCfg.getM_One;
 				Matrix_Description[0].n = receiveCfg.getN_One;
 			}
-			sMatrix Input_Matrix={(int)(MODE-'0'),Matrix_Description[0].m,Matrix_Description[0].n,0,NULL};
+			sMatrix Input_Matrix={(int)(MODE-'0'),Matrix_Description[0].m,Matrix_Description[0].n,0,NULL,1,0,0};
 			
 			
 			Input_Matrix.content = Create_Matrix(Matrix_Description[0].m, Matrix_Description[0].n, "MODE 5&6&8");
@@ -673,16 +663,16 @@ int main(int argc, const char * argv[])
 				Calculate_Result.m=Input_Matrix.m;
 				Calculate_Result.n=Input_Matrix.n;
 				Calculate_Result.content=Create_Matrix(Calculate_Result.m, Calculate_Result.n, "");
-				Matrix_Copy(Calculate_Result.content, Input_Matrix.content, Input_Matrix.m, Input_Matrix.n);
+				Matrix_Copy(Calculate_Result.content, Input_Matrix.content, 1,1,Input_Matrix.m, Input_Matrix.n);
 				
 				
 			}
-			Free_Matrix(Input_Matrix.content, Matrix_Description[0].m);
+			Free_Matrix(Input_Matrix.content, Input_Matrix.m);
 		}
 		
 		if (MODE == '7')
 		{
-			TEST_FLAG = '0';                //系统随机数填充的增广矩阵永远行或列满秩，绝大多数情况下方程组无解，因此Test模式无意义，故去除
+			TEST_FLAG = '0';                //系统随机数填充的增广矩阵永远满秩的，绝大多数情况下方程组无解，因此Test模式无意义，故去除
 			
 			struct Characteristic_of_Matrix *Matrix_Description;
 			Matrix_Description = (struct Characteristic_of_Matrix*)calloc(1, sizeof(struct Characteristic_of_Matrix));
@@ -723,72 +713,95 @@ int main(int argc, const char * argv[])
 			
 			Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1, 6);
 			
-			puts("\n--------------------------------- Confirm Input --------------------------------\n");
-			if (Matrix_Description[0].n > 9)
-				Show_Matrix(AB, 1, Matrix_Description[0].n + 1 - 9, Matrix_Description[0].m, Matrix_Description[0].n + 1, 1);
-			else
-				Show_Matrix(AB, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n + 1, 1);
+			if (serverMode==0)
+			{
+				puts("\n--------------------------------- Confirm Input --------------------------------\n");
+				if (Matrix_Description[0].n > 9)
+					Show_Matrix(AB, 1, Matrix_Description[0].n + 1 - 9, Matrix_Description[0].m, Matrix_Description[0].n + 1, 1);
+				else
+					Show_Matrix(AB, 1, 1, Matrix_Description[0].m, Matrix_Description[0].n + 1, 1);
+			}
 			
-			puts("\n\n------------------------------------ Result ------------------------------------\n");
 			if (Check_Linear_Equation_Solution_Existance(AB, Matrix_Description[0].m, Matrix_Description[0].n) == 0)
 			{
-				printf("This Linear Equation System does not have a solution\n\n");
-				return 0;
+				Calculate_Result.sluExistFlag=0;
 			}
 			
-			Row_Canonical_Form(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1);
-			
-			Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1, 6);
-			
-			int rank_of_A = Find_Rank(AB, Matrix_Description[0].m, Matrix_Description[0].n), n_of_Solution_Matrix = Matrix_Description[0].n - rank_of_A + 2;
-			double **Solution_Matrix = Create_Matrix(Matrix_Description[0].n, n_of_Solution_Matrix, "Solution Matrix");
-			Build_Solution_Matrix(AB, Solution_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, n_of_Solution_Matrix, rank_of_A);
-			
-			Approximate(Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 5);
-			
-			int Homogeneous_Flag = Find_No_Zero_Row(Solution_Matrix, n_of_Solution_Matrix - 1, Matrix_Description[0].n);
-			if (Homogeneous_Flag)
+			if (Calculate_Result.sluExistFlag!=0)
 			{
-				puts("\n------------------------------ Particular Solution -----------------------------\n");
-				Show_Matrix(Solution_Matrix, 1, n_of_Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 1);
+				Row_Canonical_Form(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1);
 				
+				Approximate(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1, 6);
+				
+				int rank_of_A = Find_Rank(AB, Matrix_Description[0].m, Matrix_Description[0].n);
+				int n_of_Solution_Matrix = Matrix_Description[0].n - rank_of_A + 2;
+				double **Solution_Matrix = Create_Matrix(Matrix_Description[0].n, n_of_Solution_Matrix, "Solution Matrix");
+				Build_Solution_Matrix(AB, Solution_Matrix, Matrix_Description[0].m, Matrix_Description[0].n, n_of_Solution_Matrix, rank_of_A);
+				
+				Approximate(Solution_Matrix, Matrix_Description[0].n, n_of_Solution_Matrix, 5);
+				Calculate_Result.m=Matrix_Description[0].n;
+				Calculate_Result.n=n_of_Solution_Matrix;
+				Calculate_Result.content=Solution_Matrix;
+				
+				
+				if(Find_No_Zero_Row(Calculate_Result.content, Calculate_Result.n - 1, Calculate_Result.m)==0)
+					Calculate_Result.homogeneousFlag = 1;
+				if (Calculate_Result.m - rank_of_A <= 0)
+					Calculate_Result.onlySluFlag=1;
 			}
-			if (Matrix_Description[0].n - rank_of_A <= 0)
-			{
-				printf("\nThis Linear Equation Systems only exist one solution");
-				if (Homogeneous_Flag == 0)puts(" = ZERO\n\n");
-				else printf("\n\n");
-			}
-			else
-			{
-				puts("\n-------------------------- Fundamental Solution Systems ------------------------\n");
-				Show_Matrix(Solution_Matrix, 1, 2, Matrix_Description[0].n, n_of_Solution_Matrix - 1, 1);
-			}
+			
 			Free_Matrix(AB, Matrix_Description[0].m);
-			Free_Matrix(Solution_Matrix, Matrix_Description[0].n);
+			//			Free_Matrix(Solution_Matrix, Matrix_Description[0].n);
 		}
 		
 		
+		//------------------------------ 将运算结果输出 ------------------------------
 		
+		//		printf("SERVERMODE = %d",serverMode);
 		
-		
-		if (serverMode==0&&MODE!='7')
+		if (serverMode==0)
 		{
 			puts("\n\n------------------------------------ Result ------------------------------------\n");
-			switch (MODE)
+			switch (Calculate_Result.mode)
 			{
-				case '1':
+				case 1:
 					printf("Determinant Value = %lf\n", Calculate_Result.value);
 					break;
 					
-				case '4':
+				case 4:
 					printf(" --------------------------------- A B %d X %d ------------------------------\n", Calculate_Result.m, Calculate_Result.n);
 					break;
-				default:
-					break;
+				case 7:
+				{
+					if (Calculate_Result.sluExistFlag==0)
+					{
+						printf("This Linear Equation System does not have a solution\n\n");
+					}
+					else
+					{
+						if (Calculate_Result.homogeneousFlag==0)
+						{
+							puts("\n------------------------------ Particular Solution -----------------------------\n");
+							Show_Matrix(Calculate_Result.content, 1, Calculate_Result.n, Calculate_Result.m, Calculate_Result.n, 1);
+							
+						}
+						if (Calculate_Result.onlySluFlag==1)
+						{
+							printf("\nThis Linear Equation Systems only exist one solution");
+							if (Calculate_Result.homogeneousFlag == 1)puts(" = ZERO\n\n");
+							else printf("\n\n");
+						}
+						else
+						{
+							puts("\n-------------------------- Fundamental Solution Systems ------------------------\n");
+							Show_Matrix(Calculate_Result.content, 1, 2, Calculate_Result.m, Calculate_Result.n - 1, 1);
+						}
+					}
+				}
+				default:break;
 			}
 			
-			if (MODE!='1')
+			if (Calculate_Result.mode!=1&&Calculate_Result.mode!=7)
 			{
 				if (Calculate_Result.n > 9)
 					Show_Matrix(Calculate_Result.content, 1, Calculate_Result.n - 9, Calculate_Result.m, Calculate_Result.n, 1);
@@ -796,22 +809,12 @@ int main(int argc, const char * argv[])
 					Show_Matrix(Calculate_Result.content, 1, 1, Calculate_Result.m, Calculate_Result.n, 1);
 			}
 		}
-		else
+		else if(serverMode==1)
 		{
 			printf("%s",Result2JSON(Calculate_Result,0));
 		}
 		Free_Matrix(Calculate_Result.content, Calculate_Result.m);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		//-----------------------------------------------------------------------------
 		
 		if (configMode == 1) free(receiveCfg.getElements_One);
 		if (invalidContinueFlag == 1) puts("");
