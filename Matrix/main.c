@@ -24,7 +24,6 @@ int main(int argc, const char * argv[])
 		
 		int invalidOptionFlag = 0;
 		//    int helpFlag = 0;
-		unsigned lordFlag = 0;
 		unsigned massFlag = 0;
 		unsigned configMode = 0;
 		unsigned outputMode = 0;
@@ -144,47 +143,6 @@ int main(int argc, const char * argv[])
 					exit(1);
 				}
 			}
-		}
-		
-		if (argc == 2 && strcmp(argv[1], "--lord") == 0)               //上帝模式，可以打印出程序自身源码
-		{
-			lordFlag = 1;
-			invalidContinueFlag = 1;
-			char passwd[15];
-			int k, l;
-			puts("So prove that you are the Lord");                   //需要输入密码
-			for (k = 0; k < 14; ++k)
-			{
-#ifdef UNIX
-				passwd[k] = getch_(0);
-#endif
-#ifdef WINDOWS
-				passwd[k] = _getch();
-#endif
-				printf("*");
-			}
-			passwd[14] = '\0';
-			printf("\n");
-			if (strcmp(passwd, "LYZ18679853316") == 0)
-			{
-				for (l = 1; l <= 3; ++l)
-				{
-					for (k = 1; k <= 230; ++k)printf("#");
-					puts("");
-				}
-				printf("Main Source __FILE__ PATH = %s\n", __FILE__);
-				FILE *fSOURCE = fopen(__FILE__, "r");
-				if (Show_File_Text(fSOURCE))return 1;
-				puts("");
-				for (l = 1; l <= 3; ++l)
-				{
-					for (k = 1; k <= 230; ++k)printf("#");
-					puts("");
-				}
-				if (Show_Header_Source())return 1;
-			}
-			else puts("You are not my lord\n");
-			return 0;
 		}
 		
 		if (argc >= 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0))
@@ -330,7 +288,7 @@ int main(int argc, const char * argv[])
 			if (TEST_FLAG == '0')
 			{
 				if (configMode == 0)
-					User_Input_Matrix(Matrix, n, n, "");
+					User_Input_Matrix(Matrix, n, n, "",0);
 				else
 					Config_Fill_Matrix(Matrix, receiveCfg, 1);
 			}
@@ -454,9 +412,9 @@ int main(int argc, const char * argv[])
 				if (configMode == 0)
 				{
 					puts("");
-					User_Input_Matrix(A, Matrix_Description[0].m, Matrix_Description[0].n, " A");
+					User_Input_Matrix(A, Matrix_Description[0].m, Matrix_Description[0].n, " A",0);
 					puts("");
-					User_Input_Matrix(B, Matrix_Description[1].m, Matrix_Description[1].n, " B");
+					User_Input_Matrix(B, Matrix_Description[1].m, Matrix_Description[1].n, " B",0);
 				}
 				else
 				{
@@ -544,11 +502,13 @@ int main(int argc, const char * argv[])
 			if (TEST_FLAG != '0')
 			{
 				Test_Scanf(Matrix_Description, 1, M_RAND_MIN, M_RAND_MAX, N_RAND_MIN, N_RAND_MAX);
-
+				
 			}
 			else if (configMode == 0)
 			{
-				printf("\nPlease input 'm' and 'n' : ");
+				if (MODE=='8')
+					printf("\nPlease input the Dimension of a Vector and the Number of Vectors : ");
+				else printf("\nPlease input 'm' and 'n' : ");
 				if (scanf("%d %d", &Matrix_Description[0].m, &Matrix_Description[0].n) != 2)
 				{
 					puts("Input error");
@@ -569,12 +529,22 @@ int main(int argc, const char * argv[])
 			if (TEST_FLAG == '0')
 			{
 				if (configMode == 0)
-					User_Input_Matrix(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, "");
+				{
+					if (MODE=='8') {
+						User_Input_Matrix(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, "",1);
+					}
+					else User_Input_Matrix(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, "",0);
+				}
 				else
+				{
 					Config_Fill_Matrix(Input_Matrix.content, receiveCfg, 1);
+					double **tp2free=Input_Matrix.content;
+					Input_Matrix.content=Transpose_Matrix(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n);
+					Free_Matrix(tp2free, Input_Matrix.m);
+					swap(&Input_Matrix.m,&Input_Matrix.n);
+				}
 			}
-			else
-				Rand_Fill(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, -10, 10, 0);
+			else Rand_Fill(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, -10, 10, 0);
 			
 			Approximate(Input_Matrix.content, Input_Matrix.m, Input_Matrix.n, 6);
 			
@@ -590,7 +560,7 @@ int main(int argc, const char * argv[])
 					if (massFlag == 1)normFlag = 'y';
 					if ((argc >= 2 && massFlag == 0) || argc == 1)
 					{
-						fflush(stdin);
+						Safe_Flush(stdin);
 						if (scanf("%c", &normFlag) != 1)
 						{
 							puts("Input error");
@@ -612,6 +582,8 @@ int main(int argc, const char * argv[])
 						exit(1);
 					}
 				}
+				
+				
 				
 				if (serverMode==0)
 				{
@@ -635,6 +607,15 @@ int main(int argc, const char * argv[])
 					Free_Matrix(Calculate_Result.content, Calculate_Result.m);
 					Calculate_Result.content = temp_Result;
 					Approximate(Calculate_Result.content, Calculate_Result.m, Calculate_Result.n, 5);
+				}
+				
+				if (TEST_FLAG=='0') {
+					double **tp_C=Calculate_Result.content;
+					Calculate_Result.content=Transpose_Matrix(Calculate_Result.content, Calculate_Result.m, Calculate_Result.n);
+					Free_Matrix(tp_C, Calculate_Result.m);		//把之前存的地址free
+					int tp=Calculate_Result.m;
+					Calculate_Result.m=Calculate_Result.n;
+					Calculate_Result.n=tp;
 				}
 			}
 			
@@ -707,7 +688,7 @@ int main(int argc, const char * argv[])
 			double **AB = Create_Matrix(Matrix_Description[0].m, Matrix_Description[0].n + 1, "MODE 4 AB");
 			
 			if (configMode == 0)
-				User_Input_Matrix(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1, "");
+				User_Input_Matrix(AB, Matrix_Description[0].m, Matrix_Description[0].n + 1, "",0);
 			else
 				Config_Fill_Matrix(AB, receiveCfg, 1);
 			
@@ -804,7 +785,9 @@ int main(int argc, const char * argv[])
 			if (Calculate_Result.mode!=1&&Calculate_Result.mode!=7)
 			{
 				if (Calculate_Result.n > 9)
+				{
 					Show_Matrix(Calculate_Result.content, 1, Calculate_Result.n - 9, Calculate_Result.m, Calculate_Result.n, 1);
+				}
 				else
 					Show_Matrix(Calculate_Result.content, 1, 1, Calculate_Result.m, Calculate_Result.n, 1);
 			}

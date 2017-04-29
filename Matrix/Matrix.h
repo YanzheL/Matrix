@@ -94,7 +94,7 @@ char* GetFileExactPath(const char* argvTemp, char *fileName);
 sConfig Read_Config(const char* programPath);
 char* Result2JSON(sMatrix rawResult,unsigned formatFlag);
 void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE);
-void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE);
+void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE,int inputMode);
 void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int m_rand_min, int mRandMax, int nRandMin, int nRandMax);
 int Check_Echelon(double **Matrix, int m, int n);
 int Find_Rank(double **Matrix, int m, int n);
@@ -111,6 +111,12 @@ int Check_Option_Order(int argc, const char** argv, char *str1, unsigned long li
 void strrpl(char* src, char ch1, char ch2, unsigned long length);
 
 void Matrix_Copy(double **dst,double **src,int begin_r,int begin_c,int end_r,int end_c);
+inline void swap(int* m,int* n)
+{
+	int tp=*m;
+	*m=*n;
+	*n=tp;
+}
 //--------------------------------------------------------- Tools -----------------------------------------------------------
 
 

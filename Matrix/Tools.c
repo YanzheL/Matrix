@@ -136,7 +136,7 @@ char* Result2JSON(const sMatrix rawResult,unsigned formatFlag)
 				if (rawResult.homogeneousFlag==0)
 				{
 					double** ptcl_slv_arr=Create_Matrix(1, rawResult.m, "");
-//					Matrix_Copy(<#double **dst#>, <#double **src#>, <#int begin_r#>, <#int begin_c#>, <#int end_r#>, <#int end_c#>)
+					//					Matrix_Copy(<#double **dst#>, <#double **src#>, <#int begin_r#>, <#int begin_c#>, <#int end_r#>, <#int end_c#>)
 					
 					Matrix_Copy(ptcl_slv_arr, Transpose_Matrix(rawResult.content, rawResult.m, rawResult.n), rawResult.n, 1, rawResult.n, rawResult.m);
 					
@@ -225,22 +225,49 @@ void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE)
 		}
 }
 
-void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE)
+void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE,int inputMode)
 {
 	int i, j;
 	Safe_Flush(stdin);
-	for (i = 0; i <= m - 1; ++i)                                                                       //用户输入矩阵
+	switch (inputMode)
 	{
-		printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
-		for (j = 0; j <= n - 1; ++j)
+		case 0:
 		{
-			if (scanf("%lf", &Matrix[i][j]) != 1)
+			for (i = 0; i <= m - 1; ++i)                                                                       //用户输入矩阵
 			{
-				puts("Input error");
-				exit(1);
+				printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
+				for (j = 0; j <= n - 1; ++j)
+				{
+					if (scanf("%lf", &Matrix[i][j]) != 1)
+					{
+						puts("Input error");
+						exit(1);
+					}
+					printf("\b");
+				}
 			}
-			printf("\b");
+			break;
 		}
+		case 1:
+		{
+			for (j = 0; j <n; ++j)                                                                       //用户输入矩阵
+			{
+				printf("Please input the %d Vector Element : ", j + 1);
+				for (i = 0; i <m; ++i)
+				{
+					if (scanf("%lf", &Matrix[i][j]) != 1)
+					{
+						puts("Input error");
+						exit(1);
+					}
+					printf("\b");
+				}
+			}
+			break;
+		}
+			
+  default:
+			break;
 	}
 }
 
@@ -297,7 +324,7 @@ int Find_Rank(double **Matrix, int m, int n)
 int Check_Linear_Equation_Solution_Existance(double **AB, int m, int n)
 {
 	int rank_A = Find_Rank(AB, m, n), rank_AB = Find_Rank(AB, m, n + 1);
-//	printf("Rank A = %d\nRank AB = %d\n", rank_A, rank_AB);
+	//	printf("Rank A = %d\nRank AB = %d\n", rank_A, rank_AB);
 	if ((rank_A != rank_AB) || rank_A == 0)
 		return 0;
 	else return 1;
