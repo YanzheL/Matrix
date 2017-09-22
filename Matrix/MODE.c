@@ -2,13 +2,14 @@
 //  MODE.c
 //  Matrix
 //
-//  Created by LI YANZHE on 02/02/2017.
+//  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2017 Yanzhe Lee. All rights reserved.
 //
 
 #include "stdafx.h"
 #include "Matrix.h"
 
+//计算行列式的值
 double Determinant(double **Matrix, int n)
 {
 	int i;
@@ -16,18 +17,19 @@ double Determinant(double **Matrix, int n)
 	//    Determinant_Row_Echelon_Form(Matrix, n);
 	Row_Echelon_Form(Matrix, n, n, 1);
 	//    Show_Matrix(Matrix, 1, 1, n, n, 1);
-	for (i = 0; i <= n - 1; ++i)
+	for (i = 0; i <n; ++i)
 		result *= Matrix[i][i];
 	return result;
 }
 
+//求伴随矩阵
 double** Adjoint_Matrix(double **Matrix, int m, int n)
 {
 	double **Result_Matrix = Create_Matrix(m, n, "");
 	int i, j;
-	for (i = 0; i <= m - 1; ++i)
+	for (i = 0; i < m; ++i)
 	{
-		for (j = 0; j <= n - 1; ++j)
+		for (j = 0; j < n; ++j)
 		{
 			Result_Matrix[i][j] = pow(-1, i + j)*Mirror(Matrix, i, j, m, n);
 		}
@@ -35,18 +37,19 @@ double** Adjoint_Matrix(double **Matrix, int m, int n)
 	return Transpose_Matrix(Result_Matrix, m, n);                                          //最后需要求转置矩阵才能得到最后的伴随矩阵
 }
 
+//行阶梯形变换
 double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 {
 	int r, j, column, rowToBeExchanged, noZeroRowCount = 0;
 	double k, coefficientOfEntireDeterminant = 1;
 	if (Check_Zero_Matrix(Matrix, m, n) == -1)return 0;
-	for (column = 0; column <= n - 1 && column <= m - 1; ++column)
+	for (column = 0; column < n && column < m; ++column)
 	{
 		//        printf("\n\n-------------------------- Column %d Begin ------------------------\n",column+1);
 		for (rowToBeExchanged = column; rowToBeExchanged <= m - 2; ++rowToBeExchanged)        // 将第column列从上到下化为1,1,...,1,...,0,0,...,0
 		{
-
-			for (j = rowToBeExchanged; j <= m - 1; ++j)
+			
+			for (j = rowToBeExchanged; j < m; ++j)
 			{
 				if (Matrix[rowToBeExchanged][column])
 				{
@@ -72,37 +75,37 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 				}
 			}
 		}
-
+		
 		noZeroRowCount = Find_No_Zero_Row(Matrix, column, m) + 1;
-
+		
 		//printf("------------------ Column %d No Zero Row Count = %d ----------------\n",column+1,no_zero_row_count);
 		//Show_Matrix(Determinant, 1,1,n, n,1);
-		for (r = column + 1; r <= noZeroRowCount - 1; ++r)
+		for (r = column + 1; r < noZeroRowCount; ++r)
 		{
 			Row_Add(Matrix, r, column, n, 1);
 		}
-
+		
 		//		puts("------------------------ Add Finish ------------------------------");
 		//        Show_Matrix(Matrix, 1, 1, m, n, 1);
-
+		
 		noZeroRowCount = 0;
-
+		
 		//		printf("------------------------- Column %d Finish ------------------------\n\n",column+1);
 	}
 	//    printf("--------------------------------------- Fix Before ---------------------------------------\n\n");
 	//    Show_Matrix(Matrix, 1, 1, m, n, 1);
 	//    puts("--------------------------------------- Fix Begin ----------------------------------------");
-
+	
 	int problemColumn = 0;
 	if (Check_Echelon(Matrix, m, n))problemColumn = Check_Echelon(Matrix, m, n);                    //检查是否已经化为行阶梯
-
-//    printf("Problem column = %d\n",problemColumn+1);
+	
+	//    printf("Problem column = %d\n",problemColumn+1);
 	if (problemColumn)
 	{
 		double last_2_LeadingCoefficient, last_1_LeadingCoefficient;
 		int lastNoZeroRow = m - 1;
 		int v;
-		for (v = m - 1; v >= 0; v--)
+		for (v = m - 1; v >= 0; --v)
 		{
 			if (Find_Leading_Column(Matrix, v, n))
 			{
@@ -110,7 +113,7 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 				break;
 			}
 		}
-
+		
 		last_2_LeadingCoefficient = Matrix[lastNoZeroRow - 1][problemColumn + 1];
 		last_1_LeadingCoefficient = Matrix[lastNoZeroRow][problemColumn + 1];
 		Scalar_Multiplication(1 / last_2_LeadingCoefficient, Matrix, lastNoZeroRow - 1, m, n);                         //先把倒数第二行首个非零元化为1
@@ -129,24 +132,25 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 	return coefficientOfEntireDeterminant;
 }
 
+//行最简形变换
 int Row_Canonical_Form(double **Matrix, int m, int n)
 {
 	int i, row, row_i_LeadingColumn, lastNoZeroRow = m - 1, returnValueOf_Find_Leading_Column;
 	//    int row_row_leading_column;
 	double row_row_SecondCoefficient, row_row_LeadingCoefficient, rowLastCoefficient;
 	if (Row_Echelon_Form(Matrix, m, n, 0) == 0)return 0;
-
-	for (i = m - 1; i >= 0; i--)
+	
+	for (i = m - 1; i >= 0; --i)
 	{
 		returnValueOf_Find_Leading_Column = Find_Leading_Column(Matrix, i, n);
 		if (returnValueOf_Find_Leading_Column)
 			lastNoZeroRow = i;
-
+		
 		rowLastCoefficient = Matrix[lastNoZeroRow][Find_Leading_Column(Matrix, lastNoZeroRow, n)];
 		if (rowLastCoefficient)
 			Scalar_Multiplication(1 / rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
 	}
-
+	
 	for (row = 0; row <= m - 2; ++row)
 	{
 		for (i = row + 1; i <= m - 1; ++i)
@@ -169,79 +173,73 @@ int Row_Canonical_Form(double **Matrix, int m, int n)
 		//}
 		row_row_LeadingCoefficient = Matrix[row][Find_Leading_Column(Matrix, row, n)];
 		if (row_row_LeadingCoefficient)
-            Scalar_Multiplication(1 / row_row_LeadingCoefficient, Matrix, row, m, n);
+			Scalar_Multiplication(1 / row_row_LeadingCoefficient, Matrix, row, m, n);
 	}
 	//puts("----------------------- Row Canonical Finish -----------------------");
 	//Show_Matrix(AB, m, n,1);
 	return 1;
 }
 
+
+
 void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, int n_of_Solution_Matrix, int rankOf_A)
 {
-	int i, j, row_i_LeadingColumn = 0;
-	for (i = 0; i <= n - 1; ++i)
+	//	puts("---------------------------------------- Raw ------------------------------------------");
+	//	Show_Matrix(AB, 1, 1, m, n+1, 1);
+	
+	for (int i = 0; i < n; ++i)
 	{
 		Solution_Matrix[i][0] = 1;
-		if (i <= m - 1)
-			Solution_Matrix[i][n_of_Solution_Matrix - 1] = AB[i][n];
-		else
-			Solution_Matrix[i][0] = 1;
 	}
 	int basicColumnCount = rankOf_A;
-
+	
 	double **basic_column_array = Create_Matrix(1, basicColumnCount, "Basic Column Array");
-	for (i = 0; i <= basicColumnCount - 1; ++i)
+	for (int i = 0; i < basicColumnCount; ++i)
 	{
 		basic_column_array[0][i] = Find_Leading_Column(AB, i, n);            //找出基础未知量所在的列号，存入数组
 	}
-	//    puts("---------------------------------------- Basic Array ------------------------------------------");
-	//    Show_Matrix(basic_column_array, 1, basic_column_count, 1);
-	//    Show_Matrix(basic_column_array, 1, 1,1,basic_column_count, 1);
-
+	//	puts("---------------------------------------- Basic Array ------------------------------------------");
+	//	Show_Matrix(basic_column_array, 1,1,1, basicColumnCount, 1);
+	
 	double **non_basic_column_array = Create_Matrix(1, n - rankOf_A, "Non Basic Column Array");
-	double *pointer = &non_basic_column_array[0][0];
-
-	for (i = 0; i < basicColumnCount; ++i)
-	{
-		if (i != basic_column_array[0][i])                                   //找出自由未知量所在的列号，存入数组
-		{
+	double *pointer = non_basic_column_array[0];
+	
+	for (int i=0; i<n; ++i) {
+		if (exists(basic_column_array[0], basicColumnCount, i)==-1) {
 			*pointer = i;
 			pointer++;
 		}
 	}
-	//    puts("----------------------------------------- Non Basic -------------------------------------------");
-	//    Show_Matrix(non_basic_column_array, 1, n-rank_of_A, 1);
-	//    Show_Matrix(non_basic_column_array, 1, 1,1,n-rank_of_A, 1);
-
-	for (i = 0; i <= n - 1; ++i)
-	{
-		if (i <= m - 1)
-			row_i_LeadingColumn = Find_Leading_Column(AB, i, n);
-
-		if (i != row_i_LeadingColumn)
-		{
-			for (j = 0; j <= n - rankOf_A - 1; ++j)
-			{
-				if (i == non_basic_column_array[0][j]) break;
-			}
-			Solution_Matrix[i][j + 1] = 1;
-		}
-		else
-		{
-			j = 0;
-			if (i <= m - 1)
-			{
-				for (j = 0; j <= n - rankOf_A - 1; ++j)
-				{
-					Solution_Matrix[i][j + 1] = -AB[i][(int)non_basic_column_array[0][j]];
-				}
-			}
-			else Solution_Matrix[i][j + 1] = 1;
-
-		}
+	
+	//	puts("----------------------------------------- Non Basic -------------------------------------------");
+	//	Show_Matrix(non_basic_column_array, 1, 1,1,n-rankOf_A, 1);
+	
+	for (int i=0; i<n-rankOf_A; ++i) {
+		int xi=non_basic_column_array[0][i];
+		Solution_Matrix[xi][i+1]=1;
 	}
-	//    puts("------------------------------------------- Struct ----------------------------------------------");
-	//    Show_Matrix(Solution_Matrix,1,1,n,n_of_Solution_Matrix, 1);
+	
+	for (int i=0; i<rankOf_A; ++i) {
+		int xi=basic_column_array[0][i];
+		int correspondRow=0;
+		for (int row=0; row<m; ++row) {
+			if (xi==Find_Leading_Column(AB, row, n)) {
+				correspondRow=row;
+				break;
+			}
+		}
+		double *p=Solution_Matrix[xi]+1;
+		for (int j=0; j<n-rankOf_A; ++j) {
+			int nxi=non_basic_column_array[0][j];
+			if (nxi>xi) {
+				*p=-AB[correspondRow][nxi];
+			}
+			++p;
+		}
+		*p=AB[correspondRow][n];
+	}
+	//	puts("------------------------------------- Solution Matrix ----------------------------------------");
+	//	Show_Matrix(Solution_Matrix,1,1,n,n_of_Solution_Matrix, 1);
 	Free_Matrix(basic_column_array, 1);
 	Free_Matrix(non_basic_column_array, 1);
 }
@@ -249,13 +247,13 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 int Reverse_Matrix(double **Matrix, int n)
 {
 	int i, j;
-	if (Find_Rank(Matrix, n, n) != n)return 0;
+	if (Find_Rank(Matrix, n, n) != n)return 0;		//如果方阵不满秩，则行列式为0
 	else
 	{
 		double **Combined_Matrix = Create_Matrix(n, 2 * n, "Combined Matrix");
-		for (i = 0; i <= n - 1; ++i)
+		for (i = 0; i <n; ++i)
 		{
-			for (j = 0; j <= 2 * n - 1; ++j)
+			for (j = 0; j <2 * n; ++j)
 			{
 				if (j <= n - 1)
 					Combined_Matrix[i][j] = Matrix[i][j];
@@ -264,9 +262,9 @@ int Reverse_Matrix(double **Matrix, int n)
 			}
 		}
 		Row_Canonical_Form(Combined_Matrix, n, 2 * n);
-		for (i = 0; i <= n - 1; ++i)
+		for (i = 0; i <n; ++i)
 		{
-			for (j = 0; j <= n - 1; ++j)
+			for (j = 0; j < n; ++j)
 			{
 				Matrix[i][j] = Combined_Matrix[i][j + n];
 			}
@@ -279,46 +277,45 @@ int Reverse_Matrix(double **Matrix, int n)
 double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
 {
 	int i, j;
-
-	//    double ***alpha=(double***)calloc(n, sizeof(double**));              //alpha[]中每一个元素都是一个列矩阵
+	
+	//    double ***alpha=(double***)calloc(n, sizeof(double**));	//alpha[]中每一个元素都是一个列矩阵
 	double ***alpha = Column_Vector_Extract(Matrix, m, n);
 	//    for (i=0; i<=n-1; ++i)
 	//        alpha[i]=Create_Matrix(m, 1, "Beta");
-	double ***beta = (double***)calloc(n, sizeof(double**));               //beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
-	for (i = 0; i <= n - 1; ++i)
+	double ***beta = (double***)calloc(n, sizeof(double**));		//beta[]中每一个元素都是一个列矩阵,用于存储上一次正交化得到的beta列向量
+	for (i = 0; i <n; ++i)
 		beta[i] = Create_Matrix(m, 1, "Beta");
-
+	
 	for (i = 0; i < m; ++i)
-		beta[0][i][0] = alpha[0][i][0];                                    //赋初始值beta1 = alpha1
-
+		beta[0][i][0] = alpha[0][i][0];								//赋初始值beta1 = alpha1
+	
 	int row = 0, x = 0;
-	for (i = 1; i <= n - 1; ++i)
+	for (i = 1; i < n; ++i)
 	{
-		double **sum = Create_Matrix(m, 1, "");                            //sum得到正交化公式中后面项的和向量
+		double **sum = Create_Matrix(m, 1, "");                     //sum得到正交化公式中后面项的和向量
 		for (x = 0; x < i; ++x)
 		{
 			double **temp = Create_Matrix(m, 1, "");
-
+			
 			for (row = 0; row < m; ++row)
 			{
-				temp[row][0] = beta[i - x - 1][row][0];                          //复制Beta[i-1]的列向量到temp中
+				temp[row][0] = beta[i - x - 1][row][0];				//复制Beta[i-1]的列向量到temp中
 			}
-
+			
 			//            printf("------------------------------- temp[%d] -------------------------------\n",i-1);
 			//            Show_Matrix(temp, 1, 1,m, 1, 1);
 			//            printf("------------------------------- Beta[%d] -------------------------------\n",i-x-1);
 			//            Show_Matrix(beta[i-x-1], 1, 1, m, 1, 1);
-
+			
 			double numerator = Scalar_Product(alpha[i], beta[i - x - 1], m);   //可能没有free
 			double dominator = Scalar_Product(beta[i - x - 1], beta[i - x - 1], m);
-
+			
 			double coefficient = numerator / dominator;
 			double **transpose_temp = Transpose_Matrix(temp, m, 1);        //转置成行向量再数乘每个元素
 			Scalar_Multiplication(coefficient, transpose_temp, 0, 1, m);
 			temp = Transpose_Matrix(transpose_temp, 1, m);                 //恢复temp向量
 			//            printf("------------------------------- temp-T[%d] -------------------------------\n",i-x-1);
 			//            Show_Matrix(temp, 1, 1,m, 1, 1);
-
 			sum = Matrix_Sum(sum, temp, m, 1, 0);
 			//            printf("------------------------------- Sum[%d] -------------------------------\n",x);
 			//            Show_Matrix(sum, 1, 1, m, 1, 1);
@@ -328,23 +325,23 @@ double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
 		beta[i] = Matrix_Sum(alpha[i], sum, m, 1, 1);
 		Free_Matrix(sum, m);
 	}
-
+	
 	double **Result_Matrix = Create_Matrix(m, n, "Schmidt Result");
-
-	for (i = 0; i <= m - 1; ++i)
+	
+	for (i = 0; i < m; ++i)
 	{
-		for (j = 0; j <= n - 1; ++j)
+		for (j = 0; j < n; ++j)
 		{
 			Result_Matrix[i][j] = beta[j][i][0];
 		}
 	}
-
+	
 	for (i = 0; i < n - 1; ++i)
 		Free_Matrix(alpha[i], m);
-
+	
 	for (i = 1; i < n - 1; ++i)
 		Free_Matrix(beta[i], m);
-
+	
 	return Result_Matrix;
 }
 
