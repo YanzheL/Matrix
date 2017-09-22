@@ -556,11 +556,12 @@ int main(int argc, const char * argv[])
 				char normFlag = 'n';
 				if (configMode == 0)
 				{
-					puts("Do you want Normalization? Please press y or n. (default n)");
 					if (massFlag == 1)normFlag = 'y';
+					puts("Do you want Normalization? Please press y or n. (default n)");
+					
 					if ((argc >= 2 && massFlag == 0) || argc == 1)
 					{
-						Safe_Flush(stdin);
+//						Safe_Flush(stdin);
 						if (scanf("%c", &normFlag) != 1)
 						{
 							puts("Input error");
@@ -653,7 +654,7 @@ int main(int argc, const char * argv[])
 		
 		if (MODE == '7')
 		{
-			TEST_FLAG = '0';                //系统随机数填充的增广矩阵永远满秩的，绝大多数情况下方程组无解，因此Test模式无意义，故去除
+			TEST_FLAG = '0';                //系统随机数填充的增广矩阵永远满秩的，绝大多数情况下方程组无解，因此Test模式无意义，故去除，手动输入增广矩阵即可
 			
 			struct Characteristic_of_Matrix *Matrix_Description;
 			Matrix_Description = (struct Characteristic_of_Matrix*)calloc(1, sizeof(struct Characteristic_of_Matrix));
@@ -740,6 +741,7 @@ int main(int argc, const char * argv[])
 		
 		//		printf("SERVERMODE = %d",serverMode);
 		
+		//serverMode用于应用在服务器端作为一个API使用，只返回JSON格式的结果数据
 		if (serverMode==0)
 		{
 			puts("\n\n------------------------------------ Result ------------------------------------\n");

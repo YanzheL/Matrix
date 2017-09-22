@@ -2,7 +2,7 @@
 //  Independent_Functions.c
 //  Matrix
 //
-//  Created by LI YANZHE on 14/12/2016.
+//  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2016 Yanzhe Lee. All rights reserved.
 //
 
@@ -249,7 +249,7 @@ void Show_Index_Page()
 	puts("|                                                                              |");
 	puts("|         This is free software: you are free to change and redistribute it    |");
 	puts("|                                                                              |");
-	puts("|         Email: lee.yanzhe@yanzhe.org           Version 1.2.3                 |");
+	puts("|         Email: lee.yanzhe@yanzhe.org           Version 1.2.5                 |");
 	puts("|                                                                              |");
 	puts("--------------------------------------------------------------------------------");
 	puts("          Please maximize your window to get a better display effect            ");
@@ -358,7 +358,6 @@ void Show_MODE_Band(char MODE)
 	}
 }
 
-
 int Show_Header_Source()
 {
 	FILE *fp = fopen(__FILE__, "r");
@@ -367,7 +366,7 @@ int Show_Header_Source()
 
 #ifdef UNIX
 //-------------------------------------------- 针对UNIX系统，定义getch函数 --------------------------------------------
-//--------------------------------------------   此部分代码并非本人编写     --------------------------------------------
+//--------------------------------------------     此部分代码来源网络      --------------------------------------------
 #include <termios.h>
 
 /* Initialize new terminal i/o settings */

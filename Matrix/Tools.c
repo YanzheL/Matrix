@@ -2,7 +2,7 @@
 //  Tools.c
 //  Matrix
 //
-//  Created by LI YANZHE on 02/02/2017.
+//  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2017 Yanzhe Lee. All rights reserved.
 //
 #include "Matrix.h"
@@ -233,7 +233,7 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE,int inputMode)
 	{
 		case 0:
 		{
-			for (i = 0; i <= m - 1; ++i)                                                                       //用户输入矩阵
+			for (i = 0; i <= m - 1; ++i)                                  //用户输入矩阵
 			{
 				printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
 				for (j = 0; j <= n - 1; ++j)
@@ -250,7 +250,7 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE,int inputMode)
 		}
 		case 1:
 		{
-			for (j = 0; j <n; ++j)                                                                       //用户输入矩阵
+			for (j = 0; j <n; ++j)                                        //用户输入矩阵
 			{
 				printf("Please input the %d Vector Element : ", j + 1);
 				for (i = 0; i <m; ++i)
@@ -278,7 +278,7 @@ void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structE
 	Recive_mn_for_Test[structElementNumber - 1].n = nRandMin + rand() % (nRandMax - nRandMin);
 }
 
-int Check_Echelon(double **Matrix, int m, int n)                                                   //用于检查是否已化为行阶梯形
+int Check_Echelon(double **Matrix, int m, int n)                         //用于检查是否已化为行阶梯形
 {
 	int formerColumnNoZeroCount, nextColumnNoZeroCount;
 	int i;
@@ -288,10 +288,10 @@ int Check_Echelon(double **Matrix, int m, int n)                                
 		nextColumnNoZeroCount = Find_No_Zero_Row(Matrix, i + 1, m) + 1;
 		nextColumnNoZeroCount = (formerColumnNoZeroCount > nextColumnNoZeroCount) ? formerColumnNoZeroCount : nextColumnNoZeroCount;
 		if (nextColumnNoZeroCount - formerColumnNoZeroCount > 1 && (nextColumnNoZeroCount != formerColumnNoZeroCount))
-		{                                                                  //如果发现后一列的非零元个数减去前一列的非零元个数的差大于1，则没有化简完
+		{                                                               //如果发现后一列的非零元个数减去前一列的非零元个数的差大于1，则没有化简完
 			return i;
 		}
-		if (Find_No_Zero_Row(Matrix, i, m) == m - 2) break;                    //如果发现第i列最后一个非零元正好在最后一行，则停止判断
+		if (Find_No_Zero_Row(Matrix, i, m) == m - 2) break;             //如果发现第i列最后一个非零元正好在最后一行，则停止判断
 	}
 	return 0;
 }
@@ -370,7 +370,8 @@ double** Matrix_Sum(double **A, double **B, int m, int n, int MODE)
 	return Result_Matrix;
 }
 
-double Mirror(double **Matrix, int row, int column, int m, int n)                            //找出余子矩阵，并返回余子式的值
+//找出余子矩阵，并返回余子式的值
+double Mirror(double **Matrix, int row, int column, int m, int n)
 {
 	double **Mirror_Matrix = Create_Matrix(m - 1, n - 1, "");
 	int i, j;
@@ -379,7 +380,7 @@ double Mirror(double **Matrix, int row, int column, int m, int n)               
 	{
 		for (j = 0; j <= n - 2; ++j)
 		{
-			if (i < row&&j < column)                                                         //通过跳过指定的行、列来创建余子矩阵
+			if (i < row&&j < column)                                      //通过跳过指定的行、列来创建余子矩阵
 				Mirror_Matrix[i][j] = Matrix[i][j];
 			else if (i < row&&j >= column)
 				Mirror_Matrix[i][j] = Matrix[i][j + 1];

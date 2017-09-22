@@ -2,7 +2,7 @@
 //  Matrix.h
 //  Matrix
 //
-//  Created by LI YANZHE on 02/02/2017.
+//  Created by LI YANZHE on 30/11/2016.
 //  Copyright © 2017 Yanzhe Lee. All rights reserved.
 //
 
@@ -97,12 +97,18 @@ void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE);
 void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE,int inputMode);
 void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int m_rand_min, int mRandMax, int nRandMin, int nRandMax);
 int Check_Echelon(double **Matrix, int m, int n);
+//求矩阵的秩
 int Find_Rank(double **Matrix, int m, int n);
+//判断线性方程组的解是否存在
 int Check_Linear_Equation_Solution_Existance(double **AB, int m, int n);
 double** Transpose_Matrix(double **Matrix, int m, int n);
+//找出余子矩阵，并返回指定元素的余子式的值
 double Mirror(double **Matrix, int row, int column, int m, int n);
+//两向量的标量积
 double Scalar_Product(double **Vector1, double **Vector2, int n);
+//向量组的标准化
 double** Vector_Normalization(double **Matrix, int m, int n);
+//求矩阵和
 double** Matrix_Sum(double **A, double **B, int m, int n, int MODE);
 char** CommandList();
 int Check_No_Command(int argc, const char** argv);
@@ -138,15 +144,38 @@ void Row_Exchange(double **Matrix, int r1, int r2, int n);
 //行加减运算
 void Row_Add(double **Matrix, int r1, int r2, int n, int flag);
 
+//返回指定列首个非零元的行号
 int Find_No_Zero_Row(double **Matrix, int column, int m);
+//返回指定行首个非零元的列号
 int Find_Leading_Column(double **Matrix, int row, int n);
+//判断是否是零矩阵
 int Check_Zero_Matrix(double **Matrix, int m, int n);
+//随机数填充给定矩阵
 void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE);
+//从矩阵中提取列向量
 double*** Column_Vector_Extract(double **Matrix, int m, int n);
+//将一系列列向量重新构成一个矩阵
 void Column_Vector_Refill(double ***vector_System, double **Matrix, int m, int n);
 void Show_Index_Page();
 void Show_Menu_Page();
 void Show_Help_Page();
+/*
+	判断一个数是否在数组中
+	@return:
+		-1:	 Not exist
+		>=0: The position of expected number
+ */
+inline int exists(double* array, int n,double val)
+{
+	double *p=array;
+	for (int i=0; i<n; ++i) {
+		if (*p==val)
+			return i;
+		else
+			++p;
+	}
+	return -1;
+}
 int Show_Header_Source();
 void Show_MODE_Band(char MODE);
 int Check_Option(int argc, const char **argv, char *option);
