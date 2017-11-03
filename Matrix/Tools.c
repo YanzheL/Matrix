@@ -15,9 +15,9 @@ char* TextFile2Char(FILE *fp)
 	fseek(fp, 0L, SEEK_END);
 	length = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
-	
+
 	//        printf("length = %ld\n",length);
-	
+
 	char *fstr = (char*)calloc(length, sizeof(char));
 	if (!fstr) {
 		perror("TextFile2Char char*fstr");
@@ -47,14 +47,14 @@ char* GetFileExactPath(const char* argvTemp, char *fileName)
 sConfig Read_Config(const char* programPath)
 {
 	sConfig readResult;
-	
+
 #ifdef GET_CURRENT_PATH_MODE
 	char *configPath = GetFileExactPath(argv[0], CONFIG_FILE_NAME);
 	FILE *fp = fopen(configPath, "rt");
 #else
 	FILE *fp = fopen(CONFIG_FILE_NAME, "rt");
 #endif
-	
+
 	if (!fp) {
 		perror("Config open error");
 		exit(0);
@@ -63,11 +63,11 @@ sConfig Read_Config(const char* programPath)
 		int i;
 		char *fstr = TextFile2Char(fp);
 		//        printf("%s\n",fstr);
-		
+
 		cJSON * root = cJSON_Parse(fstr);
 		cJSON *Elements_One = cJSON_GetObjectItem(root, "Matrix_One");
 		cJSON *Elements_Two = cJSON_GetObjectItem(root, "Matrix_Two");
-		
+
 		readResult.getMODE = cJSON_GetObjectItem(root, "MODE")->valueint;
 		readResult.getTestFlag = cJSON_GetObjectItem(root, "TEST_FLAG")->valueint;
 		readResult.getM_One = cJSON_GetObjectItem(root, "m_One")->valueint;
@@ -85,7 +85,7 @@ sConfig Read_Config(const char* programPath)
 				readResult.getElements_One[i] = cJSON_GetArrayItem(cJSON_GetArrayItem(Elements_One, row), column)->valuedouble;
 			}
 		}
-		
+
 		i = 0;
 		if (Elements_Two != NULL)
 			for (int row = 0; row < readResult.getM_Two; ++row) {
@@ -99,132 +99,132 @@ sConfig Read_Config(const char* programPath)
 	return readResult;
 }
 
-char* Result2JSON(const sMatrix rawResult,unsigned formatFlag)
+char* Result2JSON(const sMatrix rawResult, unsigned formatFlag)
 {
-	
-	char* jsonData="";
-	cJSON *root=cJSON_CreateObject();
+
+	char* jsonData = "";
+	cJSON *root = cJSON_CreateObject();
 	cJSON_AddItemToObject(root, "MODE", cJSON_CreateNumber(rawResult.mode));
-	if (rawResult.mode!=7||(rawResult.mode==7&&rawResult.sluExistFlag!=0)) {
+	if (rawResult.mode != 7 || (rawResult.mode == 7 && rawResult.sluExistFlag != 0)) {
 		cJSON_AddItemToObject(root, "Row_Number", cJSON_CreateNumber(rawResult.m));
 		cJSON_AddItemToObject(root, "Column_Number", cJSON_CreateNumber(rawResult.n));
 	}
 	switch (rawResult.mode)
 	{
-		case 1:
-			cJSON_AddItemToObject(root, "Determinant_Value", cJSON_CreateNumber(rawResult.value));
-			break;
-		case 7:
-			if (rawResult.sluExistFlag) {
-				if (!rawResult.homogeneousFlag) {
-					double** ptcl_slv_arr=Create_Matrix(1, rawResult.m, "");
-					//					Matrix_Copy(<#double **dst#>, <#double **src#>, <#int begin_r#>, <#int begin_c#>, <#int end_r#>, <#int end_c#>)
-					
-					Matrix_Copy(ptcl_slv_arr, Transpose_Matrix(rawResult.content, rawResult.m, rawResult.n), rawResult.n, 1, rawResult.n, rawResult.m);
-					
-					cJSON_AddItemToObject(root, "Particular_Solution", cJSON_CreateDoubleArray(ptcl_slv_arr[0], rawResult.m));
-					
-					Free_Matrix(ptcl_slv_arr, 1);
-				}
-				else {
-					if (rawResult.onlySluFlag) {
-						cJSON_AddItemToObject(root, "Particular_Solution", cJSON_CreateString("ZERO"));
-					}
-					cJSON_AddItemToObject(root, "Homogeneous_Flag", cJSON_CreateBool(1));
-				}
-				cJSON *Fundmtl_Slu_Sys=cJSON_CreateArray();
-				for (int i=0; i<rawResult.n-1; ++i) {
-					cJSON_AddItemToArray(Fundmtl_Slu_Sys, cJSON_CreateDoubleArray(Transpose_Matrix(rawResult.content, rawResult.m, rawResult.n)[i], rawResult.m));
-				}
-				
-				cJSON_AddItemToObject(root, "Fundamental_Solution_Sys", Fundmtl_Slu_Sys);
+	case 1:
+		cJSON_AddItemToObject(root, "Determinant_Value", cJSON_CreateNumber(rawResult.value));
+		break;
+	case 7:
+		if (rawResult.sluExistFlag) {
+			if (!rawResult.homogeneousFlag) {
+				double** ptcl_slv_arr = Create_Matrix(1, rawResult.m, "");
+				//					Matrix_Copy(<#double **dst#>, <#double **src#>, <#int begin_r#>, <#int begin_c#>, <#int end_r#>, <#int end_c#>)
+
+				Matrix_Copy(ptcl_slv_arr, Transpose_Matrix(rawResult.content, rawResult.m, rawResult.n), rawResult.n, 1, rawResult.n, rawResult.m);
+
+				cJSON_AddItemToObject(root, "Particular_Solution", cJSON_CreateDoubleArray(ptcl_slv_arr[0], rawResult.m));
+
+				Free_Matrix(ptcl_slv_arr, 1);
 			}
-			else
-				cJSON_AddItemToObject(root, "Solution_Exist_Flag", cJSON_CreateBool(0));
-			break;
-		default:
-			break;
+			else {
+				if (rawResult.onlySluFlag) {
+					cJSON_AddItemToObject(root, "Particular_Solution", cJSON_CreateString("ZERO"));
+				}
+				cJSON_AddItemToObject(root, "Homogeneous_Flag", cJSON_CreateBool(1));
+			}
+			cJSON *Fundmtl_Slu_Sys = cJSON_CreateArray();
+			for (int i = 0; i < rawResult.n - 1; ++i) {
+				cJSON_AddItemToArray(Fundmtl_Slu_Sys, cJSON_CreateDoubleArray(Transpose_Matrix(rawResult.content, rawResult.m, rawResult.n)[i], rawResult.m));
+			}
+
+			cJSON_AddItemToObject(root, "Fundamental_Solution_Sys", Fundmtl_Slu_Sys);
+		}
+		else
+			cJSON_AddItemToObject(root, "Solution_Exist_Flag", cJSON_CreateBool(0));
+		break;
+	default:
+		break;
 	}
-	
-	if (rawResult.mode!=1)
+
+	if (rawResult.mode != 1)
 	{
-		cJSON *matrixContent=cJSON_CreateArray();
-		
-		for (int i=0; i<rawResult.m; ++i) {
+		cJSON *matrixContent = cJSON_CreateArray();
+
+		for (int i = 0; i < rawResult.m; ++i) {
 			cJSON_AddItemToArray(matrixContent, cJSON_CreateDoubleArray(rawResult.content[i], rawResult.n));
 		}
-		
-		if (rawResult.mode!=7) {
+
+		if (rawResult.mode != 7) {
 			cJSON_AddItemToObject(root, "Matrix_Content", matrixContent);
 		}
-		else if(rawResult.sluExistFlag!=0)cJSON_AddItemToObject(root, "Solution_Matrix", matrixContent);
+		else if (rawResult.sluExistFlag != 0)cJSON_AddItemToObject(root, "Solution_Matrix", matrixContent);
 	}
-	
-	
-	
+
+
+
 	switch (formatFlag) {
-		case 0:jsonData=cJSON_PrintUnformatted(root);break;
-		case 1:jsonData=cJSON_Print(root);break;
+	case 0:jsonData = cJSON_PrintUnformatted(root); break;
+	case 1:jsonData = cJSON_Print(root); break;
 	}
-	
+
 	return jsonData;
-	
+
 }
 
 void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE)
 {
 	int num = 0;
 	switch (TYPE) {
-		case 1:
-			for (int i = 0; i < configSource.getM_One; ++i) {
-				for (int j = 0; j < configSource.getN_One; ++j, ++num) {
-					Matrix[i][j] = configSource.getElements_One[num];
-				}
+	case 1:
+		for (int i = 0; i < configSource.getM_One; ++i) {
+			for (int j = 0; j < configSource.getN_One; ++j, ++num) {
+				Matrix[i][j] = configSource.getElements_One[num];
 			}
-			break;
-			
-		case 2:
-			for (int i = 0; i < configSource.getM_Two; ++i) {
-				for (int j = 0; j < configSource.getN_Two; ++j, ++num) {
-					Matrix[i][j] = configSource.getElements_Two[num];
-				}
+		}
+		break;
+
+	case 2:
+		for (int i = 0; i < configSource.getM_Two; ++i) {
+			for (int j = 0; j < configSource.getN_Two; ++j, ++num) {
+				Matrix[i][j] = configSource.getElements_Two[num];
 			}
-			break;
+		}
+		break;
 	}
 }
 
-void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE,int inputMode)
+void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE, int inputMode)
 {
 	Safe_Flush(stdin);
 	switch (inputMode)
 	{
-		case 0:
-			for (int i = 0; i <= m - 1; ++i) {
-				printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
-				for (int j = 0; j <= n - 1; ++j) {
-					if (scanf("%lf", &Matrix[i][j]) != 1) {
-						puts("Input error");
-						exit(1);
-					}
-					printf("\b");
+	case 0:
+		for (int i = 0; i <= m - 1; ++i) {
+			printf("Please input row %d elements of%s Matrix : ", i + 1, TYPE);
+			for (int j = 0; j <= n - 1; ++j) {
+				if (scanf("%lf", &Matrix[i][j]) != 1) {
+					puts("Input error");
+					exit(1);
 				}
+				printf("\b");
 			}
-			break;
-		case 1:
-			for (int j = 0; j <n; ++j) {
-				printf("Please input the %d Vector Element : ", j + 1);
-				for (int i = 0; i <m; ++i) {
-					if (scanf("%lf", &Matrix[i][j]) != 1) {
-						puts("Input error");
-						exit(1);
-					}
-					printf("\b");
+		}
+		break;
+	case 1:
+		for (int j = 0; j < n; ++j) {
+			printf("Please input the %d Vector Element : ", j + 1);
+			for (int i = 0; i < m; ++i) {
+				if (scanf("%lf", &Matrix[i][j]) != 1) {
+					puts("Input error");
+					exit(1);
 				}
+				printf("\b");
 			}
-			break;
-			
-		default:
-			break;
+		}
+		break;
+
+	default:
+		break;
 	}
 }
 
@@ -299,13 +299,13 @@ double** Matrix_Sum(double **A, double **B, int m, int n, int MODE)
 		for (int j = 0; j < n; ++j) {
 			switch (MODE)
 			{
-				case 0:
-					Result_Matrix[i][j] = A[i][j] + B[i][j];
-					break;
-				case 1:
-					Result_Matrix[i][j] = A[i][j] - B[i][j];
-					break;
-				default:break;
+			case 0:
+				Result_Matrix[i][j] = A[i][j] + B[i][j];
+				break;
+			case 1:
+				Result_Matrix[i][j] = A[i][j] - B[i][j];
+				break;
+			default:break;
 			}
 		}
 	}
@@ -339,7 +339,7 @@ double Scalar_Product(double **Vector1, double **Vector2, int n)
 	double **Product_Matrix = Create_Matrix(1, 1, "Product Matrix");
 	double **Vector1_Transpose = Transpose_Matrix(Vector1, n, 1);
 	Matrix_Multiplication(Vector1_Transpose, Vector2, Product_Matrix, 1, n, n, 1);
-	
+
 	double product = Product_Matrix[0][0];
 	Free_Matrix(Product_Matrix, 1);
 	Free_Matrix(Vector1_Transpose, 1);
@@ -355,7 +355,7 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 	}
 	double **Result_Matrix = Create_Matrix(m, n, "");
 	double ***vector_System = Column_Vector_Extract(Matrix, m, n);
-	
+
 	for (int i = 0; i < n; ++i) {
 		product[i] = sqrt(Scalar_Product(vector_System[i], vector_System[i], m));
 		if (product[i]) {
@@ -365,9 +365,9 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 			Free_Matrix(temp_Tranpose, 1);
 		}
 	}
-	
+
 	Column_Vector_Refill(vector_System, Result_Matrix, m, n);
-	
+
 	free(product);
 	for (int i = 0; i < n; ++i)
 		Free_Matrix(vector_System[i], m);
@@ -376,7 +376,7 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 
 int Check_Option_Order(int argc, const char** argv, char *str1, unsigned long limN1, char *str2, unsigned long limN2)
 {
-	int addr1 = 0,addr2 = 0;
+	int addr1 = 0, addr2 = 0;
 	for (int i = 0; i < argc; ++i) {
 		if (strncmp(argv[i], str1, limN1) == 0)
 			addr1 = i;
@@ -408,7 +408,7 @@ char** CommandList()
 		char n[2] = "0";
 		n[0] = (char)('0' + oNum);
 		strcat(allOptions[oNum], n);
-		
+
 	}
 	allOptions[9] = "--config";
 	allOptions[10] = "-h";
@@ -420,14 +420,14 @@ char** CommandList()
 	allOptions[15] = "--out";
 	allOptions[16] = "--test";
 	allOptions[17] = "--mass-test";
-	
+
 	return allOptions;
 }
 
 int Check_No_Command(int argc, const char** argv)
 {
 	char **allOptions = CommandList();
-	int existFlag=0,commandNum = 0;
+	int existFlag = 0, commandNum = 0;
 	for (int i = 1; i < argc; ++i) {
 		//确定传入参数是否在已知列表中
 		for (int j = 0; j < MAX_OPTIONS; ++j) {
@@ -436,7 +436,7 @@ int Check_No_Command(int argc, const char** argv)
 				break;
 			}
 		}
-		
+
 		if (existFlag) {
 			for (int j = 0; j <= 13; ++j) {
 				if (strcmp(argv[i], allOptions[j]) == 0) {
@@ -449,15 +449,15 @@ int Check_No_Command(int argc, const char** argv)
 			return 9;
 		existFlag = 0;
 	}
-	
+
 	switch (commandNum)
 	{
-		case 0:
-			return 1;
-			break;
-		default:
-			return 0;
-			break;
+	case 0:
+		return 1;
+		break;
+	default:
+		return 0;
+		break;
 	}
 }
 
@@ -465,7 +465,7 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 {
 	int invalidOptionFlag = 0;
 	char **knownOptions = CommandList();
-	int wrongOrderFlag = 0,problemOption = 0;
+	int wrongOrderFlag = 0, problemOption = 0;
 	if (argc >= 2) {
 		invalidOptionFlag = argc - 1;
 		for (int i = 1; i < argc; ++i) {
@@ -494,16 +494,16 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 				if (invalidOptionFlag == ini) problemOption = i;
 			}
 		}
-		
+
 		int noCommandFlag = 0;
-		
+
 		if (argc > 2 && Check_No_Command(argc, argv) == 1) {
 			printf("No command found; type '--help' for a list.\n");
 			puts("Syntax: Matrix [Commands] [Options]");
 			invalidOptionFlag = 1;
 			noCommandFlag = 1;
 		}
-		
+
 		if (invalidOptionFlag != 0 && noCommandFlag == 0) {
 			*invalidContinueFlag = 1;
 			if (wrongOrderFlag == 0)
@@ -523,11 +523,11 @@ void strrpl(char* src, char ch1, char ch2, unsigned long length)		//用于替换
 	}
 }
 
-void Matrix_Copy(double **dst,double **src,int begin_r,int begin_c,int end_r,int end_c)
+void Matrix_Copy(double **dst, double **src, int begin_r, int begin_c, int end_r, int end_c)
 {
-	for (int i=begin_r-1; i<end_r; ++i) {
-		for (int j=begin_c-1; j<end_c; ++j) {
-			dst[i-(begin_r-1)][j-(begin_c-1)]=src[i][j];
+	for (int i = begin_r - 1; i < end_r; ++i) {
+		for (int j = begin_c - 1; j < end_c; ++j) {
+			dst[i - (begin_r - 1)][j - (begin_c - 1)] = src[i][j];
 		}
 	}
 }
