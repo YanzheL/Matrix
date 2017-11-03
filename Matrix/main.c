@@ -268,27 +268,27 @@ int main(int argc, const char * argv[])
 					Show_Matrix(Matrix, 1, 1, n, n, 1);
 			}
 
-			Calculate_Result.m = n;
-			Calculate_Result.n = n;
-			switch (MODE) {
-			case '1':
-				Calculate_Result.content = Matrix;
-				Calculate_Result.value = Determinant(Calculate_Result.content, n);
-				break;
-
-			case '2':
-				Calculate_Result.content = Matrix;
-				Approximate(Calculate_Result.content, n, n, 5);
-				Free_Matrix(Matrix, n);
-				break;
-
-			case '3':
-				Calculate_Result.content = Matrix;
-				if (Reverse_Matrix(Calculate_Result.content, n) == 0)
-					puts("The Inverse Matrix doesn't Exist");
-				break;
-			}
-		}
+            Calculate_Result.m = n;
+            Calculate_Result.n = n;
+            switch (MODE) {
+                case '1':
+                    Calculate_Result.content = Matrix;
+                    Calculate_Result.value = Determinant(Calculate_Result.content, n);
+                    break;
+                    
+                case '2':
+                    Calculate_Result.content = Adjoint_Matrix(Matrix, n, n);
+                    Approximate(Calculate_Result.content, n, n, 5);
+                    Free_Matrix(Matrix, n);
+                    break;
+                    
+                case '3':
+                    Calculate_Result.content = Matrix;
+                    if (Reverse_Matrix(Calculate_Result.content, n) == 0)
+                        puts("The Inverse Matrix doesn't Exist");
+                    break;
+            }
+        }
 
 		if (MODE == '4') {
 			struct Characteristic_of_Matrix *Matrix_Description;
