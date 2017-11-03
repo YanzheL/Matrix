@@ -1,4 +1,4 @@
-﻿//
+//
 //  Independent_Functions.c
 //  Matrix
 //
@@ -11,12 +11,9 @@
 
 int Check_Option(int argc, const char **argv, char *option)
 {
-	int optionCheck;
 	int flag = 0;
-	for (optionCheck = 0; optionCheck < argc; ++optionCheck)
-	{
-		if (strcmp(argv[optionCheck], option) == 0)
-		{
+	for (int optionCheck = 0; optionCheck < argc; ++optionCheck) {
+		if (strcmp(argv[optionCheck], option) == 0) {
 			flag = 1;
 			break;
 		}
@@ -26,19 +23,16 @@ int Check_Option(int argc, const char **argv, char *option)
 
 int Show_File_Text(FILE *fp)
 {
-	char C;
-	//    FILE *fp = fopen(__FILE__, "r");
-	if (fp == NULL)
-	{
+	char ch;
+	if (!fp) {
 		perror("FILE Text open error");
 		return 1;
 	}
-	do
-	{
-		C = fgetc(fp);
-		putchar(C);
-	} while (C != EOF);
-
+	do {
+		ch = fgetc(fp);
+		putchar(ch);
+	} while (ch != EOF);
+	
 	fclose(fp);
 	return 0;
 }
@@ -51,17 +45,14 @@ void Safe_Flush(FILE *fp)																		//用于清空scanf缓冲区
 
 double** Create_Matrix(int m, int n, char *DISPLAY)
 {
-	int i;
 	double **Matrix;
-	if ((Matrix = (double**)calloc(m, sizeof(double*))) == NULL)
-	{
+	if ((Matrix = (double**)calloc(m, sizeof(double*))) == NULL) {
 		printf("Matrix%s Calloc Error\n", DISPLAY);
 		perror("Error Info");
 		return NULL;
 	}
-
-	for (i = 0; i < m; ++i)
-	{
+	
+	for (int i = 0; i < m; ++i) {
 		Matrix[i] = (double*)calloc(n, sizeof(double));
 	}
 	return Matrix;
@@ -69,9 +60,7 @@ double** Create_Matrix(int m, int n, char *DISPLAY)
 
 void Free_Matrix(double **Matrix, int m)
 {
-	int i;
-	for (i = 0; i < m; ++i)
-	{
+	for (int i = 0; i < m; ++i) {
 		free(Matrix[i]);
 	}
 	free(Matrix);
@@ -79,20 +68,15 @@ void Free_Matrix(double **Matrix, int m)
 
 void Scalar_Multiplication(double k, double **Matrix, int r, int m, int n)						//数乘运算 用k数乘第r行
 {
-	int j;
-	for (j = 0; j <= n - 1; ++j)
+	for (int j = 0; j < n; ++j)
 		Matrix[r][j] *= k;
 }
 
 void Show_Matrix(double **Matrix, int startRow, int startColumn, int endRow, int endColumn, int displayFlag)
 {																								//用于向屏幕打印整个矩阵
-	int i, j;
-	for (i = startRow - 1; i <= endRow - 1; ++i)
-	{
-		for (j = startColumn - 1; j <= endColumn - 1; ++j)
-		{
-			if (displayFlag == 1)
-			{
+	for (int i = startRow - 1; i < endRow; ++i) {
+		for (int j = startColumn - 1; j <endColumn; ++j) {
+			if (displayFlag == 1) {
 				if (Matrix[i][j] == floor(Matrix[i][j]))
 					printf("%9d", (int)floor(Matrix[i][j]));
 				else if (Matrix[i][j] == ceil(Matrix[i][j]))
@@ -108,12 +92,9 @@ void Show_Matrix(double **Matrix, int startRow, int startColumn, int endRow, int
 
 void Approximate(double **Matrix, int m, int n, int index)
 {
-	int i, j;
 	double p = pow(10, -index);
-	for (i = 0; i <= m - 1; ++i)
-	{
-		for (j = 0; j <= n - 1; ++j)
-		{
+	for (int i = 0; i <m; ++i) {
+		for (int j = 0; j <n; ++j) {
 			if (Matrix[i][j] - floor(Matrix[i][j]) < p)
 				Matrix[i][j] = floor(Matrix[i][j]);												//近似运算
 			else if (ceil(Matrix[i][j]) - Matrix[i][j] < p)
@@ -125,9 +106,7 @@ void Approximate(double **Matrix, int m, int n, int index)
 void Row_Exchange(double **Matrix, int r1, int r2, int n)                                       //行交换，r1行与r2行交换
 {
 	double temp = 0;
-	int j;
-	for (j = 0; j <= n - 1; ++j)
-	{
+	for (int j = 0; j <n; ++j) {
 		temp = Matrix[r1][j];
 		Matrix[r1][j] = Matrix[r2][j];
 		Matrix[r2][j] = temp;
@@ -136,90 +115,83 @@ void Row_Exchange(double **Matrix, int r1, int r2, int n)                       
 
 void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                                  //行加减运算
 {
-	int c;
-	if (flag == 0)                                                                              //flag=0时进行r1行加r2行
-		for (c = 0; c <= n - 1; c++)
-		{
-			Matrix[r1][c] += Matrix[r2][c];
-		}
-	if (flag == 1)                                                                              //flag=1时进行r1行减r2行
-		for (c = 0; c <= n - 1; ++c)
-		{
-			Matrix[r1][c] -= Matrix[r2][c];
-		}
+	switch (flag) {
+		case 0: //flag=0时进行r1行加r2行
+			for (int c = 0; c < n; c++) {
+				Matrix[r1][c] += Matrix[r2][c];
+			}
+			break;
+		case 1: //flag=1时进行r1行减r2行
+			for (int c = 0; c < n; ++c) {
+				Matrix[r1][c] -= Matrix[r2][c];
+			}
+			break;
+	}
 }
 
 int Find_No_Zero_Row(double **Matrix, int column, int m)										//从上到下找出第column列中最后一个非零元所在的行号
 {
-	int count = 0, row;
-	for (row = 0; row < m; ++row)
-	{
+	int count = 0;
+	for (int row = 0; row < m; ++row) {
 		if (fabs(Matrix[row][column]))count = row;
 	}
-
+	
 	return count;
 }
 
 int Find_Leading_Column(double **Matrix, int row, int n)
 {
-	int count = 0, column;
-	for (column = n - 1; column >= 0; column--)
-	{
+	int count = 0;
+	for (int column = n - 1; column >= 0; --column) {
 		if (fabs(Matrix[row][column]))count = column;
 	}
-
+	
 	return count;
 }
 
 int Check_Zero_Matrix(double **Matrix, int m, int n)
 {
-	int zeroElementCount = 0, i, j;
-	for (i = 0; i <= m - 1; ++i)																//数出增广矩阵中零元素的个数
-	{
-		for (j = 0; j <= n - 1; ++j)
-		{
+	int zeroElementCount = 0;
+	//数出增广矩阵中零元素的个数
+	for (int i = 0; i < m; ++i) {
+		for (int j = 0; j < n; ++j) {
 			if (Matrix[i][j] == 0)zeroElementCount++;
 		}
 	}
-	if (zeroElementCount == (m)*(n))
-	{
+	if (zeroElementCount == (m)*(n)) {
 		//        printf("Zero Element = %d\n",zeroElementCount);
 		return -1;																				//如果用户输入的矩阵元素全为0，则不用化简，直接返回
 	}
-	else return zeroElementCount;
+	else
+		return zeroElementCount;
 }
 
 void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE)
 {
-	int i, j;
-//	srand((unsigned)time(NULL));
-	for (i = 0; i <= m - 1; ++i)
-	{
-		for (j = 0; j <= n - 1; ++j)															//测试需要 随机整数填充增广矩阵
-		{
+	//	srand((unsigned)time(NULL));
+	for (int i = 0; i < m; ++i) {
+		//测试需要 随机整数填充增广矩阵
+		for (int j = 0; j < n; ++j) {
 			if (MODE == 1)
 				Matrix[i][j] = MIN + rand() % (MAX - MIN - 1) + (double)rand() / RAND_MAX;		//随机小数填充
-			else Matrix[i][j] = MIN + rand() % MAX;												//随机整数填充
+			else
+				Matrix[i][j] = MIN + rand() % MAX;												//随机整数填充
 		}
 	}
 }
 
 double*** Column_Vector_Extract(double **Matrix, int m, int n)
 {
-	int i, r, s;
 	double ***vector_System = (double***)calloc(n, sizeof(double**));
-	if (vector_System == NULL)
-	{
+	if (vector_System == NULL) {
 		perror("vector_System");
 		exit(1);
 	}
-	for (i = 0; i < n; ++i)
+	for (int i = 0; i < n; ++i)
 		vector_System[i] = Create_Matrix(m, 1, "Vector System");
-
-	for (s = 0; s < n; ++s)
-	{
-		for (r = 0; r < m; ++r)
-		{
+	
+	for (int s = 0; s < n; ++s) {
+		for (int r = 0; r < m; ++r) {
 			vector_System[s][r][0] = Matrix[r][s];
 		}
 	}
@@ -228,11 +200,8 @@ double*** Column_Vector_Extract(double **Matrix, int m, int n)
 
 void Column_Vector_Refill(double ***vector_System, double **Matrix, int m, int n)
 {
-	int r, s;
-	for (s = 0; s < n; ++s)
-	{
-		for (r = 0; r < m; ++r)
-		{
+	for (int s = 0; s < n; ++s) {
+		for (int r = 0; r < m; ++r) {
 			Matrix[r][s] = vector_System[s][r][0];
 		}
 	}
@@ -271,7 +240,7 @@ void Show_Help_Page()
 {
 	puts("--------------------------------------------------------------------------------");
 	puts("\nSyntax: Matrix [Commands] [options]\n");
-
+	
 	puts("Commands:");
 	puts("  -h --help       Show this help page");
 	puts("  -c --config     Read config file named 'config.json' from $CURRENT_DIR");
@@ -281,9 +250,9 @@ void Show_Help_Page()
 	puts("     --menu       Show Mode Menu page");
 	puts("     --mode-1     --mode-2      --mode-3 ");
 	puts("     --mode-4     --mode-5      --mode-6 ");
-    puts("     --mode-7     --mode-8             \n");
-    
-    puts("Options:");
+	puts("     --mode-7     --mode-8             \n");
+	
+	puts("Options:");
 	puts("  -o --out        Output stdout to FILE and store in $CURRENT_DIR");
 	puts("     --test       Enable random fill test mode");
 	puts("     --mass-test  Enable Unstoppable test mode\n");
@@ -300,69 +269,63 @@ void Show_MODE_Band(char MODE)
 {
 	switch (MODE)
 	{
-	case '1':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                        ---- MODE 1 Determinant ----                          |");
-		puts("--------------------------------------------------------------------------------");
-		break;
+		case '1':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                        ---- MODE 1 Determinant ----                          |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '2':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                       ---- MODE 2 Adjoint Matrix ----                        |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '3':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                       ---- MODE 3 Inverse Matrix ----                        |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '4':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                    ---- MODE 4 Matrix Multiplication ----                    |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '5':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                       ---- MODE 5 Row Echelon Form ----                      |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '6':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                      ---- MODE 6 Row Canonical Form ----                     |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '7':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                       ---- MODE 7 Linear Equations ----                      |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
+		case '8':
+		{
+			puts("--------------------------------------------------------------------------------");
+			puts("|                   ---- MODE 8 Schmidt Orthogonalization ----                 |");
+			puts("--------------------------------------------------------------------------------");
+			break;
+		}
 	}
-	case '2':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                       ---- MODE 2 Adjoint Matrix ----                        |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	case '3':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                       ---- MODE 3 Inverse Matrix ----                        |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	case '4':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                    ---- MODE 4 Matrix Multiplication ----                    |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	case '5':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                       ---- MODE 5 Row Echelon Form ----                      |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	case '6':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                      ---- MODE 6 Row Canonical Form ----                     |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	case '7':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                       ---- MODE 7 Linear Equations ----                      |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	case '8':
-	{
-		puts("--------------------------------------------------------------------------------");
-		puts("|                   ---- MODE 8 Schmidt Orthogonalization ----                 |");
-		puts("--------------------------------------------------------------------------------");
-		break;
-	}
-	}
-}
-
-int Show_Header_Source()
-{
-	FILE *fp = fopen(__FILE__, "r");
-	return Show_File_Text(fp);
 }
 
 #ifdef UNIX
