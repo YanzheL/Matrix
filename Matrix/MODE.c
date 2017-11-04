@@ -125,42 +125,42 @@ double Row_Echelon_Form(double **Matrix, const int m, const int n, const int Det
 //行最简形变换
 int Row_Canonical_Form(double **Matrix, const int m, const int n)
 {
-    int lastNoZeroRow = m - 1;
-    if (Row_Echelon_Form(Matrix, m, n, 0) == 0)
-        return 0;
-    for (int i = m - 1; i >= 0; --i) {
-        int returnValueOf_Find_Leading_Column = Find_Leading_Column(Matrix, i, n);
-        if (returnValueOf_Find_Leading_Column)
-            lastNoZeroRow = i;
-        
-        double rowLastCoefficient = Matrix[lastNoZeroRow][Find_Leading_Column(Matrix, lastNoZeroRow, n)];
-        if (rowLastCoefficient)
-            Scalar_Multiplication(1 / rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
-    }
-    for (int row = 0; row < m - 1; ++row) {
-        for (int i = row + 1; i < m; ++i) {
-            //            row_row_leading_column=Find_Leading_Column(Matrix, row, n);
-            int row_i_LeadingColumn = Find_Leading_Column(Matrix, i, n);
-            double row_row_SecondCoefficient = Matrix[row][row_i_LeadingColumn];
-            if (row_row_SecondCoefficient != 0 && Matrix[i][row_i_LeadingColumn] != 0) {
-                //printf("\n---------- Row %d ----> i %d Prepare---------------\n",row+1,i+1);
-                //Show_Matrix(AB, m, n,1);
-                Scalar_Multiplication(1 / row_row_SecondCoefficient, Matrix, row, m, n);
-                //printf("---------- Row %d ----> i %d Scalared--------------\n",row+1,i+1);
-                //Show_Matrix(AB, m, n,1);
-                Row_Add(Matrix, row, i, n, 1);
-                //printf("---------- Row %d ----> i %d Added ----------------\n\n",row+1,i+1);
-                //Show_Matrix(AB, m, n,1);
-            }
-        }
-        //}
-        double row_row_LeadingCoefficient = Matrix[row][Find_Leading_Column(Matrix, row, n)];
-        if (row_row_LeadingCoefficient)
-            Scalar_Multiplication(1 / row_row_LeadingCoefficient, Matrix, row, m, n);
-    }
-    //puts("----------------------- Row Canonical Finish -----------------------");
-    //Show_Matrix(AB, m, n,1);
-    return 1;
+	int lastNoZeroRow = m - 1;
+	if (Row_Echelon_Form(Matrix, m, n, 0) == 0)
+		return 0;
+	for (int i = m - 1; i >= 0; --i) {
+		int returnValueOf_Find_Leading_Column = Find_Leading_Column(Matrix, i, n);
+		if (returnValueOf_Find_Leading_Column)
+			lastNoZeroRow = i;
+
+		double rowLastCoefficient = Matrix[lastNoZeroRow][Find_Leading_Column(Matrix, lastNoZeroRow, n)];
+		if (rowLastCoefficient)
+			Scalar_Multiplication(1 / rowLastCoefficient, Matrix, lastNoZeroRow, m, n);
+	}
+	for (int row = 0; row < m - 1; ++row) {
+		for (int i = row + 1; i < m; ++i) {
+			//            row_row_leading_column=Find_Leading_Column(Matrix, row, n);
+			int row_i_LeadingColumn = Find_Leading_Column(Matrix, i, n);
+			double row_row_SecondCoefficient = Matrix[row][row_i_LeadingColumn];
+			if (row_row_SecondCoefficient != 0 && Matrix[i][row_i_LeadingColumn] != 0) {
+				//printf("\n---------- Row %d ----> i %d Prepare---------------\n",row+1,i+1);
+				//Show_Matrix(AB, m, n,1);
+				Scalar_Multiplication(1 / row_row_SecondCoefficient, Matrix, row, m, n);
+				//printf("---------- Row %d ----> i %d Scalared--------------\n",row+1,i+1);
+				//Show_Matrix(AB, m, n,1);
+				Row_Add(Matrix, row, i, n, 1);
+				//printf("---------- Row %d ----> i %d Added ----------------\n\n",row+1,i+1);
+				//Show_Matrix(AB, m, n,1);
+			}
+		}
+		//}
+		double row_row_LeadingCoefficient = Matrix[row][Find_Leading_Column(Matrix, row, n)];
+		if (row_row_LeadingCoefficient)
+			Scalar_Multiplication(1 / row_row_LeadingCoefficient, Matrix, row, m, n);
+	}
+	//puts("----------------------- Row Canonical Finish -----------------------");
+	//Show_Matrix(AB, m, n,1);
+	return 1;
 }
 
 
