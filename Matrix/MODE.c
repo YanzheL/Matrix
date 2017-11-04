@@ -13,7 +13,7 @@
 #include "Matrix.h"
 
  //计算行列式的值
-double Determinant(double **Matrix, int n)
+double Determinant(double **Matrix, const int n)
 {
 	double result = 1;
 	//    Determinant_Row_Echelon_Form(Matrix, n);
@@ -25,7 +25,7 @@ double Determinant(double **Matrix, int n)
 }
 
 //求伴随矩阵
-double** Adjoint_Matrix(double **Matrix, int m, int n)
+double** Adjoint_Matrix(double **Matrix, const int m, const int n)
 {
 	double **Result_Matrix = Create_Matrix(m, n, "");
 	for (int i = 0; i < m; ++i) {
@@ -37,7 +37,7 @@ double** Adjoint_Matrix(double **Matrix, int m, int n)
 }
 
 //行阶梯形变换
-double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
+double Row_Echelon_Form(double **Matrix, const int m, const int n, const int DeterminantMODE)
 {
 	int noZeroRowCount = 0;
 	double coefficientOfEntireDeterminant = 1;
@@ -123,7 +123,7 @@ double Row_Echelon_Form(double **Matrix, int m, int n, int DeterminantMODE)
 }
 
 //行最简形变换
-int Row_Canonical_Form(double **Matrix, int m, int n)
+int Row_Canonical_Form(double **Matrix, const int m, const int n)
 {
     int lastNoZeroRow = m - 1;
     if (Row_Echelon_Form(Matrix, m, n, 0) == 0)
@@ -165,7 +165,7 @@ int Row_Canonical_Form(double **Matrix, int m, int n)
 
 
 
-void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, int n_of_Solution_Matrix, int rankOf_A)
+void Build_Solution_Matrix(double **AB, double **Solution_Matrix, const int m, const int n, const int n_of_Solution_Matrix, const int rankOf_A)
 {
 	//	puts("---------------------------------------- Raw ------------------------------------------");
 	//	Show_Matrix(AB, 1, 1, m, n+1, 1);
@@ -225,7 +225,7 @@ void Build_Solution_Matrix(double **AB, double **Solution_Matrix, int m, int n, 
 	Free_Matrix(non_basic_column_array, 1);
 }
 
-int Reverse_Matrix(double **Matrix, int n)
+int Reverse_Matrix(double **Matrix, const int n)
 {
 	if (Find_Rank(Matrix, n, n) != n)
 		return 0;		//如果方阵不满秩，则行列式为0
@@ -250,7 +250,7 @@ int Reverse_Matrix(double **Matrix, int n)
 	return 1;
 }
 
-double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
+double** Schmidt_Orthogonalization(double **Matrix, const int m, const int n)
 {
 	//    double ***alpha=(double***)calloc(n, sizeof(double**));	//alpha[]中每一个元素都是一个列矩阵
 	double ***alpha = Column_Vector_Extract(Matrix, m, n);
@@ -313,7 +313,7 @@ double** Schmidt_Orthogonalization(double **Matrix, int m, int n)
 	return Result_Matrix;
 }
 
-int Matrix_Multiplication(double **A, double **B, double **Result_Matrix, int m_A, int n_A, int m_B, int n_B)
+int Matrix_Multiplication(double **A, double **B, double **Result_Matrix, const int m_A, const int n_A, const int m_B, const int n_B)
 {
 	double **Temp = Create_Matrix(m_A, n_B, "Multi Temp");
 	for (int i = 0; i < m_A; ++i) {

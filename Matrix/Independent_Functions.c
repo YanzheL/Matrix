@@ -8,7 +8,7 @@
 
 #include "Matrix.h"
 
-int Check_Option(int argc, const char **argv, char *option)
+int Check_Option(const int argc, const char **argv, const char *option)
 {
 	int flag = 0;
 	for (int optionCheck = 0; optionCheck < argc; ++optionCheck) {
@@ -42,7 +42,7 @@ void Safe_Flush(FILE *fp)																		//用于清空scanf缓冲区
 	while ((ch = fgetc(fp)) != EOF && ch != '\n');
 }
 
-double** Create_Matrix(int m, int n, char *DISPLAY)
+double** Create_Matrix(const int m, const int n, const char *DISPLAY)
 {
 	double **Matrix;
 	if ((Matrix = (double**)calloc(m, sizeof(double*))) == NULL) {
@@ -57,7 +57,7 @@ double** Create_Matrix(int m, int n, char *DISPLAY)
 	return Matrix;
 }
 
-void Free_Matrix(double **Matrix, int m)
+void Free_Matrix(double **Matrix, const int m)
 {
 	for (int i = 0; i < m; ++i) {
 		free(Matrix[i]);
@@ -65,13 +65,13 @@ void Free_Matrix(double **Matrix, int m)
 	free(Matrix);
 }
 
-void Scalar_Multiplication(double k, double **Matrix, int r, int m, int n)						//数乘运算 用k数乘第r行
+void Scalar_Multiplication(const double k, double **Matrix, const int r, const int m, const int n)						//数乘运算 用k数乘第r行
 {
 	for (int j = 0; j < n; ++j)
 		Matrix[r][j] *= k;
 }
 
-void Show_Matrix(double **Matrix, int startRow, int startColumn, int endRow, int endColumn, int displayFlag)
+void Show_Matrix(double **Matrix, const int startRow, const int startColumn, const int endRow, const int endColumn, const int displayFlag)
 {																								//用于向屏幕打印整个矩阵
 	for (int i = startRow - 1; i < endRow; ++i) {
 		for (int j = startColumn - 1; j < endColumn; ++j) {
@@ -89,7 +89,7 @@ void Show_Matrix(double **Matrix, int startRow, int startColumn, int endRow, int
 	}
 }
 
-void Approximate(double **Matrix, int m, int n, int index)
+void Approximate(double **Matrix, const int m, const int n, const int index)
 {
 	double p = pow(10, -index);
 	for (int i = 0; i < m; ++i) {
@@ -102,7 +102,7 @@ void Approximate(double **Matrix, int m, int n, int index)
 	}
 }
 
-void Row_Exchange(double **Matrix, int r1, int r2, int n)                                       //行交换，r1行与r2行交换
+void Row_Exchange(double **Matrix, const int r1, const int r2, const int n)                                       //行交换，r1行与r2行交换
 {
 	double temp = 0;
 	for (int j = 0; j < n; ++j) {
@@ -112,7 +112,7 @@ void Row_Exchange(double **Matrix, int r1, int r2, int n)                       
 	}
 }
 
-void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                                  //行加减运算
+void Row_Add(double **Matrix, const int r1, const int r2, const int n, const int flag)                                  //行加减运算
 {
 	switch (flag) {
 	case 0: //flag=0时进行r1行加r2行
@@ -128,7 +128,7 @@ void Row_Add(double **Matrix, int r1, int r2, int n, int flag)                  
 	}
 }
 
-int Find_No_Zero_Row(double **Matrix, int column, int m)										//从上到下找出第column列中最后一个非零元所在的行号
+int Find_No_Zero_Row(double **Matrix, const int column, const int m)										//从上到下找出第column列中最后一个非零元所在的行号
 {
 	int count = 0;
 	for (int row = 0; row < m; ++row) {
@@ -138,7 +138,7 @@ int Find_No_Zero_Row(double **Matrix, int column, int m)										//从上到下
 	return count;
 }
 
-int Find_Leading_Column(double **Matrix, int row, int n)
+int Find_Leading_Column(double **Matrix, const int row, const int n)
 {
 	int count = 0;
 	for (int column = n - 1; column >= 0; --column) {
@@ -148,7 +148,7 @@ int Find_Leading_Column(double **Matrix, int row, int n)
 	return count;
 }
 
-int Check_Zero_Matrix(double **Matrix, int m, int n)
+int Check_Zero_Matrix(double **Matrix, const int m, const int n)
 {
 	int zeroElementCount = 0;
 	//数出增广矩阵中零元素的个数
@@ -165,7 +165,7 @@ int Check_Zero_Matrix(double **Matrix, int m, int n)
 		return zeroElementCount;
 }
 
-void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE)
+void Rand_Fill(double **Matrix, const int m, const int n, const int MIN, const int MAX, const int MODE)
 {
 	//	srand((unsigned)time(NULL));
 	for (int i = 0; i < m; ++i) {
@@ -179,7 +179,7 @@ void Rand_Fill(double **Matrix, int m, int n, int MIN, int MAX, int MODE)
 	}
 }
 
-double*** Column_Vector_Extract(double **Matrix, int m, int n)
+double*** Column_Vector_Extract(double **Matrix, const int m, const int n)
 {
 	double ***vector_System = (double***)calloc(n, sizeof(double**));
 	if (vector_System == NULL) {
@@ -197,7 +197,7 @@ double*** Column_Vector_Extract(double **Matrix, int m, int n)
 	return vector_System;
 }
 
-void Column_Vector_Refill(double ***vector_System, double **Matrix, int m, int n)
+void Column_Vector_Refill(double ***vector_System, double **Matrix, const int m, const int n)
 {
 	for (int s = 0; s < n; ++s) {
 		for (int r = 0; r < m; ++r) {
@@ -264,7 +264,7 @@ void Show_Help_Page()
 	puts("  Matrix --mode-5 --mass-test");
 }
 
-void Show_MODE_Band(char MODE)
+void Show_MODE_Band(const char MODE)
 {
 	switch (MODE)
 	{
@@ -333,7 +333,7 @@ void Show_MODE_Band(char MODE)
 #include <termios.h>
 
 /* Initialize new terminal i/o settings */
-void initTermios(int echo)
+void initTermios(const int echo)
 {
 	tcgetattr(0, &old); /* grab old terminal i/o settings */
 	new = old; /* make new settings same as old settings */
@@ -349,7 +349,7 @@ void resetTermios(void)
 }
 
 /* Read 1 character - echo defines echo mode */
-char getch_(int echo)
+char getch_(const int echo)
 {
 	char ch;
 	initTermios(echo);

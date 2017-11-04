@@ -30,7 +30,7 @@ char* TextFile2Char(FILE *fp)
 	return fstr;
 }
 
-char* GetFileExactPath(const char* argvTemp, char *fileName)
+char* GetFileExactPath(const char* argvTemp, const char *fileName)
 {
 	char *filePath = (char*)calloc(strlen(argvTemp) - strlen("Matrix") + strlen(fileName), sizeof(char));
 	if (filePath) {
@@ -97,7 +97,7 @@ sConfig Read_Config(const char* programPath)
 	return readResult;
 }
 
-char* Result2JSON(const sMatrix rawResult, unsigned formatFlag)
+char* Result2JSON(const sMatrix rawResult, const unsigned formatFlag)
 {
 
 	char* jsonData = "";
@@ -169,7 +169,7 @@ char* Result2JSON(const sMatrix rawResult, unsigned formatFlag)
 
 }
 
-void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE)
+void Config_Fill_Matrix(double **Matrix, const sConfig configSource, const int TYPE)
 {
 	int num = 0;
 	switch (TYPE) {
@@ -191,7 +191,7 @@ void Config_Fill_Matrix(double **Matrix, sConfig configSource, int TYPE)
 	}
 }
 
-void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE, int inputMode)
+void User_Input_Matrix(double **Matrix, const int m, const int n, const char *TYPE, const int inputMode)
 {
 	Safe_Flush(stdin);
 	switch (inputMode)
@@ -226,14 +226,14 @@ void User_Input_Matrix(double **Matrix, int m, int n, char *TYPE, int inputMode)
 	}
 }
 
-void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, int structElementNumber, int mRandMin, int mRandMax, int nRandMin, int nRandMax)
+void Test_Scanf(struct Characteristic_of_Matrix *Recive_mn_for_Test, const int structElementNumber, const int mRandMin, const int mRandMax, const int nRandMin, const int nRandMax)
 {
 	//	srand((unsigned)time(NULL));
 	Recive_mn_for_Test[structElementNumber - 1].m = mRandMin + rand() % (mRandMax - mRandMin);       //测试需要
 	Recive_mn_for_Test[structElementNumber - 1].n = nRandMin + rand() % (nRandMax - nRandMin);
 }
 
-int Check_Echelon(double **Matrix, int m, int n)                         //用于检查是否已化为行阶梯形
+int Check_Echelon(double **Matrix, const int m, const int n)                         //用于检查是否已化为行阶梯形
 {
 	for (int i = 0; i < n - 1; ++i) {
 		int formerColumnNoZeroCount = Find_No_Zero_Row(Matrix, i, m) + 1;
@@ -247,7 +247,7 @@ int Check_Echelon(double **Matrix, int m, int n)                         //用�
 	return 0;
 }
 
-int Find_Rank(double **Matrix, int m, int n)
+int Find_Rank(double **Matrix, const int m, const int n)
 {
 	double **Copy_Of_Matrix = Create_Matrix(m, n, "Copy of Matrix");
 	int rank = 0;
@@ -269,7 +269,7 @@ int Find_Rank(double **Matrix, int m, int n)
 	return rank;
 }
 
-int Check_Linear_Equation_Solution_Existance(double **AB, int m, int n)
+int Check_Linear_Equation_Solution_Existance(double **AB, const int m, const int n)
 {
 	int rank_A = Find_Rank(AB, m, n), rank_AB = Find_Rank(AB, m, n + 1);
 	//	printf("Rank A = %d\nRank AB = %d\n", rank_A, rank_AB);
@@ -279,7 +279,7 @@ int Check_Linear_Equation_Solution_Existance(double **AB, int m, int n)
 		return 1;
 }
 
-double** Transpose_Matrix(double **Matrix, int m, int n)
+double** Transpose_Matrix(double **Matrix, const int m, const int n)
 {
 	double **Transpose_Matrix;
 	Transpose_Matrix = Create_Matrix(n, m, "Transpose");
@@ -290,7 +290,7 @@ double** Transpose_Matrix(double **Matrix, int m, int n)
 	return Transpose_Matrix;
 }
 
-double** Matrix_Sum(double **A, double **B, int m, int n, int MODE)
+double** Matrix_Sum(double **A, double **B, const int m, const int n, const int MODE)
 {
 	double **Result_Matrix = Create_Matrix(m, n, "Matrix Sum");
 	for (int i = 0; i < m; ++i) {
@@ -311,7 +311,7 @@ double** Matrix_Sum(double **A, double **B, int m, int n, int MODE)
 }
 
 //找出余子矩阵，并返回余子式的值
-double Mirror(double **Matrix, int row, int column, int m, int n)
+double Mirror(double **Matrix, const int row, const int column, const int m, const int n)
 {
 	double **Mirror_Matrix = Create_Matrix(m - 1, n - 1, "");
 	double result;
@@ -332,7 +332,7 @@ double Mirror(double **Matrix, int row, int column, int m, int n)
 	return result;
 }
 
-double Scalar_Product(double **Vector1, double **Vector2, int n)
+double Scalar_Product(double **Vector1, double **Vector2, const int n)
 {
 	double **Product_Matrix = Create_Matrix(1, 1, "Product Matrix");
 	double **Vector1_Transpose = Transpose_Matrix(Vector1, n, 1);
@@ -344,7 +344,7 @@ double Scalar_Product(double **Vector1, double **Vector2, int n)
 	return product;
 }
 
-double** Vector_Normalization(double **Matrix, int m, int n)
+double** Vector_Normalization(double **Matrix, const int m, const int n)
 {
 	double *product = (double*)calloc(n, sizeof(double));
 	if (!product) {
@@ -372,7 +372,7 @@ double** Vector_Normalization(double **Matrix, int m, int n)
 	return Result_Matrix;
 }
 
-int Check_Option_Order(int argc, const char** argv, char *str1, unsigned long limN1, char *str2, unsigned long limN2)
+int Check_Option_Order(const int argc, const char** argv, const char *str1, const unsigned long limN1, const char *str2, const unsigned long limN2)
 {
 	int addr1 = 0, addr2 = 0;
 	for (int i = 0; i < argc; ++i) {
@@ -422,7 +422,7 @@ char** CommandList()
 	return allOptions;
 }
 
-int Check_No_Command(int argc, const char** argv)
+int Check_No_Command(const int argc, const char** argv)
 {
 	char **allOptions = CommandList();
 	int existFlag = 0, commandNum = 0;
@@ -459,7 +459,7 @@ int Check_No_Command(int argc, const char** argv)
 	}
 }
 
-int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
+int Check_Known_Options(const int argc, const char** argv, int *invalidContinueFlag)
 {
 	int invalidOptionFlag = 0;
 	char **knownOptions = CommandList();
@@ -514,14 +514,14 @@ int Check_Known_Options(int argc, const char** argv, int *invalidContinueFlag)
 	return invalidOptionFlag;
 }
 
-void strrpl(char* src, char ch1, char ch2, unsigned long length)		//用于替换字符，遇到ch1就换为ch2
+void strrpl(char* src, const char ch1, const char ch2, const unsigned long length)		//用于替换字符，遇到ch1就换为ch2
 {
 	for (int i = 0; i < length - 1; ++i) {
 		if (src[i] == ch1) src[i] = ch2;
 	}
 }
 
-void Matrix_Copy(double **dst, double **src, int begin_r, int begin_c, int end_r, int end_c)
+void Matrix_Copy(double **dst, double **src, const int begin_r, const int begin_c, const int end_r, const int end_c)
 {
 	for (int i = begin_r - 1; i < end_r; ++i) {
 		for (int j = begin_c - 1; j < end_c; ++j) {
