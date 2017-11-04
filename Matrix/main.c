@@ -9,7 +9,7 @@
 #include "stdafx.h"
 #include "Matrix.h"
 static char TEST_FLAG = '0';
-static char MODE = '0';
+char MODE = '0';
 
 unsigned CONTINUE_FLAG = 0;
 
@@ -24,13 +24,9 @@ int main(int argc, const char * argv[])
 		//		srand((unsigned)acuTime.tv_nsec);
 		srand((unsigned)time(NULL));
 
-		int invalidOptionFlag = 0;
+		int invalidOptionFlag = 0, invalidContinueFlag = 0, indexShowTime = 0;
 		//    int helpFlag = 0;
-		unsigned massFlag = 0;
-		unsigned configMode = 0;
-		unsigned outputMode = 0;
-		int invalidContinueFlag = 0;
-		unsigned serverMode = 0;
+		unsigned massFlag = 0, configMode = 0, outputMode = 0, serverMode = 0;
 		char *outputFileName;
 
 		invalidOptionFlag = Check_Known_Options(argc, argv, &invalidContinueFlag);
@@ -137,7 +133,7 @@ int main(int argc, const char * argv[])
 
 		if (argc >= 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
 			//        helpFlag = 1;
-			Show_Index_Page();
+			if (!indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 			Show_Help_Page();
 			invalidContinueFlag = 1;
 		}
@@ -148,38 +144,49 @@ int main(int argc, const char * argv[])
 
 		if ((argc >= 2 && strcmp(argv[1], "--mode-1") == 0) || MODE == '1') {
 			MODE = '1';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-2") == 0) || MODE == '2') {
 			MODE = '2';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-3") == 0) || MODE == '3') {
 			MODE = '3';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-4") == 0) || MODE == '4') {
 			MODE = '4';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-5") == 0) || MODE == '5') {
 			MODE = '5';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-6") == 0) || MODE == '6') {
 			MODE = '6';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-7") == 0) || MODE == '7') {
 			MODE = '7';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
 		else if ((argc >= 2 && strcmp(argv[1], "--mode-8") == 0) || MODE == '8') {
 			MODE = '8';
-			if (serverMode == 0) Show_Index_Page();
+			if (!serverMode && !indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 		}
-		if ((argc == 1 || ((argc == 2) && (strcmp(argv[1], "--test") == 0 || strcmp(argv[1], "--mass-test") == 0))) && configMode == 0) {
-			Show_Index_Page();
+		if (
+			(
+				argc == 1
+				||
+				(
+				(argc == 2)
+					&&
+					(strcmp(argv[1], "--test") == 0
+						||
+						strcmp(argv[1], "--mass-test") == 0)
+					)
+				) && configMode == 0) {
+			if (!indexShowTime) { Show_Index_Page(); ++indexShowTime; }
 			Show_Menu_Page();
 			printf("Please choose mode number: ");
 			if (scanf("%c", &MODE) != 1) {
@@ -271,27 +278,27 @@ int main(int argc, const char * argv[])
 					Show_Matrix(Matrix, 1, 1, n, n, 1);
 			}
 
-            Calculate_Result.m = n;
-            Calculate_Result.n = n;
-            switch (MODE) {
-                case '1':
-                    Calculate_Result.content = Matrix;
-                    Calculate_Result.value = Determinant(Calculate_Result.content, n);
-                    break;
-                    
-                case '2':
-                    Calculate_Result.content = Adjoint_Matrix(Matrix, n, n);
-                    Approximate(Calculate_Result.content, n, n, 5);
-                    Free_Matrix(Matrix, n);
-                    break;
-                    
-                case '3':
-                    Calculate_Result.content = Matrix;
-                    if (Reverse_Matrix(Calculate_Result.content, n) == 0)
-                        puts("The Inverse Matrix doesn't Exist");
-                    break;
-            }
-        }
+			Calculate_Result.m = n;
+			Calculate_Result.n = n;
+			switch (MODE) {
+			case '1':
+				Calculate_Result.content = Matrix;
+				Calculate_Result.value = Determinant(Calculate_Result.content, n);
+				break;
+
+			case '2':
+				Calculate_Result.content = Adjoint_Matrix(Matrix, n, n);
+				Approximate(Calculate_Result.content, n, n, 5);
+				Free_Matrix(Matrix, n);
+				break;
+
+			case '3':
+				Calculate_Result.content = Matrix;
+				if (Reverse_Matrix(Calculate_Result.content, n) == 0)
+					puts("The Inverse Matrix doesn't Exist");
+				break;
+			}
+		}
 
 		if (MODE == '4') {
 			struct Characteristic_of_Matrix *Matrix_Description;
