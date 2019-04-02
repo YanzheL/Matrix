@@ -23,13 +23,13 @@ Some MODE will ask you to input the value of 'm' or ‘n', which represents row 
 
 According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determinant are only available for Square Matrix.
 
-### Here shows some screenshots
+### Screenshots
 
 ![main_menu](main_menu.png)
 
 ![help_page](help_page.png)
 
-#### Some examples
+#### Examples
 
 ![MODE8-A](MODE8-A.png)
 
@@ -37,7 +37,7 @@ According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determin
 
 ![MODE7](MODE7.png)
 
-#### Example Configuration File in JSON format
+#### Example JSON Configuration File
 
 ```json
 {
