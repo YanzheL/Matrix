@@ -41,28 +41,26 @@ According to mathematics principles, Inverse Matrix, Adjoint Matrix and Determin
 
 ```json
 {
-	"MODE" : 7,
-	"TEST_FLAG" : 0,
-	"m_One" : 3,
-	"n_One" : 5,
-	"m_Two" : 5,
-	"n_Two" : 4,
-	"Extra_Option" : "y",
-	
-	"Matrix_One" :
-	[
-	 [1,-7,0,6,5],
-	 [0,0,1,-2,-3],
-	 [-1,7,-4,2,7]
-	 ],
-	
-	"Matrix_Two" :
-	[
-	 [ 1 ,  12 ,  0  ,  4  ],
-	 [ 2 , -23 ,  0  , -1  ],
-	 [ 3 , -51 ,  0  , -9  ],
-	 [ 4 ,  21 , -11 ,  19 ],
-	 [ 5 ,  29 ,  1  ,  2  ]
-	 ]
+  "MODE": 7,
+  "TEST_FLAG": 0,
+  "m_One": 3,
+  "n_One": 5,
+  "m_Two": 5,
+  "n_Two": 4,
+  "Extra_Option": "y",
+
+  "Matrix_One": [
+    [1, -7, 0, 6, 5],
+    [0, 0, 1, -2, -3],
+    [-1, 7, -4, 2, 7]
+  ],
+
+  "Matrix_Two": [
+    [1, 12, 0, 4],
+    [2, -23, 0, -1],
+    [3, -51, 0, -9],
+    [4, 21, -11, 19],
+    [5, 29, 1, 2]
+  ]
 }
 ```
