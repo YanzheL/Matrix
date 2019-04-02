@@ -1,12 +1,21 @@
 # Matrix
 
-### Matrix is a command line application which is used for solving simple linear algebra problems.
+### Description
+Matrix is a command line application which is used for solving simple linear algebra problems.
 
-### This program mainly suit for UNIX/Linux plaforms, but files in "Matrix" folder is still compatible with Windows (With some functions disabled)
+This program works well on UNIX/Linux plaforms, but files in "Matrix" folder is still compatible with Windows (With some functions disabled)
 
-### All source code file except "cJSON.c" and "cJSON.h" are written by Yanzhe Lee.
+All source code file except "cJSON.c" and "cJSON.h" are written by Yanzhe Lee.
 
-### Having tested quantities times,this program works perfectly on OSX system.
+### Story of this project
+
+This is the first programming project of me when I started first year CS courses at HIT.
+
+So the implementations of matrix operations are very naive without any optimization.
+
+I just use this project for learning C language as well as Linear Algebra.
+
+### Features
 
 There are some MODEs that you can choose to solve different kinds of problems.
 
